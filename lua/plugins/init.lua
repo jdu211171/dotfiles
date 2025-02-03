@@ -17,7 +17,15 @@ return {
   {
     "github/copilot.vim",
     lazy = false,
-  }
+  },
+
+  -- Gitsigns
+  {
+    "lewis6991/gitsigns.nvim",
+    config = function()
+      require "configs.gitsigns"
+    end,
+  },
 
   -- {
   -- 	"nvim-treesitter/nvim-treesitter",
