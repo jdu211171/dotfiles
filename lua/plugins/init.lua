@@ -13,6 +13,12 @@ return {
     end,
   },
 
+  -- GitHub Copilot
+  {
+    "github/copilot.vim",
+    lazy = false,
+  }
+
   -- {
   -- 	"nvim-treesitter/nvim-treesitter",
   -- 	opts = {
