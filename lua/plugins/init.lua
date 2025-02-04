@@ -1,11 +1,22 @@
 return {
   {
     "stevearc/conform.nvim",
-    event = 'BufWritePre', -- uncomment for format on save
+    event = "BufWritePre",
     lazy = false,
-    opts = require "configs.conform",
+    config = function()
+      require("configs.conform").setup()
+    end,
+    keys = {
+      {
+        "<leader>lf",
+        function()
+          require("conform").format { async = true, lsp_fallback = true }
+        end,
+        mode = "n",
+        desc = "Format buffer",
+      },
+    },
   },
-
   -- These are some examples, uncomment them if you want to see them work!
   {
     "neovim/nvim-lspconfig",
