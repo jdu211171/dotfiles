@@ -6,7 +6,7 @@ local M = {}
 function M.setup()
   -- Import formatters
   local formatters_opts = {}
-  local formatter_files = { "prettier" } -- Add others like "eslint_d"
+  local formatter_files = { "prettier", "php_cs_fixer" } -- Add php_cs_fixer
 
   for _, name in ipairs(formatter_files) do
     local ok, fmt = pcall(require, "configs.conform.formatters." .. name)
@@ -59,6 +59,8 @@ function M.setup()
       typescript = { "prettier" },
       typescriptreact = { "prettier" },
       yaml = { "prettier" },
+      php = { "php-cs-fixer" },
+      blade = { "php-cs-fixer" },
     },
     formatters = formatters,
     format_on_save = {
