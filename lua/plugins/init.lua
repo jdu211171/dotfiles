@@ -69,6 +69,21 @@ return {
     event = { "BufReadPost", "BufNewFile" },
   },
 
+  -- TMUX Navigator
+  {
+    "christoomey/vim-tmux-navigator",
+    lazy = false,
+    vim.keymap.set("n", "C-h", ":TmuxNavigateLeft<CR>"),
+    vim.keymap.set("n", "C-j", ":TmuxNavigateDown<CR>"),
+    vim.keymap.set("n", "C-k", ":TmuxNavigateUp<CR>"),
+    vim.keymap.set("n", "C-l", ":TmuxNavigateRight<CR>"),
+  },
+
+  -- VIM Fugitive
+  {
+    "tpope/vim-fugitive",
+  },
+
   -- {
   -- 	"nvim-treesitter/nvim-treesitter",
   -- 	opts = {

@@ -28,6 +28,8 @@
   "render-markdown.nvim": { "branch": "main", "commit": "e05a9f22f31c088ece3fa5928daf546a015b66ee" },
   "telescope.nvim": { "branch": "master", "commit": "415af52339215926d705cccc08145f3782c4d132" },
   "ui": { "branch": "v3.0", "commit": "7f70aac4ad4741c48a2d2f5abac84c06de226c5f" },
+  "vim-fugitive": { "branch": "master", "commit": "b068eaf1e6cbe35d1ac100d435cd7f7b74a5c87d" },
+  "vim-tmux-navigator": { "branch": "master", "commit": "d847ea942a5bb4d4fab6efebc9f30d787fd96e65" },
   "volt": { "branch": "main", "commit": "3bedb1576db574af160643eea7df3b09dbe5ee9c" },
   "which-key.nvim": { "branch": "main", "commit": "0e76a87ac51772569aec678dc74baa8e2a86100c" }
 }
