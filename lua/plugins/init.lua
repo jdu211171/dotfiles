@@ -84,6 +84,21 @@ return {
     "tpope/vim-fugitive",
   },
 
+  -- Zen Mode
+  {
+    "folke/zen-mode.nvim",
+    keys = {
+      {
+        "<leader>zz",
+        function()
+          require("zen-mode").toggle()
+        end,
+        mode = "n",
+        desc = "Toggle Zen Mode",
+      },
+    },
+  },
+
   -- {
   -- 	"nvim-treesitter/nvim-treesitter",
   -- 	opts = {
