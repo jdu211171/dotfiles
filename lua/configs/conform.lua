@@ -6,7 +6,7 @@ local M = {}
 function M.setup()
   -- Import formatters
   local formatters_opts = {}
-  local formatter_files = { "prettier", "php_cs_fixer" } -- Add php_cs_fixer
+  local formatter_files = { "prettier" }
 
   for _, name in ipairs(formatter_files) do
     local ok, fmt = pcall(require, "configs.conform.formatters." .. name)
@@ -46,21 +46,16 @@ function M.setup()
       lua = { "stylua" },
       css = { "prettier" },
       html = { "prettier" },
-      arduino = { "clang-format" },
       c = { "clang-format" },
-      cpp = { "clang-format" },
       javascript = { "prettier" },
       json = { "prettier" },
       jsonc = { "prettier" },
       markdown = { "prettier" },
       rust = { "rustfmt" },
       sh = { "shfmt" },
-      tex = { "latexindent" },
       typescript = { "prettier" },
       typescriptreact = { "prettier" },
       yaml = { "prettier" },
-      php = { "php-cs-fixer" },
-      blade = { "php-cs-fixer" },
     },
     formatters = formatters,
     format_on_save = {
