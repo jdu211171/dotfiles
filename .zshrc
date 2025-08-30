@@ -25,6 +25,8 @@ fi
 # Source/Load zinit
 source "${ZINIT_HOME}/zinit.zsh"
 
+# zsh plugins
+
 # Add in zsh plugins
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
@@ -47,6 +49,7 @@ eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh/zen.toml)"
 bindkey -v
 bindkey '^p' history-beginning-search-backward
 bindkey '^n' history-beginning-search-forward
+
 
 # History
 HISTSIZE=15000

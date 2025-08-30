@@ -3,11 +3,15 @@ return {
     "stevearc/conform.nvim",
     event = "BufWritePre",
     lazy = false,
+    config = function()
+      -- Configure formatters and format-on-save
+      require("configs.conform").setup()
+    end,
     keys = {
       {
         "<leader>lf",
         function()
-          require("conform").format { async = true, lsp_fallback = true }
+          require("conform").format { async = true, lsp_fallback = false }
         end,
         mode = "n",
         desc = "Format buffer",
