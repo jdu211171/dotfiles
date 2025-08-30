@@ -1,0 +1,9 @@
+{
+  // Minimal Waybar config; adjust modules as needed
+  "layer": "top",
+  "position": "top",
+  "modules-left": ["hyprland/workspaces"],
+  "modules-center": ["clock"],
+  "modules-right": ["battery", "pulseaudio", "network"],
+  "clock": { "format": "%a %b %d %H:%M" }
+}

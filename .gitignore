@@ -1,0 +1,21 @@
+# Caches and noisy runtime files
+.cache/
+.local/share/nvim/{swap,undo,backup}/
+**/*.swp
+**/*.swo
+**/*.pyc
+.thumbnails/
+.mozilla/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node / build stuff (if any)
+node_modules/
+dist/
+build/
+
+# Editor
+.idea/
+.vscode/

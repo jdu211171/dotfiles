@@ -1,0 +1,7 @@
+[user]
+  name = Your Name
+  email = you@example.com
+[core]
+  editor = nvim
+[color]
+  ui = auto

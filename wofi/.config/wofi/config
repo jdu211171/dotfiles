@@ -1,0 +1,5 @@
+term=kitty
+allow_images=true
+width=35%
+height=40%
+prompt=Run:

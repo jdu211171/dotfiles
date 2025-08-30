@@ -1,0 +1,4 @@
+[
+  { "context": "Editor", "bindings": { "ctrl-b": "workspace::ToggleLeftDock" } },
+  { "context": "Editor", "bindings": { "ctrl-\": "editor::ToggleComment" } }
+]

@@ -1,0 +1,5 @@
+(^|/)\.git(/|$)
+(^|/)README\.md$
+(^|/)LICENSE$
+(^|/)Makefile$
+(^|/)\.stow-local-ignore$

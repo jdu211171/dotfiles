@@ -1,101 +1,53 @@
-# Dotfiles
+# Dotfiles (GNU Stow)
 
-This repository contains my personal dotfiles for configuring various tools and applications on Linux. Feel free to use them to set up your own environment.
+This repo manages my configs with GNU Stow. Each package mirrors paths from $HOME downward and is symlinked into place.
 
-## Setup Instructions
+## Layout
 
-1. **Clone the Repository**
+- hypr/.config/hypr/hyprland.conf
+- waybar/.config/waybar/config.jsonc
+- kitty/.config/kitty/kitty.conf
+- nvim/.config/nvim/init.lua
+- zed/.config/zed/{settings.json,keymap.json}
+- zsh/.zshrc
+- git/.gitconfig
+- scripts/.local/bin/...
+- wofi/.config/wofi/config
+- dunst/.config/dunst/dunstrc
+- oh-my-posh/.config/oh-my-posh/theme.omp.json
+- host-laptop/.config/hypr/host.conf (optional per-host overrides)
 
-   Clone this repository to your home directory under a `dotfiles` folder:
+## Usage
 
-   ```bash
-   git clone https://github.com/jdu211171/dotfiles.git ~/dotfiles
-   ```
+1) Install Stow: pacman -S stow (Arch), apt install stow, or brew install stow
 
-2. **Backup Existing Configurations (Optional but Recommended)**
+2) Dry-run to preview links:
 
-   To avoid losing your current configurations, create a backup directory and move any existing files or directories that might be overwritten:
+    make -C dotfiles dry-run
 
-   ```bash
-   mkdir ~/dotfiles-backup
-   ```
+3) Apply symlinks into $HOME:
 
-   Then, manually back up any files or directories from your home directory (e.g., `~/.gitconfig`, `~/.zshrc`) or `~/.config/` (e.g., `~/.config/kitty`, `~/.config/nvim`) that match the ones in this repository. For example:
+    make -C dotfiles stow
 
-   ```bash
-   mv ~/.gitconfig ~/dotfiles-backup/
-   mv ~/.zshrc ~/dotfiles-backup/
-   mv ~/.config/kitty ~/dotfiles-backup/kitty
-   # Repeat for other files and directories as needed
-   ```
+- Restow after changes:
 
-3. **Create Symbolic Links**
+    make -C dotfiles restow
 
-   Link the configuration files and directories from the repository to their appropriate locations:
+- Unstow to remove symlinks:
 
-   - **For files starting with a dot** (e.g., `.gitconfig`, `.zshrc`):
-     These should be linked directly to your home directory (`~`).
+    make -C dotfiles unstow
 
-     ```bash
-     ln -s ~/dotfiles/.gitconfig ~/.gitconfig
-     ln -s ~/dotfiles/.zshrc ~/.zshrc
-     # Add similar commands for other dotfiles
-     ```
+You can target specific packages with PACKAGES:
 
-   - **For directories not starting with a dot** (e.g., `kitty`, `nvim`):
-     These are typically configuration directories that should be linked to `~/.config/`.
-
-     ```bash
-     ln -s ~/dotfiles/kitty ~/.config/kitty
-     ln -s ~/dotfiles/nvim ~/.config/nvim
-     # Add similar commands for other directories
-     ```
-
-   Note: Some configurations may reference additional files or directories within `~/dotfiles` (e.g., themes or scripts). These do not need separate linking as long as they remain in the repository and are correctly referenced.
-
-4. **Reload Your Shell**
-
-   To apply the changes, open a new terminal or reload your shell configuration:
-
-   ```bash
-   source ~/.zshrc
-   ```
-
-## Updating Configurations
-
-To update your configurations with the latest changes from this repository:
-
-1. **Navigate to the dotfiles directory**:
-
-   ```bash
-   cd ~/dotfiles
-   ```
-
-2. **Pull the latest changes**:
-
-   ```bash
-   git pull origin main
-   ```
-
-   Replace `main` with the appropriate branch name if necessary.
-
-3. **Recreate symbolic links** (if needed):
-
-   If new files or directories have been added, repeat the linking process for those new items as described in the setup instructions.
-
-4. **Reload your shell** (if necessary):
-
-   Some changes may require reloading your shell or restarting applications for the updates to take effect:
-
-   ```bash
-   source ~/.zshrc
-   ```
-
-**Note**: If you have made local changes to your configurations, commit those changes before updating to avoid losing them.
+    make -C dotfiles stow PACKAGES="hypr waybar git zed oh-my-posh"
 
 ## Notes
 
-- **Overwriting Configurations**: The symbolic links will overwrite any existing files or directories at the target locations. Ensure you’ve backed up anything you want to keep before linking.
-- **Expanding Configurations**: As new files or directories are added to this repository, repeat step 3 of the setup instructions for each new item, linking dotfiles to `~` and configuration directories to `~/.config/` as appropriate.
+- If Stow reports an existing non-symlink file conflict, move that file into this repo under the matching package and rerun with restow.
+- .stow-local-ignore prevents Stow from linking repo meta files like .git and README.md.
+- For host-specific tweaks (e.g., laptop vs desktop), include host-laptop and only stow it on that machine.
 
-Enjoy your new setup!
+## Bootstrap script
+
+See scripts/setup.sh for a safe helper that previews and applies stow actions.
+Make it executable once: chmod +x scripts/setup.sh
