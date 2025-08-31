@@ -1,7 +1,9 @@
 [user]
-  name = Your Name
-  email = you@example.com
+	name = jdu211171
+	email = 211171m@jdu.uz
 [core]
   editor = nvim
 [color]
   ui = auto
+[init]
+	defaultBranch = main
