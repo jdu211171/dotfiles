@@ -81,7 +81,12 @@
     "light": "One Light",
     "dark": "One Dark"
   },
-  "formatter": "prettier",
+  "formatter": {
+    "external": {
+      "command": "node_modules/.bin/prettier",
+      "arguments": ["--stdin-filepath", "{buffer_path}"]
+    }
+  },
   "format_on_save": "off",
   "context_servers": {
     "mcp-server-github": {
