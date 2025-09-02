@@ -1,7 +1,8 @@
 SHELL := /usr/bin/env bash
 
 # Default packages to stow; override with `make stow PACKAGES="..."`
-PACKAGES ?= hypr waybar kitty nvim zsh git scripts wofi dunst zed oh-my-posh
+# Default package set. Note: directory is "ohmyposh" (no hyphens).
+PACKAGES ?= hypr waybar kitty nvim zsh git scripts wofi dunst zed ohmyposh
 
 # Target directory (usually $HOME)
 TARGET ?= $(HOME)

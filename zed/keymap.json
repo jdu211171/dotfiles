@@ -1,0 +1,47 @@
+[
+	{
+		"context": "Pane",
+		"bindings": {
+			"ctrl-tab": "pane::ActivateNextItem",
+			"ctrl-shift-tab": "pane::ActivatePreviousItem"
+		}
+	},
+	{
+		"context": "Editor && vim_mode == normal",
+		"bindings": {
+			"ctrl-h": "workspace::ActivatePaneLeft",
+			"ctrl-j": "workspace::ActivatePaneDown",
+			"ctrl-k": "workspace::ActivatePaneUp",
+			"ctrl-l": "workspace::ActivatePaneRight"
+		}
+	},
+	{
+		"context": "Editor && vim_mode == insert",
+		"bindings": {
+			"ctrl-h": "workspace::ActivatePaneLeft",
+			"ctrl-j": "workspace::ActivatePaneDown",
+			"ctrl-k": "workspace::ActivatePaneUp",
+			"ctrl-l": "workspace::ActivatePaneRight"
+		}
+	},
+	{
+		"context": "Terminal",
+		"bindings": {
+			"ctrl-h": "workspace::ActivatePaneLeft",
+			"ctrl-j": "workspace::ActivatePaneDown",
+			"ctrl-k": "workspace::ActivatePaneUp",
+			"ctrl-l": "workspace::ActivatePaneRight"
+		}
+	},
+	{
+		"context": "Editor && vim_mode == insert",
+		"bindings": {
+			"alt-right": "editor::AcceptPartialEditPrediction"
+		}
+	},
+	{
+		"bindings": {
+			"shift-escape": "workspace::ToggleZoom"
+		}
+	}
+]
