@@ -47,4 +47,3 @@ Notes
 ## Ignore and Noise Hygiene
 - Avoid committing OS and cache files (already covered in `.gitignore`): `.DS_Store`, `Thumbs.db`, `node_modules/`, `.idea/`, `.vscode/`, etc.
 - Never commit secrets. If a file must contain secrets locally, template it here (e.g., `*.example`) and keep real values out of the repo.
-

@@ -14,7 +14,7 @@ Examples:
 
 Notes:
   - Ensure 'stow' is installed (pacman -S stow | apt install stow | brew install stow)
-  - Run from the repo root (dotfiles/)
+  - Run from the repo root (~/dotfiles)
 USAGE
 }
 

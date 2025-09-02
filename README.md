@@ -2,6 +2,8 @@
 
 This repo manages my configs with GNU Stow. Each package mirrors paths from $HOME downward and is symlinked into place.
 
+Canonical location on this machine: ~/dotfiles
+
 ## Layout
 
 - hypr/.config/hypr/hyprland.conf
@@ -23,23 +25,23 @@ This repo manages my configs with GNU Stow. Each package mirrors paths from $HOM
 
 2) Dry-run to preview links:
 
-    make -C dotfiles dry-run
+    make -C ~/dotfiles dry-run
 
 3) Apply symlinks into $HOME:
 
-    make -C dotfiles stow
+    make -C ~/dotfiles stow
 
 - Restow after changes:
 
-    make -C dotfiles restow
+    make -C ~/dotfiles restow
 
 - Unstow to remove symlinks:
 
-    make -C dotfiles unstow
+    make -C ~/dotfiles unstow
 
 You can target specific packages with PACKAGES:
 
-    make -C dotfiles stow PACKAGES="hypr waybar git zed oh-my-posh"
+    make -C ~/dotfiles stow PACKAGES="hypr waybar git zed oh-my-posh"
 
 ## Notes
 
