@@ -4,12 +4,12 @@
 # Keep PATH entries unique (prevents bloat/duplication)
 typeset -U path PATH
 
-# Java configuration (adjust JAVA_HOME if needed)
-export JAVA_HOME=/home/user/.jdks/amazon-corretto
-
 # Baseline PATH (prepend JAVA tools if present)
 export PATH="$HOME/.local/bin:$HOME/.config/composer/vendor/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
-export PATH="$JAVA_HOME/bin:$PATH"
+
+# Java configuration (adjust JAVA_HOME if needed)
+# export JAVA_HOME=/home/user/.jdks/amazon-corretto
+# export PATH="$JAVA_HOME/bin:$PATH"
 
 # Set the directory we want to store zinit and plugins
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
