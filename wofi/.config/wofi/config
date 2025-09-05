@@ -1,5 +1,20 @@
+# Minimal, centered Wofi launcher
+show=drun
+prompt=Run
+allow_images=false
+matching=fuzzy
+dynamic_lines=false
+lines=8
+columns=1
+hide_scroll=true
+
+# Window placement/size
+location=center
+anchor=center
+width=40%
+dpi-aware=yes
+
+# Behavior
+insensitive_hint=true
 term=kitty
-allow_images=true
-width=35%
-height=40%
-prompt=Run:
+no_actions=true

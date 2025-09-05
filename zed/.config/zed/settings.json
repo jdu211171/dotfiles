@@ -69,7 +69,7 @@
   "buffer_font_family": "JetBrainsMono Nerd Font Mono",
   "buffer_font_size": 15,
   "theme": {
-    "mode": "system",
+    "mode": "dark",
     "light": "One Light",
     "dark": "One Dark"
   },

@@ -1,0 +1,4 @@
+# Ignore stateful and large theme assets; managed locally by themectl
+^(theme|theme-current\.json)$
+^themes(/|$)
+
