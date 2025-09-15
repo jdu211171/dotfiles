@@ -7,22 +7,24 @@
   "position": "top",
   "height": 34,
   "margin": "2 2 0 2",
-  "spacing": 8,
+  "spacing": 6,
   "gtk-layer-shell": true,
   "exclusive": true,
 
   // Layout
   "modules-left": ["hyprland/workspaces", "hyprland/submap"],
-  "modules-center": ["hyprland/window"],
+  // Replaced active application with date/time in the center
+  "modules-center": ["custom/clock"],
+  // Removed duplicate clock from right side
   "modules-right": [
     "custom/theme",
     "custom/bluetooth",
     "network",
     "pulseaudio",
     "battery",
-    "clock",
     "custom/reboot",
     "custom/shutdown",
+    "custom/pomodoro",
     "tray",
   ],
 
@@ -40,18 +42,30 @@
       "5": [],
     },
   },
+
+  // Pomodoro timer
+  "custom/pomodoro": {
+    "exec": "/home/user/.config/waybar/scripts/pomodoro.sh",
+    "return-type": "json",
+    "interval": 1,
+    "format": "{text}",
+    "tooltip": true,
+    "on-click": "/home/user/.config/waybar/scripts/pomodoro.sh toggle",
+    "on-click-right": "/home/user/.config/waybar/scripts/pomodoro.sh stop",
+    "on-click-middle": "/home/user/.config/waybar/scripts/pomodoro.sh skip"
+  },
   "hyprland/window": {
-    "format": "  {title}",
+    "format": "󰍹 {title}",
     "max-length": 60,
     "separate-outputs": true,
     "rewrite": {
-      "^(.*) — Mozilla Firefox$": "  $1",
-      "^(.*) - VSCodium$": "  $1",
-      "^(.*) - Visual Studio Code$": "  $1",
+      "^(.*) — Mozilla Firefox$": "󰈹 $1",
+      "^(.*) - VSCodium$": "󰨞 $1",
+      "^(.*) - Visual Studio Code$": "󰨞 $1",
     },
   },
   "hyprland/submap": {
-    "format": "  {name}",
+    "format": "󰌌 {name}",
     "tooltip": true,
   },
 
@@ -77,22 +91,26 @@
   },
 
   // System modules
-  "clock": {
-    "format": "󰥔 {:%a %b %d %H:%M}",
-    "tooltip-format": "{:%A, %B %d %Y}\nWeek {:%V}",
-    "timezone": "Asia/Tokyo",
+  "custom/clock": {
+    "exec": "/home/user/.config/waybar/scripts/clock.sh",
+    "return-type": "json",
     "interval": 5,
+    "format": "{text}",
+    "tooltip": true
   },
+
   "network": {
-    "format-wifi": "",
-    "format-ethernet": "󰈁 {ifname}",
+    "format-wifi": "󰤨",
+    "format-ethernet": "󰈁",
     "format-disconnected": "󰤭",
     "format-disabled": "󰤭",
     "tooltip-format": "{ifname} {ipaddr}/{cidr}\n{essid} ({signalStrength}%)",
+    "states": { "low": 30, "medium": 60, "high": 100 },
     "max-length": 24,
   },
   "pulseaudio": {
-    "format": "{icon} {volume}%",
+    "format": "{icon}",
+    "states": { "low": 30, "medium": 70, "high": 101 },
     "format-muted": "󰝟",
     "scroll-step": 3,
     "on-click": "pavucontrol",
@@ -105,10 +123,10 @@
   },
   "battery": {
     "states": { "warning": 25, "critical": 10 },
-    "format": "{icon} {capacity}%",
-    "format-plugged": "󰂄 {capacity}%",
-    "format-charging": "󰂄 {capacity}%",
-    "format-full": "󰁹 100%",
+    "format": "{icon}",
+    "format-plugged": "󰂄",
+    "format-charging": "󰂄",
+    "format-full": "󰁹",
     "format-icons": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
     "interval": 15,
   },
