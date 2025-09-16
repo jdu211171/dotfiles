@@ -12,10 +12,10 @@ return {
         auto_trigger = true,
         debounce = 75,
         keymap = {
-          -- Use <C-y> to avoid conflicts with tmux/nvim mappings
-          accept = "<C-y>",
-          accept_word = "<M-l>",
-          accept_line = "<M-;>",
+          -- Friendlier inline suggestion workflow
+          accept = "<Tab>",
+          accept_word = false,
+          accept_line = false,
           next = "<M-]>",
           prev = "<M-[>",
           dismiss = "<C-]>",
@@ -23,6 +23,44 @@ return {
       },
       panel = { enabled = false },
     },
+    config = function(_, opts)
+      require("copilot").setup(opts)
+
+      local suggestion = require("copilot.suggestion")
+
+      local function fallback(key)
+        return vim.api.nvim_replace_termcodes(key, true, false, true)
+      end
+
+      local function accept_word_or_fallback(key)
+        if suggestion.is_visible() then
+          suggestion.accept_word()
+          return "<Ignore>"
+        end
+        return fallback(key)
+      end
+
+      local function accept_line_or_fallback(key)
+        if suggestion.is_visible() then
+          suggestion.accept_line()
+          return "<Ignore>"
+        end
+        return fallback(key)
+      end
+
+      vim.keymap.set("i", "<M-Right>", function()
+        return accept_word_or_fallback("<M-Right>")
+      end, { expr = true, silent = true, desc = "Copilot accept word (Alt+Right)" })
+
+      vim.keymap.set("i", "<End>", function()
+        return accept_line_or_fallback("<End>")
+      end, { expr = true, silent = true, desc = "Copilot accept line (End)" })
+
+      vim.keymap.set("i", "<S-Tab>", function()
+        suggestion.next()
+        return "<Ignore>"
+      end, { expr = true, silent = true, desc = "Copilot trigger suggestion (Shift+Tab)" })
+    end,
   },
 
   -- Copilot Chat UI and features
