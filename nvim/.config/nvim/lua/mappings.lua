@@ -7,8 +7,8 @@ local map = vim.keymap.set
 map("n", ";", ":", { desc = "CMD enter command mode" })
 map("i", "jk", "<ESC>")
 
--- Terminal: make <Esc> leave Terminal-Job mode (to Terminal-Normal)
-map("t", "<Esc>", [[<C-\><C-n>]], { desc = "Terminal: exit to Normal mode" })
+-- Terminal: Shift+Esc leaves Terminal-Job mode (to Terminal-Normal)
+map("t", "<S-Esc>", [[<C-\><C-n>]], { desc = "Terminal: exit to Normal mode" })
 
 -- map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
 
