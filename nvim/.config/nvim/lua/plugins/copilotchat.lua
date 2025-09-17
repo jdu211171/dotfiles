@@ -100,6 +100,26 @@ return {
         title = "🤖 Copilot Chat",
         zindex = 100,
       },
+      -- Override the built-in Commit prompt to include staged diff
+      -- and project-specific instructions from
+      -- .github/copilot-commit-message-instructions.md.
+      -- This keeps the existing <leader>cC mapping that triggers
+      -- :CopilotChatCommit, which uses the 'Commit' prompt by name.
+      prompts = {
+        Commit = {
+          description = "Commit message (staged) using project instructions",
+          -- Inject resources directly into the prompt. CopilotChat will
+          -- expand #gitdiff:staged to the staged changes, and #file:… to the
+          -- contents of that file if present.
+          prompt = table.concat({
+            "> #gitdiff:staged",
+            "#file:.github/copilot-commit-message-instructions.md",
+            "",
+            "Generate a concise commit message that strictly follows the",
+            "instructions file. Return only a single gitcommit code block.",
+          }, "\n"),
+        },
+      },
       -- Prefer visual selection, fallback to current line
       selection = function(source)
         return require("CopilotChat.select").visual(source)
