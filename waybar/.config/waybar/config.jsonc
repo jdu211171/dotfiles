@@ -19,6 +19,7 @@
   "modules-right": [
     "custom/theme",
     "custom/bluetooth",
+    "custom/docker",
     "network",
     "pulseaudio",
     "battery",
@@ -78,6 +79,16 @@
     "tooltip": true,
     "on-click": "/home/user/.config/waybar/scripts/bluetooth.sh toggle",
     "on-click-right": "blueman-manager",
+  },
+
+  // Docker daemon
+  "custom/docker": {
+    "exec": "/home/user/.config/waybar/scripts/docker.sh",
+    "return-type": "json",
+    "interval": 5,
+    "format": "{text}",
+    "tooltip": true,
+    "on-click": "/home/user/.config/waybar/scripts/docker.sh toggle"
   },
 
   // Theme toggle (dark/light)
