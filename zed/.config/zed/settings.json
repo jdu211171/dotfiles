@@ -16,6 +16,7 @@
       "agent": {
         "name": "Agent",
         "tools": {
+          "web_search": true,
           "thinking": true,
           "terminal": true,
           "read_file": true,
