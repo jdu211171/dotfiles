@@ -12,27 +12,6 @@ map("t", "<S-Esc>", [[<C-\><C-n>]], { desc = "Terminal: exit to Normal mode" })
 
 -- map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
 
--- Copilot: toggle suggestions on/off
-map("n", "<leader>tc", function()
-  local function do_toggle()
-    local suggestion = require("copilot.suggestion")
-    suggestion.toggle_auto_trigger()
-    local cfg = require("copilot.config")
-    local on = cfg.get().suggestion and cfg.get().suggestion.auto_trigger
-    vim.notify("Copilot suggestions: " .. ((on and "ON") or "OFF"))
-  end
-
-  if not pcall(do_toggle) then
-    local ok_lazy, lazy = pcall(require, "lazy")
-    if ok_lazy then
-      pcall(lazy.load, { plugins = { "copilot.lua" } })
-      pcall(do_toggle)
-    else
-      vim.notify("Copilot not loaded and lazy not available", vim.log.levels.WARN)
-    end
-  end
-end, { desc = "Copilot: toggle suggestions" })
-
 -- Utility: copy current file's relative path
 map("n", "<leader>yp", function()
   local rel = vim.fn.expand("%:.")
