@@ -22,7 +22,8 @@ M.ui = {
 }
 
 M.term = {
-  winopts = { number = false, relativenumber = false },
+  -- Show line numbers in NvChad's terminal windows
+  winopts = { number = true, relativenumber = true },
   sizes = { sp = 0.5, vsp = 0.5, ["bo sp"] = 0.5, ["bo vsp"] = 0.5 },
   float = {
     relative = "editor",
