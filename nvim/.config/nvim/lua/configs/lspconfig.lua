@@ -1,24 +1,16 @@
--- load defaults i.e lua_lsp
+-- load NVChad defaults (capabilities/on_init/on_attach)
 require("nvchad.configs.lspconfig").defaults()
 
-local lspconfig = require "lspconfig"
-
--- EXAMPLE
+-- servers to enable (Neovim 0.11+ new API only)
 local servers = { "html", "cssls", "ts_ls" }
-local nvlsp = require "nvchad.configs.lspconfig"
 
--- lsps with default config
-for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup {
-    on_attach = nvlsp.on_attach,
-    on_init = nvlsp.on_init,
-    capabilities = nvlsp.capabilities,
-  }
+for _, name in ipairs(servers) do
+  -- NVChad defaults() already set global opts via vim.lsp.config("*", ...)
+  vim.lsp.enable(name)
 end
 
--- configuring single server, example: typescript
--- lspconfig.ts_ls.setup {
---   on_attach = nvlsp.on_attach,
---   on_init = nvlsp.on_init,
---   capabilities = nvlsp.capabilities,
--- }
+-- Example: per‑server customization
+-- vim.lsp.config("ts_ls", {
+--   -- settings = { ... },
+-- })
+-- vim.lsp.enable("ts_ls")
