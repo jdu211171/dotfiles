@@ -34,3 +34,11 @@ map("n", "<leader>yf", function()
   vim.fn.setreg("+", mention)
   vim.notify("Copied: " .. mention)
 end, { desc = "Yank @file:<relative> to clipboard" })
+
+-- NvDash: open dashboard safely on demand
+map("n", "<leader>nd", function()
+  if not vim.bo.buflisted then
+    vim.cmd.enew()
+  end
+  require("nvchad.nvdash").open()
+end, { desc = "NvDash: Open dashboard" })

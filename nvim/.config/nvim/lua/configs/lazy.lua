@@ -1,6 +1,9 @@
 return {
   defaults = { lazy = true },
   install = { colorscheme = { "nvchad" } },
+  -- Disable LuaRocks/Hererocks integration to silence health warnings
+  -- (no plugins in this config require it)
+  rocks = { enabled = false },
 
   ui = {
     icons = {

@@ -14,7 +14,9 @@ M.base46 = {
   },
 }
 
-M.nvdash = { load_on_startup = true }
+-- Avoid startup error from NvDash in some setups where the first
+-- buffer/window isn't listed yet. Open it manually instead.
+M.nvdash = { load_on_startup = false }
 M.ui = {
   tabufline = {
     lazyload = false,
