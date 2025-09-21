@@ -1,0 +1,25 @@
+hide_agent_reasoning = true
+network_access = true
+# Enable full access when you approve an escalated command
+approval_policy = "on-request"
+sandbox_mode = "danger-full-access"
+
+# Cross-platform notifier; relies on ~/.local/bin in PATH
+notify = ["codex-notify-sound"]
+model = "gpt-5"
+model_reasoning_effort = "high"
+
+[tools]
+web_search = true
+
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "@upstash/context7-mcp@latest"]
+
+[mcp_servers.supabase]
+command = "npx"
+# Provide SUPABASE_ACCESS_TOKEN via environment; do not hardcode secrets here
+args = ["-y", "@supabase/mcp-server-supabase@latest"]
+transport = "stdio"
+
+# Note: omit per-host absolute project paths to keep config portable.
