@@ -19,3 +19,18 @@ build/
 # Editor
 .idea/
 .vscode/
+
+# Codex CLI (do not track secrets/noise if copied here)
+codex/.codex/auth.json
+codex/.codex/history.jsonl
+codex/.codex/log/
+codex/.codex/sessions/
+codex/.codex/shell_snapshots/
+codex/.codex/config.toml.bak.*
+
+# Gemini CLI (do not track secrets/noise if copied here)
+gemini/.gemini/oauth_creds.json
+gemini/.gemini/google_accounts.json
+gemini/.gemini/installation_id
+gemini/.gemini/tmp/
+gemini/.gemini/settings.json.bak.*
