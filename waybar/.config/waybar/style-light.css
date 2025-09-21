@@ -1,0 +1,160 @@
+/* Light theme for Waybar */
+/* Save as: ~/.config/waybar/style-light.css */
+
+* {
+  font-family: "JetBrainsMono Nerd Font Propo", Inter, "Noto Sans", "DejaVu Sans", system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  font-size: 12px;
+}
+
+window#waybar {
+  background: rgba(255, 255, 255, 0.75);
+  color: #111827; /* near-black text */
+  border: 1px solid rgba(17, 24, 39, 0.10);
+  border-radius: 10px;
+  margin: 2px 2px 0 2px;
+  padding: 4px 6px;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+/* Reset GTK button prelight/hover so Waybar CSS rules win */
+button:hover {
+  box-shadow: none;        /* remove theme prelight */
+  text-shadow: none;
+  background: transparent; /* avoid white hover from some themes */
+  transition: none;
+}
+
+/* Add breathing room around the right group */
+.modules-right {
+  margin-left: 8px;
+  padding-right: 10px; /* space from bar's right edge */
+}
+
+window#waybar.hidden { opacity: 1.0; }
+
+/* Workspaces */
+#workspaces button {
+  padding: 0 8px;
+  color: #4b5563; /* slate-600 */
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  margin: 0 2px;
+}
+
+/* No hover styling on workspaces (explicitly override GTK) */
+#workspaces button:hover,
+#workspaces button:focus,
+#workspaces button:active,
+#workspaces button:checked:hover {
+  background: transparent;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+#workspaces button.active {
+  background: rgba(59, 130, 246, 0.15); /* blue-500 */
+  color: #2563eb;
+}
+
+/* when the first workspace is active, extend highlight to the left edge */
+/* no special casing for first workspace */
+
+#window { padding: 0 10px; color: #111827; }
+
+#clock,
+#pulseaudio,
+#battery,
+#network,
+#bluetooth,
+#custom-bluetooth,
+#tray,
+#submap,
+#custom-theme,
+#custom-shutdown,
+#custom-reboot {
+  padding: 0 6px; /* consistent inner space for icon-only */
+  margin: 0;      /* rely on Waybar's global module spacing */
+  border-radius: 8px;
+}
+
+/* Icon-only modules: fix width and center for perfectly even spacing */
+#network,
+#pulseaudio,
+#battery,
+#custom-bluetooth,
+#custom-theme,
+#custom-shutdown,
+#custom-reboot {
+  min-width: 10px;
+}
+
+/* Force mono icon font for icon-only modules to keep widths consistent */
+#network,
+#pulseaudio,
+#battery,
+#custom-bluetooth,
+#custom-theme,
+#custom-shutdown,
+#custom-reboot {
+  font-family: "Symbols Nerd Font Mono", "Nerd Font Symbols Mono", "Symbols Nerd Font", "Nerd Font Symbols", "JetBrainsMono Nerd Font Mono", monospace;
+}
+
+#clock { color: #111827; }
+
+#network.disconnected { color: #b91c1c; /* red-700 */ }
+#network.wifi.low { color: #ca8a04; /* yellow-600 */ }
+#network.wifi.medium { color: #d97706; /* amber-600 */ }
+#network.wifi.high { color: #16a34a; /* green-600 */ }
+#pulseaudio.muted { color: #a16207; /* yellow-700 */ }
+/* Volume levels when not muted */
+#pulseaudio.low:not(.muted) { color: #16a34a; /* green-600 */ }
+#pulseaudio.medium:not(.muted) { color: #ca8a04; /* yellow-600 */ }
+#pulseaudio.high:not(.muted) { color: #b91c1c; /* red-700 */ }
+#battery.warning { color: #a16207; }
+#battery.critical { color: #b91c1c; }
+#battery.charging,
+#battery.plugged { color: #16a34a; /* green-600 */ }
+
+/* Bluetooth status coloring for custom module */
+#custom-bluetooth.connected { color: #2563eb; /* blue-600 */ }
+#custom-bluetooth.disconnected { color: #d97706; /* amber-600 */ }
+#custom-bluetooth.off, #custom-bluetooth.unavailable { color: #b91c1c; /* red-700 */ }
+
+/* Tighter spacing on right */
+#network,
+#pulseaudio,
+#battery,
+#clock,
+#bluetooth,
+#custom-bluetooth,
+#custom-theme,
+#custom-shutdown,
+#custom-reboot {
+  padding: 0 6px;
+  margin: 0;
+}
+
+/* No hover highlight for right-side modules */
+.modules-right > *:hover,
+.modules-right *:hover {
+  background: transparent;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+/* Tray icons tighter look */
+#tray > .tray { padding: 0 2px; }
+
+/* Power icons */
+#custom-shutdown { color: #b91c1c; /* red-700 */ }
+#custom-reboot { color: #d97706; /* amber-600 */ }
+
+/* add space between reboot and shutdown like other modules */
+#custom-shutdown { margin-left: 8px; }
+
+/* Pomodoro styles */
+#custom-pomodoro { padding: 0 8px; }
+#custom-pomodoro.work { color: #2563eb; }
+#custom-pomodoro.break { color: #16a34a; }
+#custom-pomodoro.paused { color: #ca8a04; }
