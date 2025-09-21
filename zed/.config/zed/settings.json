@@ -95,8 +95,8 @@
       "args": [
         "-y",
         "@modelcontextprotocol/server-filesystem",
-        "/Users/muhammadnurislomtukhtamishhoji-zoda/Desktop",
-        "/Users/muhammadnurislomtukhtamishhoji-zoda/Downloads"
+        "${HOME}/Desktop",
+        "${HOME}/Downloads"
       ],
       "env": {}
     }
