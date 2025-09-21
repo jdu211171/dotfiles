@@ -91,14 +91,28 @@ return {
     event = { "BufReadPost", "BufNewFile" },
   },
 
-  -- TMUX Navigator
+  -- TMUX + Neovim navigation
+  -- Use alexghergh/nvim-tmux-navigation to support a "Next" action.
+  -- Maps: <C-h/j/k> are directional; <C-l> cycles: Nvim → Nvim-term → next tmux pane.
   {
-    "christoomey/vim-tmux-navigator",
+    "alexghergh/nvim-tmux-navigation",
     lazy = false,
-    vim.keymap.set("n", "C-h", ":TmuxNavigateLeft<CR>"),
-    vim.keymap.set("n", "C-j", ":TmuxNavigateDown<CR>"),
-    vim.keymap.set("n", "C-k", ":TmuxNavigateUp<CR>"),
-    vim.keymap.set("n", "C-l", ":TmuxNavigateRight<CR>"),
+    config = function()
+      local nav = require "nvim-tmux-navigation"
+      nav.setup { disable_when_zoomed = true }
+
+      local map = function(lhs, fn)
+        vim.keymap.set({ "n", "t" }, lhs, fn, { silent = true })
+      end
+
+      map("<C-h>", nav.NvimTmuxNavigateLeft)
+      map("<C-j>", nav.NvimTmuxNavigateDown)
+      map("<C-k>", nav.NvimTmuxNavigateUp)
+      -- Use <C-l> as "Next" to match desired repeated-press behavior
+      map("<C-l>", nav.NvimTmuxNavigateNext)
+      -- Optional: jump to last active split/pane
+      -- map("<C-\\>", nav.NvimTmuxNavigateLastActive)
+    end,
   },
 
   -- VIM Fugitive
