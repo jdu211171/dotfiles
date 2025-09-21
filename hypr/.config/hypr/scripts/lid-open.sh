@@ -11,5 +11,5 @@ MODELINE=${INTERNAL_MODELINE:-"1920x1080@60,0x0,1.5"}
 "$HCTL" --batch "keyword monitor $INTERNAL,$MODELINE" >/dev/null 2>&1 || true
 sleep 0.15
 if [ -f "$HOME/.config/hypr/themes/fuji.jpg" ]; then
-  "$HCTL" hyprpaper wallpaper ",/home/user/.config/hypr/themes/fuji.jpg" >/dev/null 2>&1 || true
+  "$HCTL" hyprpaper wallpaper ",${HOME}/.config/hypr/themes/fuji.jpg" >/dev/null 2>&1 || true
 fi

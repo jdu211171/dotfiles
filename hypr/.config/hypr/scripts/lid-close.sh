@@ -25,7 +25,7 @@ if "$HCTL" -j monitors | jq -e --arg int "$INTERNAL" '
   # Give Hyprland a moment to finalize layout, then reassert wallpaper
   sleep 0.15
   if [ -f "$HOME/.config/hypr/themes/fuji.jpg" ]; then
-    "$HCTL" hyprpaper wallpaper ",/home/user/.config/hypr/themes/fuji.jpg" >/dev/null 2>&1 || true
+    "$HCTL" hyprpaper wallpaper ",${HOME}/.config/hypr/themes/fuji.jpg" >/dev/null 2>&1 || true
   fi
 else
   # No external monitors are active — keep the internal on.
