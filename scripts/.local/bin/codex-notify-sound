@@ -1,0 +1,82 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# codex-notify-sound: Cross-platform sound notification for Codex CLI
+# Usage: codex-notify-sound [optional-sound-file]
+
+sound_file="${1:-${CODEX_NOTIFY_SOUND:-}}"
+
+is_macos() { [[ "${OSTYPE:-}" == darwin* ]] || [[ "$(uname -s 2>/dev/null || true)" == "Darwin" ]]; }
+
+try_afplay() {
+  command -v afplay >/dev/null 2>&1 || return 1
+  local f="$1"
+  if [[ -n "$f" && -f "$f" ]]; then
+    afplay "$f" && return 0
+  fi
+  # macOS built-in sound
+  local builtin="/System/Library/Sounds/Glass.aiff"
+  [[ -f "$builtin" ]] && afplay "$builtin" && return 0
+  return 1
+}
+
+try_canberra() {
+  command -v canberra-gtk-play >/dev/null 2>&1 || return 1
+  # Use a generic desktop sound
+  canberra-gtk-play -i dialog-information -V 0 || canberra-gtk-play -i complete -V 0 || return 1
+}
+
+try_paplay() {
+  command -v paplay >/dev/null 2>&1 || return 1
+  local f="$1"
+  if [[ -n "$f" && -f "$f" ]]; then
+    paplay "$f" && return 0
+  fi
+  local candidates=(
+    "/usr/share/sounds/freedesktop/stereo/complete.oga"
+    "/usr/share/sounds/freedesktop/stereo/message.oga"
+  )
+  for c in "${candidates[@]}"; do
+    [[ -f "$c" ]] && paplay "$c" && return 0
+  done
+  return 1
+}
+
+try_aplay() {
+  command -v aplay >/dev/null 2>&1 || return 1
+  local f="$1"
+  [[ -n "$f" && -f "$f" ]] || return 1
+  aplay "$f" && return 0
+}
+
+try_spd_say() {
+  command -v spd-say >/dev/null 2>&1 || return 1
+  spd-say "Task complete" && return 0
+}
+
+try_say() {
+  command -v say >/dev/null 2>&1 || return 1
+  say "Done" && return 0
+}
+
+try_osascript_beep() {
+  is_macos || return 1
+  command -v osascript >/dev/null 2>&1 || return 1
+  osascript -e 'beep' && return 0
+}
+
+# Try best options in order
+if try_afplay "$sound_file" || \
+   try_canberra || \
+   try_paplay "$sound_file" || \
+   try_aplay "$sound_file" || \
+   try_spd_say || \
+   try_say || \
+   try_osascript_beep; then
+  exit 0
+fi
+
+# Fallback: terminal bell
+printf '\a' || true
+exit 0
+

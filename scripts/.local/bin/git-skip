@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# git-skip: toggle skip-worktree for paths to quiet local churn
+# Usage:
+#   git-skip on  <path> [...]
+#   git-skip off <path> [...]
+#   git-skip ls             # list paths marked skip-worktree
+
+cmd=${1:-}
+shift || true
+
+case "${cmd:-}" in
+  on)
+    (( $# >= 1 )) || { echo "Usage: git-skip on <path> [...]"; exit 2; }
+    git update-index --skip-worktree "$@"
+    ;;
+  off)
+    (( $# >= 1 )) || { echo "Usage: git-skip off <path> [...]"; exit 2; }
+    git update-index --no-skip-worktree "$@"
+    ;;
+  ls|list)
+    # Show files flagged skip-worktree
+    git ls-files -v | awk '/^S/{sub(/^S /, ""); print}'
+    ;;
+  *)
+    echo "git-skip: toggle skip-worktree to ignore local churn"
+    echo "Usage:"
+    echo "  git-skip on  <path> [...]"
+    echo "  git-skip off <path> [...]"
+    echo "  git-skip ls"
+    exit 2
+    ;;
+esac
+
