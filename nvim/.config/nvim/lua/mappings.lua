@@ -7,8 +7,11 @@ local map = vim.keymap.set
 map("n", ";", ":", { desc = "CMD enter command mode" })
 map("i", "jk", "<ESC>")
 
--- Terminal: Shift+Esc leaves Terminal-Job mode (to Terminal-Normal)
-map("t", "<S-Esc>", [[<C-\><C-n>]], { desc = "Terminal: exit to Normal mode" })
+-- Do NOT hijack plain <Esc> so zsh vi-mode keeps working
+-- Provide reliable alternatives that do not need extended-keys
+map("t", "<C-\\>", [[<C-\><C-n>]], { desc = "Terminal: exit to Normal (Ctrl-\\)" })
+map("t", "<C-g>", [[<C-\><C-n>]], { desc = "Terminal: exit to Normal (Ctrl-g)" })
+map("t", "<M-q>", [[<C-\><C-n>]], { desc = "Terminal: exit to Normal (Alt-q)" })
 
 -- map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
 
