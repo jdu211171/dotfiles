@@ -3,15 +3,11 @@ return {
     "stevearc/conform.nvim",
     event = "BufWritePre",
     lazy = false,
-    config = function()
-      -- Configure formatters and format-on-save
-      require("configs.conform").setup()
-    end,
     keys = {
       {
         "<leader>lf",
         function()
-          require("conform").format { async = true, lsp_fallback = false }
+          require("conform").format { async = true, lsp_fallback = true }
         end,
         mode = "n",
         desc = "Format buffer",
@@ -23,6 +19,16 @@ return {
     "neovim/nvim-lspconfig",
     config = function()
       require "configs.lspconfig"
+    end,
+  },
+
+  -- Disable auto popup completion from nvim-cmp; manual trigger only
+  {
+    "hrsh7th/nvim-cmp",
+    opts = function(_, opts)
+      opts.completion = opts.completion or {}
+      opts.completion.autocomplete = false
+      return opts
     end,
   },
 
@@ -73,9 +79,14 @@ return {
     dependencies = { "nvim-treesitter/nvim-treesitter", "echasnovski/mini.nvim" }, -- if you use the mini.nvim suite
     -- dependencies = { "nvim-treesitter/nvim-treesitter", "echasnovski/mini.icons" }, -- if you use standalone mini plugins
     -- dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" }, -- if you prefer nvim-web-devicons
-    opts = {}, -- additional options can be specified here
-    config = function()
-      require("render-markdown").setup {}
+    -- Disable features that require missing parsers/tools to clear health warnings
+    opts = {
+      html = { enabled = false },
+      latex = { enabled = false },
+      yaml = { enabled = false },
+    },
+    config = function(_, opts)
+      require("render-markdown").setup(opts)
     end,
     event = { "BufReadPost", "BufNewFile" },
   },
@@ -98,6 +109,7 @@ return {
   -- nvim-tree: show .env and other dotfiles
   {
     "nvim-tree/nvim-tree.lua",
+    lazy = false,
     opts = {
       filters = {
         -- do not hide dotfiles; ensures .env is visible
