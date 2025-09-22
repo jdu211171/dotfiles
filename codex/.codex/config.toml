@@ -17,9 +17,19 @@ command = "npx"
 args = ["-y", "@upstash/context7-mcp@latest"]
 
 [mcp_servers.supabase]
-command = "npx"
-# Provide SUPABASE_ACCESS_TOKEN via environment; do not hardcode secrets here
-args = ["-y", "@supabase/mcp-server-supabase@latest"]
+command = "/home/user/.local/bin/supabase-mcp-stdio"
+args = []
 transport = "stdio"
 
 # Note: omit per-host absolute project paths to keep config portable.
+
+# GitHub MCP server (official) — runs locally via Docker over stdio.
+# Docs: https://github.com/github/github-mcp-server
+# Requires an environment variable: GITHUB_PERSONAL_ACCESS_TOKEN
+# Do NOT hardcode the token here. Export it in your shell profile, e.g.:
+#   export GITHUB_PERSONAL_ACCESS_TOKEN=ghp_XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+# Optional: set read-only mode with GITHUB_READ_ONLY=1, or enable dynamic tool discovery with GITHUB_DYNAMIC_TOOLSETS=1
+[mcp_servers.github]
+command = "/home/user/.local/bin/github-mcp-stdio"
+args = []
+transport = "stdio"
