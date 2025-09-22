@@ -92,8 +92,7 @@ return {
   },
 
   -- TMUX + Neovim navigation
-  -- Use alexghergh/nvim-tmux-navigation to support a "Next" action.
-  -- Maps: <C-h/j/k> are directional; <C-l> cycles: Nvim → Nvim-term → next tmux pane.
+  -- Directional Ctrl-h/j/k/l across Neovim splits and tmux panes.
   {
     "alexghergh/nvim-tmux-navigation",
     lazy = false,
@@ -108,8 +107,7 @@ return {
       map("<C-h>", nav.NvimTmuxNavigateLeft)
       map("<C-j>", nav.NvimTmuxNavigateDown)
       map("<C-k>", nav.NvimTmuxNavigateUp)
-      -- Use <C-l> as "Next" to match desired repeated-press behavior
-      map("<C-l>", nav.NvimTmuxNavigateNext)
+      map("<C-l>", nav.NvimTmuxNavigateRight)
       -- Optional: jump to last active split/pane
       -- map("<C-\\>", nav.NvimTmuxNavigateLastActive)
     end,
