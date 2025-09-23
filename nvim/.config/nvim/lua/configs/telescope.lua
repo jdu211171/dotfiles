@@ -39,7 +39,8 @@ end
 
 telescope.setup {
   defaults = {
-    file_ignore_patterns = { "node_modules", "vendor" },
+    -- Filter results: hide VCS directory explicitly
+    file_ignore_patterns = { "%.git/", "node_modules", "vendor" },
     mappings = {
       i = {
         ["<CR>"] = function(bufnr)
@@ -89,20 +90,18 @@ telescope.setup {
     },
   },
   pickers = {
-    -- Include files normally ignored by .gitignore (like .env)
+    -- Respect .gitignore while still allowing hidden files
     find_files = {
       hidden = true,
-      no_ignore = true,
-      no_ignore_parent = true,
     },
     live_grep = {
       additional_args = function()
-        return { "--hidden", "--no-ignore", "--no-ignore-parent" }
+        return { "--hidden", "--glob=!.git/*" }
       end,
     },
     grep_string = {
       additional_args = function()
-        return { "--hidden", "--no-ignore", "--no-ignore-parent" }
+        return { "--hidden", "--glob=!.git/*" }
       end,
     },
   },
