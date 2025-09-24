@@ -343,3 +343,20 @@ export GITHUB_DYNAMIC_TOOLSETS="${GITHUB_DYNAMIC_TOOLSETS:-1}"
 #
 #  TRAPWINCH() { _warp_statusline_draw "$_warp_statusline_last_status"; return 0 }
 # fi
+
+# --- tmux auto-attach on interactive shells ---
+# Attaches to the most recently used tmux session if one exists; otherwise
+# starts a new server (tmux-continuum + resurrect will auto-restore if enabled).
+# Set TMUX_AUTO_DISABLE=1 to skip for a shell.
+if command -v tmux >/dev/null 2>&1; then
+  if [[ -z "$TMUX" && $- == *i* && -z "${TMUX_AUTO_DISABLE:-}" ]]; then
+    # If a server is running, pick the most-recently attached session
+    if tmux ls >/dev/null 2>&1; then
+      local _tmux_recent
+      _tmux_recent=$(tmux ls -F '#{session_last_attached} #{session_name}' 2>/dev/null | sort -rn | awk 'NR==1{print $2}')
+      exec tmux attach -d -t "${_tmux_recent:-main}"
+    else
+      exec tmux
+    fi
+  fi
+fi
