@@ -18,22 +18,20 @@ function M.setup()
 
   -- Build formatters configuration
   local formatters = {
-    -- Match VS Code: prefer project-local Prettier and run from project root
+    -- Prefer project-local Prettier and run from closest config root.
+    -- If not installed locally, fall back to global `prettier` (parity with VS Code extension).
     prettier = {
       prefer_local = "node_modules/.bin",
       cwd = util.root_file {
         ".prettierrc",
         ".prettierrc.json",
+        ".prettierrc.yml",
+        ".prettierrc.yaml",
         ".prettierrc.js",
         "prettier.config.js",
-        "package.json",
+        "prettier.config.cjs",
+        ".git",
       },
-      -- Enforce workspace-only Prettier: skip if no local binary
-      condition = function(ctx)
-        local start = ctx.dirname or vim.fn.fnamemodify(ctx.filename, ":h")
-        local found = vim.fs.find("node_modules/.bin/prettier", { upward = true, path = start })
-        return not vim.tbl_isempty(found)
-      end,
     },
     pint = {
       command = "php",
@@ -77,6 +75,7 @@ function M.setup()
       html = { "prettier" },
       c = { "clang-format" },
       javascript = { "prettier" },
+      javascriptreact = { "prettier" },
       json = { "prettier" },
       jsonc = { "prettier" },
       markdown = { "prettier" },
@@ -84,13 +83,20 @@ function M.setup()
       sh = { "shfmt" },
       typescript = { "prettier" },
       typescriptreact = { "prettier" },
+      vue = { "prettier" },
+      svelte = { "prettier" },
+      astro = { "prettier" },
+      scss = { "prettier" },
+      less = { "prettier" },
+      graphql = { "prettier" },
       yaml = { "prettier" },
       php = { "pint" },
       blade = { "blade-formatter" },
     },
     formatters = formatters,
     format_on_save = {
-      timeout_ms = 500,
+      -- Large monorepos sometimes need more than 500ms
+      timeout_ms = 3000,
       lsp_fallback = false,
     },
   }
