@@ -1,191 +1,49 @@
+default_profile = "full-auto-mode"
+approval_policy = "never"
+file_opener = "vscode"
 hide_agent_reasoning = true
-# NOTE: `network_access` is not a recognized top‑level key in Codex as of 2025‑09‑24.
-#       Network controls live under the sandbox configuration (see commented
-#       `[sandbox_workspace_write]` → `network_access`) and via `sandbox_mode`.
-#       Leaving this here for backward compatibility, but it has no effect.
+model = "gpt-5"
+model_reasoning_effort = "high"
 network_access = true
-
-# # Show raw reasoning tokens (when available). Off by default and may be noisy.
-# show_raw_agent_reasoning = false
-# Enable full access when you approve an escalated command
-# Approval policy controls when Codex asks before running commands or editing files.
-# One of: "untrusted" | "on-failure" | "on-request" | "never"
-approval_policy = "on-request"
-# Sandbox policy for subprocesses and file access.
-# One of: "read-only" | "workspace-write" | "danger-full-access"
+notify = ["codex-notify-sound"]
 sandbox_mode = "danger-full-access"
 
-# Cross-platform notifier; relies on ~/.local/bin in PATH
-# External program for notifications (receives a single JSON argument per event).
-# For lightweight desktop notifications in the TUI only, see `[tui]` below.
-notify = ["codex-notify-sound"]
-# Default model for Codex. Leave unset to use the CLI default (currently "gpt-5-codex").
-model = "gpt-5"
+[history]
+  persistence = "save-all"
 
-# Responses API reasoning effort: "minimal" | "low" | "medium" | "high"
-model_reasoning_effort = "high"
+[mcp_servers]
 
-# Optional: additional model/Responses API tuning (commented out by default)
-# model_context_window = 128000            # Example; leave unset to use model default
-# model_max_output_tokens = 8192           # Example; leave unset to use model default
-# model_verbosity = "medium"               # "low" | "medium" | "high" (Responses API)
-# model_reasoning_summary = "auto"         # "auto" | "concise" | "detailed" | "none"
-# model_supports_reasoning_summaries = true  # Force-enable when provider omits metadata
-# model_reasoning_summary_format = "experimental"  # "none" | "experimental"
-# model_provider = "openai"                # Provider id from [model_providers]
-# chatgpt_base_url = "https://chat.openai.com"  # Base URL for ChatGPT auth flow (rare)
+  [mcp_servers.context7]
+    args = ["-y", "@upstash/context7-mcp@latest"]
+    command = "npx"
+    startup_timeout_sec = 20
+    tool_timeout_sec = 60
 
-# Storage and privacy
-# disable_response_storage = false         # Required for certain enterprise/ZDR orgs
+  [mcp_servers.github]
+    args = []
+    command = "/home/user/.local/bin/github-mcp-stdio-native"
+    startup_timeout_sec = 60
+    tool_timeout_sec = 60
+    transport = "stdio"
 
-# Experimental toggles (unstable; prefer defaults)
-# experimental_resume = "/path/to/resume.jsonl"           # Internal/experimental
-# experimental_instructions_file = "/path/to/AGENTS.md"    # Override built-ins
-# experimental_use_exec_command_tool = false                # Try experimental exec tool
-# responses_originator_header_internal_override = ""        # Override `originator` header
+  [mcp_servers.supabase]
+    args = []
+    command = "/home/user/.local/bin/supabase-mcp-stdio"
+    startup_timeout_sec = 20
+    tool_timeout_sec = 60
+    transport = "stdio"
 
-[tools]
-web_search = true
+[sandbox_workspace_write]
+  exclude_slash_tmp = false
+  exclude_tmpdir_env_var = false
+  network_access = true
+  writable_roots = []
 
-# Alias for the same setting (either works):
-# [tools]
-# web_search_request = true
+[shell_environment_policy]
+  exclude = []
+  ignore_default_excludes = false
+  include_only = []
+  inherit = "all"
 
-[mcp_servers.context7]
-command = "npx"
-args = ["-y", "@upstash/context7-mcp@latest"]
-startup_timeout_sec = 20   # Optional; default: 10
-tool_timeout_sec = 60      # Optional; default: 60
-
-[mcp_servers.supabase]
-command = "/home/user/.local/bin/supabase-mcp-stdio"
-args = []
-transport = "stdio"
-startup_timeout_sec = 20
-tool_timeout_sec = 60
-
-# Note: omit per-host absolute project paths to keep config portable.
-
-# GitHub MCP server (official) — runs locally via Docker over stdio.
-# Docs: https://github.com/github/github-mcp-server
-# Requires an environment variable: GITHUB_PERSONAL_ACCESS_TOKEN
-# Do NOT hardcode the token here. Export it in your shell profile, e.g.:
-#   export GITHUB_PERSONAL_ACCESS_TOKEN=ghp_XXXXXXXXXXXXXXXXXXXXXXXXXXXX
-# Optional: set read-only mode with GITHUB_READ_ONLY=1, or enable dynamic tool discovery with GITHUB_DYNAMIC_TOOLSETS=1
-[mcp_servers.github]
-command = "/home/user/.local/bin/github-mcp-stdio"
-args = []
-transport = "stdio"
-startup_timeout_sec = 20
-tool_timeout_sec = 60
-
-###############################################################################
-# Below are NEW/OPTIONAL configuration sections pulled from the latest docs.
-# They are commented out so you can toggle them on as needed.
-# Reference (2025‑09‑24): openai/codex docs/config.md
-###############################################################################
-
-# ------------------------
-# Model Providers (optional)
-# ------------------------
-# Use this to add or override providers compatible with OpenAI APIs.
-# After defining a provider here, set `model_provider = "<id>"` above.
-
-# [model_providers.openai]
-# name = "OpenAI"
-# base_url = "https://api.openai.com/v1"
-# env_key = "OPENAI_API_KEY"
-# wire_api = "chat"                   # "chat" | "responses" (default: "chat")
-# query_params = {}                    # e.g., { api-version = "2024-08-01-preview" }
-# http_headers = { }                   # Extra static headers per request
-# env_http_headers = { }               # Headers sourced from env vars
-# request_max_retries = 4              # HTTP retries
-# stream_max_retries = 5               # SSE stream retries
-# stream_idle_timeout_ms = 300000      # SSE idle timeout in ms
-
-# Azure example (remember to set your endpoint):
-# [model_providers.azure]
-# name = "Azure"
-# base_url = "https://YOUR_PROJECT_NAME.openai.azure.com/openai"
-# env_key = "AZURE_OPENAI_API_KEY"    # Or "OPENAI_API_KEY"
-# wire_api = "chat"
-# query_params = { api-version = "2024-08-01-preview" }
-
-# Ollama local example:
-# [model_providers.ollama]
-# name = "Ollama"
-# base_url = "http://localhost:11434/v1"
-
-# Third‑party example:
-# [model_providers.mistral]
-# name = "Mistral"
-# base_url = "https://api.mistral.ai/v1"
-# env_key = "MISTRAL_API_KEY"
-
-# ------------------------
-# Sandbox fine‑tuning (only for sandbox_mode = "workspace-write")
-# ------------------------
-# [sandbox_workspace_write]
-# # By default, cwd plus $TMPDIR and /tmp are writable; tweak as needed.
-# exclude_tmpdir_env_var = false
-# exclude_slash_tmp = false
-# writable_roots = ["/Users/YOU/.pyenv/shims"]
-# # Allow outbound network access from inside the sandbox (off by default).
-# network_access = false
-
-# ------------------------
-# Shell environment policy for subprocesses
-# ------------------------
-# Controls which environment variables are passed to subprocesses spawned by Codex.
-# Patterns are case‑insensitive globs (e.g., "AWS_*", "*TOKEN*").
-# [shell_environment_policy]
-# inherit = "all"                     # "all" | "core" | "none"
-# ignore_default_excludes = false      # If false, drops KEY/SECRET/TOKEN by name
-# exclude = ["AWS_*", "AZURE_*"]      # Additional excludes
-# set = { CI = "1" }                   # Force‑set / override values
-# include_only = ["PATH", "HOME"]      # If non‑empty, only allow matching vars
-
-# ------------------------
-# TUI options
-# ------------------------
-# [tui]
-# # Desktop notifications inside the TUI. Set true for built‑in, or provide a
-# # command to invoke (array form behaves like `notify`, but scoped to TUI).
-# notifications = false
-# # notifications = ["notify-send", "Codex", "Turn complete"]
-
-# ------------------------
-# History persistence
-# ------------------------
-# [history]
-# persistence = "save-all"            # "save-all" | "none"
-# max_bytes = 0                        # Currently ignored
-
-# ------------------------
-# File opener integration for clickable citations
-# ------------------------
-# file_opener = "vscode"               # "vscode" | "vscode-insiders" | "windsurf" | "cursor" | "none"
-
-# ------------------------
-# Project documentation ingest
-# ------------------------
-# Max bytes to read from AGENTS.md or other project docs.
-# project_doc_max_bytes = 131072
-
-# ------------------------
-# Profiles (optional)
-# ------------------------
-# profile = "default"
-# [profiles.default]
-# model = "gpt-5-codex"
-# approval_policy = "on-request"
-# sandbox_mode = "workspace-write"
-# [profiles.fast]
-# model = "gpt-4o-mini"
-# model_verbosity = "low"
-
-# ------------------------
-# Trust specific projects/worktrees (advanced)
-# ------------------------
-# [projects."/absolute/path/to/repo"]
-# trust_level = "trusted"              # Only value currently recognized
+[profiles.full-auto-mode]
+full-auto = true
