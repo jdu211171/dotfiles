@@ -1,0 +1,9 @@
+{
+  "banner": "once",
+  "beep": true,
+  "render_markdown": true,
+  "screen_reader": true,
+  "theme": "auto",
+  "trusted_folders": []
+}
+
