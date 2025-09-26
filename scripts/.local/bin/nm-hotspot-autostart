@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# User-level watcher to auto start/stop Wi-Fi hotspot based on Ethernet link state.
+# Requires NetworkManager. Runs a lightweight loop on nmcli monitor events and
+# reconciles desired hotspot state.
+
+ENV_FILE="$HOME/.config/autohotspot.env"
+if [[ -f "$ENV_FILE" ]]; then
+  # shellcheck disable=SC1090
+  source "$ENV_FILE"
+fi
+
+HOTSPOT_CON=${HOTSPOT_CON:-dotfiles-hotspot}
+HOTSPOT_POLICY=${HOTSPOT_AUTOSTART_POLICY:-ethernet}
+
+# Optional filters
+HOTSPOT_WIRE_IF=${HOTSPOT_WIRE_IF:-}  # e.g., enp3s0. If empty, any connected Ethernet triggers.
+
+log() {
+  echo "[nm-hotspot-autostart] $*"
+}
+
+want_hotspot_on() {
+  # Decide if hotspot should be on, based on policy and current device states.
+  case "$HOTSPOT_POLICY" in
+    ethernet)
+      if [[ -n "$HOTSPOT_WIRE_IF" ]]; then
+        nmcli -t -f DEVICE,TYPE,STATE device \
+          | awk -F: -v dev="$HOTSPOT_WIRE_IF" '$1==dev && $2=="ethernet" && $3 ~ /connected/ {found=1} END{exit !found}'
+      else
+        nmcli -t -f DEVICE,TYPE,STATE device \
+          | awk -F: '$2=="ethernet" && $3 ~ /connected/ {found=1} END{exit !found}'
+      fi
+      ;;
+    always)
+      return 0
+      ;;
+    never)
+      return 1
+      ;;
+    *)
+      # default: ethernet
+      nmcli -t -f DEVICE,TYPE,STATE device \
+        | awk -F: '$2=="ethernet" && $3 ~ /connected/ {found=1} END{exit !found}'
+      ;;
+  esac
+}
+
+hotspot_active() {
+  nmcli -t -f NAME connection show --active | grep -Fxq "$HOTSPOT_CON"
+}
+
+sync_state() {
+  if want_hotspot_on; then
+    if ! hotspot_active; then
+      log "Bringing hotspot up..."
+      if ! hotspot-up; then
+        log "Failed to start hotspot '$HOTSPOT_CON'"
+      fi
+    fi
+  else
+    if hotspot_active; then
+      log "Bringing hotspot down..."
+      hotspot-down || true
+    fi
+  fi
+}
+
+log "Starting watcher. Policy=$HOTSPOT_POLICY WireIF=${HOTSPOT_WIRE_IF:-any}"
+
+# Initial reconciliation on start.
+sync_state
+
+# Monitor NetworkManager for changes and reconcile.
+nmcli monitor | while IFS= read -r _; do
+  sync_state
+done
+

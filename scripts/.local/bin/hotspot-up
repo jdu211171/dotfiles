@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Bring up the configured hotspot connection, creating it if necessary.
+
+ENV_FILE="$HOME/.config/autohotspot.env"
+if [[ -f "$ENV_FILE" ]]; then
+  # shellcheck disable=SC1090
+  source "$ENV_FILE"
+fi
+
+HOTSPOT_CON=${HOTSPOT_CON:-dotfiles-hotspot}
+
+if ! nmcli -t -f NAME connection show | grep -Fxq "$HOTSPOT_CON"; then
+  hotspot-setup
+fi
+
+nmcli connection up "$HOTSPOT_CON"
+

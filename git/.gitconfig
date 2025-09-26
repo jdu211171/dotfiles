@@ -2,8 +2,25 @@
 	name = jdu211171
 	email = 211171m@jdu.uz
 [core]
-  editor = nvim
+	editor = nvim
 [color]
   ui = auto
 [init]
 	defaultBranch = main
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+
+[merge]
+  tool = vscode
+[mergetool]
+  prompt = false
+  keepBackup = false
+[mergetool "vscode"]
+  cmd = '/usr/sbin/code' \"$MERGE
+  trustExitCode = false
+[push]
+	autoSetupRemote = true

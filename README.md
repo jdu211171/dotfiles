@@ -49,6 +49,26 @@ You can target specific packages with PACKAGES:
 - .stow-local-ignore prevents Stow from linking repo meta files like .git and README.md.
 - For host-specific tweaks (e.g., laptop vs desktop), include host-laptop and only stow it on that machine.
 
+## Hotspot (tethering) on Arch
+
+- See docs/hotspot.md for a detailed guide.
+- Requirements: `networkmanager` enabled, `dnsmasq`, polkit agent, AP‑capable Wi‑Fi card.
+- Tools provided:
+  - Scripts: `hotspot-setup`, `hotspot-up`, `hotspot-down`, `nm-hotspot-autostart`, `autohotspot-install`.
+  - User service: `systemd/.config/systemd/user/nm-hotspot-autostart.service`.
+  - Dispatcher hook (installed by `autohotspot-install`).
+
+Fresh install quick start:
+
+    sudo pacman -S networkmanager dnsmasq
+    sudo systemctl enable --now NetworkManager
+    make stow PACKAGES="scripts systemd autohotspot"
+    autohotspot-install
+    # edit ~/.config/autohotspot.env to set SSID/PSK if needed
+    hotspot-up   # or just plug Ethernet to auto-start via dispatcher
+
+
+
 ## Bootstrap script
 
 See scripts/setup.sh for a safe helper that previews and applies stow actions.

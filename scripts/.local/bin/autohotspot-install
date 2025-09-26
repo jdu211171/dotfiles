@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Install/refresh the Auto Hotspot configuration on Arch + NetworkManager.
+# - Creates ~/.config/autohotspot.env from example if missing
+# - Installs /etc/NetworkManager/dispatcher.d/50-autohotspot.sh as root-owned file (no symlink)
+# - Creates /etc/NetworkManager/autohotspot.env if missing (from user or example)
+# - Ensures IPv4 forwarding persists via /etc/sysctl.d/99-autohotspot-forward.conf
+# - Restarts NetworkManager
+#
+# Usage:
+#   autohotspot-install            # perform install/refresh
+#   autohotspot-install --no-sysctl  # skip writing sysctl persistent file
+
+NO_SYSCTL=0
+if [[ "${1:-}" == "--no-sysctl" ]]; then
+  NO_SYSCTL=1
+fi
+
+die() { echo "[autohotspot-install] $*" >&2; exit 1; }
+log() { echo "[autohotspot-install] $*"; }
+
+need() { command -v "$1" >/dev/null 2>&1 || die "Missing requirement: $1"; }
+
+need nmcli
+
+# Detect repo root from this script's real path (stowed symlink points into repo)
+SCRIPT_PATH=$(readlink -f "${BASH_SOURCE[0]:-$0}")
+SCRIPT_DIR=$(dirname "$SCRIPT_PATH")
+if git -C "$SCRIPT_DIR" rev-parse --show-toplevel >/dev/null 2>&1; then
+  REPO_ROOT=$(git -C "$SCRIPT_DIR" rev-parse --show-toplevel)
+else
+  # Fallback: assume dotfiles layout: scripts/.local/bin -> repo root is 3 up
+  REPO_ROOT=$(readlink -f "$SCRIPT_DIR/../../..")
+fi
+
+DISPATCHER_SRC="$REPO_ROOT/networkmanager/etc/NetworkManager/dispatcher.d/50-autohotspot.sh"
+ETC_DISPATCHER="/etc/NetworkManager/dispatcher.d/50-autohotspot.sh"
+ETC_ENV="/etc/NetworkManager/autohotspot.env"
+USER_ENV_EXAMPLE="$REPO_ROOT/autohotspot/.config/autohotspot.env.example"
+USER_ENV="$HOME/.config/autohotspot.env"
+
+[[ -f "$DISPATCHER_SRC" ]] || die "Missing dispatcher script in repo: $DISPATCHER_SRC"
+
+mkdir -p "$HOME/.config"
+if [[ ! -f "$USER_ENV" ]]; then
+  if [[ -f "$USER_ENV_EXAMPLE" ]]; then
+    cp -n "$USER_ENV_EXAMPLE" "$USER_ENV"
+    log "Wrote $USER_ENV (edit SSID/PSK as needed)"
+  else
+    cat >"$USER_ENV" <<'EOF'
+# Auto-created by autohotspot-install
+HOTSPOT_CON=dotfiles-hotspot
+HOTSPOT_SSID=arch-hotspot
+HOTSPOT_PSK=archhotspot
+HOTSPOT_BAND=bg
+HOTSPOT_CHANNEL=6
+# HOTSPOT_WIFI_IF=wlan0
+# HOTSPOT_WIRE_IF=enp1s0f1
+# HOTSPOT_AUTOSTART_POLICY=ethernet
+EOF
+    log "Wrote default $USER_ENV"
+  fi
+fi
+
+log "Installing dispatcher (root-owned file): $ETC_DISPATCHER"
+sudo install -D -o root -g root -m 0755 "$DISPATCHER_SRC" "$ETC_DISPATCHER"
+
+if [[ ! -f "$ETC_ENV" ]]; then
+  log "Creating $ETC_ENV from user config"
+  # Prefer user config values; fallback to defaults
+  # shellcheck disable=SC1090
+  source "$USER_ENV"
+  sudo tee "$ETC_ENV" >/dev/null <<EOF
+HOTSPOT_CON=${HOTSPOT_CON:-dotfiles-hotspot}
+HOTSPOT_SSID=${HOTSPOT_SSID:-arch-hotspot}
+HOTSPOT_PSK=${HOTSPOT_PSK:-archhotspot}
+HOTSPOT_BAND=${HOTSPOT_BAND:-bg}
+HOTSPOT_CHANNEL=${HOTSPOT_CHANNEL:-6}
+HOTSPOT_WIFI_IF=${HOTSPOT_WIFI_IF:-}
+HOTSPOT_WIRE_IF=${HOTSPOT_WIRE_IF:-}
+EOF
+else
+  log "$ETC_ENV exists; leaving as-is"
+fi
+
+if [[ "$NO_SYSCTL" -ne 1 ]]; then
+  log "Ensuring IPv4 forwarding persists"
+  echo 'net.ipv4.ip_forward=1' | sudo tee /etc/sysctl.d/99-autohotspot-forward.conf >/dev/null
+  sudo sysctl --system >/dev/null
+fi
+
+log "Restarting NetworkManager"
+sudo systemctl restart NetworkManager
+
+log "Done. Edit $USER_ENV and $ETC_ENV if needed, then plug Ethernet."
+

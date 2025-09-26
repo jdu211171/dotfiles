@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Configure a persistent NetworkManager hotspot connection if missing.
+# Uses environment variables from ~/.config/autohotspot.env when present.
+
+ENV_FILE="$HOME/.config/autohotspot.env"
+if [[ -f "$ENV_FILE" ]]; then
+  # shellcheck disable=SC1090
+  source "$ENV_FILE"
+fi
+
+HOTSPOT_CON=${HOTSPOT_CON:-dotfiles-hotspot}
+HOTSPOT_SSID=${HOTSPOT_SSID:-arch-hotspot}
+HOTSPOT_PSK=${HOTSPOT_PSK:-changeme-please}
+HOTSPOT_BAND=${HOTSPOT_BAND:-bg}            # bg or a
+HOTSPOT_CHANNEL=${HOTSPOT_CHANNEL:-auto}     # auto or a specific channel number
+
+# Try to auto-detect a Wi-Fi interface if not specified.
+HOTSPOT_WIFI_IF=${HOTSPOT_WIFI_IF:-}
+if [[ -z "${HOTSPOT_WIFI_IF}" ]]; then
+  HOTSPOT_WIFI_IF=$(nmcli -t -f DEVICE,TYPE device status | awk -F: '$2=="wifi" {print $1; exit}') || true
+fi
+
+if [[ -z "${HOTSPOT_WIFI_IF}" ]]; then
+  echo "No Wi-Fi interface found (nmcli). Aborting." >&2
+  exit 1
+fi
+
+# If the connection already exists, ensure required properties are set and exit.
+if nmcli -t -f NAME connection show | grep -Fxq "$HOTSPOT_CON"; then
+  # Ensure expected properties are in place; do not overwrite SSID/PSK implicitly.
+  nmcli connection modify "$HOTSPOT_CON" \
+    802-11-wireless.mode ap \
+    802-11-wireless.band "$HOTSPOT_BAND" \
+    ipv4.method shared \
+    ipv6.method ignore \
+    connection.autoconnect no
+  # Channel is optional; skip if 'auto'.
+  if [[ "$HOTSPOT_CHANNEL" != "auto" ]]; then
+    nmcli connection modify "$HOTSPOT_CON" 802-11-wireless.channel "$HOTSPOT_CHANNEL"
+  fi
+  echo "Hotspot connection '$HOTSPOT_CON' already exists. Updated essential properties."
+  exit 0
+fi
+
+# Create the hotspot connection.
+nmcli connection add type wifi ifname "$HOTSPOT_WIFI_IF" con-name "$HOTSPOT_CON" ssid "$HOTSPOT_SSID"
+nmcli connection modify "$HOTSPOT_CON" \
+  802-11-wireless.mode ap \
+  802-11-wireless.band "$HOTSPOT_BAND" \
+  ipv4.method shared \
+  ipv6.method ignore \
+  connection.autoconnect no
+
+if [[ "$HOTSPOT_CHANNEL" != "auto" ]]; then
+  nmcli connection modify "$HOTSPOT_CON" 802-11-wireless.channel "$HOTSPOT_CHANNEL"
+fi
+
+nmcli connection modify "$HOTSPOT_CON" \
+  802-11-wireless-security.key-mgmt wpa-psk \
+  802-11-wireless-security.psk "$HOTSPOT_PSK"
+
+echo "Created NetworkManager hotspot '$HOTSPOT_CON' on '$HOTSPOT_WIFI_IF' with SSID '$HOTSPOT_SSID'."
+

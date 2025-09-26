@@ -1,0 +1,6 @@
+{
+  "access_token": "<redacted>",
+  "refresh_token": "<redacted>",
+  "expires_at": "<unix-epoch-or-iso>",
+  "account_id": "<uuid>"
+}

@@ -1,0 +1,10 @@
+{
+  "OPENAI_API_KEY": "set-this-in-your-env-or-auth.json",
+  "tokens": {
+    "id_token": "<redacted>",
+    "access_token": "<redacted>",
+    "refresh_token": "<redacted>",
+    "account_id": "<uuid>"
+  },
+  "last_refresh": "<ISO8601>"
+}

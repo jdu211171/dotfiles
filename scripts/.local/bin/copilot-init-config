@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.copilot}"
+CONFIG_FILE="$CONFIG_DIR/config.json"
+EXAMPLE_FILE="$CONFIG_DIR/config.json.example"
+
+mkdir -p "$CONFIG_DIR"
+
+if [[ -f "$CONFIG_FILE" ]]; then
+  echo "copilot-init-config: Config already exists at $CONFIG_FILE; not modifying."
+  exit 0
+fi
+
+if [[ -f "$EXAMPLE_FILE" ]]; then
+  cp -n "$EXAMPLE_FILE" "$CONFIG_FILE"
+else
+  # Fall back to writing a sane default if the example isn't stowed
+  cat >"$CONFIG_FILE" <<'JSON'
+{
+  "banner": "once",
+  "beep": true,
+  "render_markdown": true,
+  "screen_reader": true,
+  "theme": "auto",
+  "trusted_folders": []
+}
+JSON
+fi
+
+chmod 600 "$CONFIG_FILE" 2>/dev/null || true
+echo "copilot-init-config: Created $CONFIG_FILE with accessible defaults."
+echo "Next: run 'copilot' and use '/login' to authenticate."
+

@@ -4,3 +4,25 @@
 (^|/)Makefile$
 (^|/)\.stow-local-ignore$
 (^|/)\.DS_Store$
+(^|/)Thumbs\.db$
+(^|/)\.git$
+(^|/)\.gitmodules$
+
+# Waybar runtime noise
+(^|/)\.config/waybar/waybar\.log(\..*)?$
+(^|/)\.config/waybar/pomodoro/state\.json$
+
+# Codex CLI: ignore runtime/state and secrets
+(^|/)\.codex/(log|sessions|shell_snapshots)(/|$)
+(^|/)\.codex/(history\.jsonl|internal_storage\.json|version\.json|auth\.json)$
+(^|/)\.codex/config\.toml\.bak\..*$
+
+# Gemini CLI: ignore runtime/state and secrets
+(^|/)\.gemini/tmp(/|$)
+(^|/)\.gemini/(oauth_creds\.json|google_accounts\.json|installation_id)$
+(^|/)\.gemini/settings\.json\.bak\..*$
+
+# Never stow template files like *.example or *.example.json
+(^|/).*\.example(\..*)?$
+(^|/)codex/\.codex/.*\.example(\..*)?$
+(^|/)gemini/\.gemini/.*\.example(\..*)?$

@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Bring down the configured hotspot connection if active.
+
+ENV_FILE="$HOME/.config/autohotspot.env"
+if [[ -f "$ENV_FILE" ]]; then
+  # shellcheck disable=SC1090
+  source "$ENV_FILE"
+fi
+
+HOTSPOT_CON=${HOTSPOT_CON:-dotfiles-hotspot}
+
+if nmcli -t -f NAME connection show --active | grep -Fxq "$HOTSPOT_CON"; then
+  nmcli connection down "$HOTSPOT_CON"
+else
+  echo "Hotspot '$HOTSPOT_CON' not active."
+fi
+
