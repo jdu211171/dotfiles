@@ -67,3 +67,8 @@ do
   mapdir("<C-k>", ok and nav.NvimTmuxNavigateUp,    "wincmd k")
   mapdir("<C-l>", ok and nav.NvimTmuxNavigateRight, "wincmd l")
 end
+
+-- Normal mode: Alt+Right/Left act like Tab/Shift-Tab
+-- Use remap=true so buffer-local <Tab>/<S-Tab> mappings (e.g., Telescope) still trigger
+map("n", "<M-Right>", "<Tab>",   { remap = true, silent = true, desc = "Normal: behave as <Tab> (Alt+Right)" })
+map("n", "<M-Left>",  "<S-Tab>", { remap = true, silent = true, desc = "Normal: behave as <S-Tab> (Alt+Left)" })
