@@ -7,6 +7,10 @@ local map = vim.keymap.set
 map("n", ";", ":", { desc = "CMD enter command mode" })
 map("i", "jk", "<ESC>")
 
+-- Visual: Tab/Shift-Tab to indent/dedent and keep selection
+map("v", "<Tab>", ">gv", { silent = true, desc = "Visual: indent selection" })
+map("v", "<S-Tab>", "<gv", { silent = true, desc = "Visual: dedent selection" })
+
 -- Do NOT hijack plain <Esc> so zsh vi-mode keeps working
 -- Provide reliable alternatives that do not need extended-keys
 map("t", "<C-\\>", [[<C-\><C-n>]], { desc = "Terminal: exit to Normal (Ctrl-\\)" })
