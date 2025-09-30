@@ -1,6 +1,7 @@
 local configs_location = vim.fn.stdpath "config" .. "/configs/"
 local utils = require "utils"
 local util = require "conform.util"
+local fmt_toggle = require "configs.format_toggle"
 
 local M = {}
 
@@ -94,11 +95,14 @@ function M.setup()
       blade = { "blade-formatter" },
     },
     formatters = formatters,
-    format_on_save = {
-      -- Large monorepos sometimes need more than 500ms
-      timeout_ms = 3000,
-      lsp_fallback = false,
-    },
+    -- Default: disabled; can be toggled per project via configs.format_toggle
+    -- Return opts to enable, or false/nil to disable.
+    format_on_save = function(ctx)
+      if fmt_toggle.is_enabled(ctx.buf) then
+        return { timeout_ms = 3000, lsp_fallback = false }
+      end
+      return false
+    end,
   }
 end
 

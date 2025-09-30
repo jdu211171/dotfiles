@@ -3,6 +3,14 @@ return {
     "stevearc/conform.nvim",
     event = "BufWritePre",
     lazy = false,
+    config = function()
+      -- Configure formatters and enable format-on-save
+      pcall(function()
+        require("configs.conform").setup()
+        -- Expose project-scoped toggle commands
+        require("configs.format_toggle").setup_user_commands()
+      end)
+    end,
     keys = {
       {
         "<leader>lf",
@@ -11,6 +19,14 @@ return {
         end,
         mode = "n",
         desc = "Format buffer",
+      },
+      {
+        "<leader>la",
+        function()
+          require("configs.format_toggle").toggle(0)
+        end,
+        mode = "n",
+        desc = "Toggle autoformat (project)",
       },
     },
   },
