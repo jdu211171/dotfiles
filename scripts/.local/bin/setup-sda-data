@@ -1,0 +1,267 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# setup-sda-data: Repurpose /dev/sda as a single ext4 volume mounted at /data
+#
+# - Destroys ALL data on the target device.
+# - Creates GPT and a single partition 100% of the disk
+# - Formats ext4 with label DATA (customizable)
+# - Mounts at /data (customizable) and adds fstab by UUID
+# - Idempotent: if partition + ext4 + mount are already correct, it skips redoing work
+#
+# Usage:
+#   sudo setup-sda-data [--device /dev/sda] [--label DATA] [--mountpoint /data] [--force] [--dry-run] [--verbose] [--debug] [--reserved-percent 1] [--fstab-opts "noatime,defaults,nofail,x-systemd.device-timeout=10s"]
+#
+
+DEVICE=${DEVICE:-/dev/sda}
+LABEL=${LABEL:-DATA}
+MOUNTPOINT=${MOUNTPOINT:-/data}
+FORCE=${FORCE:-}
+DRY_RUN=${DRY_RUN:-}
+VERBOSE=${VERBOSE:-}
+DEBUG=${DEBUG:-}
+RESERVED_PERCENT=${RESERVED_PERCENT:-1}
+FSTAB_OPTS=${FSTAB_OPTS:-noatime,defaults,nofail,x-systemd.device-timeout=10s}
+
+print_usage() {
+  sed -n '1,40p' "$0" | sed -n 's/^# \{0,1\}//p'
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --device)
+      DEVICE="$2"; shift 2;;
+    --label)
+      LABEL="$2"; shift 2;;
+    --mountpoint)
+      MOUNTPOINT="$2"; shift 2;;
+    --force)
+      FORCE=1; shift;;
+    --dry-run)
+      DRY_RUN=1; shift;;
+    --verbose)
+      VERBOSE=1; shift;;
+    --debug)
+      DEBUG=1; shift;;
+    --reserved-percent)
+      RESERVED_PERCENT="$2"; shift 2;;
+    --fstab-opts)
+      FSTAB_OPTS="$2"; shift 2;;
+    -h|--help)
+      print_usage; exit 0;;
+    *)
+      echo "Unknown argument: $1" >&2; print_usage; exit 2;;
+  esac
+done
+
+if [[ -n "${DEBUG}" ]]; then
+  set -x
+fi
+
+log() {
+  if [[ -n "${VERBOSE}" ]]; then
+    echo "[INFO] $*"
+  fi
+}
+
+run() {
+  if [[ -n "${DRY_RUN}" ]]; then
+    echo "+ $*"
+  else
+    eval "$@"
+  fi
+}
+
+require_root() {
+  if [[ -n "${DRY_RUN}" ]]; then
+    log "Dry run: skipping root requirement"
+    return 0
+  fi
+  if [[ $(id -u) -ne 0 ]]; then
+    echo "This script must be run as root (use sudo)." >&2
+    exit 1
+  fi
+}
+
+confirm_destructive() {
+  if [[ -z "${FORCE}" ]]; then
+    echo "Refusing to proceed without --force; this will ERASE ${DEVICE}." >&2
+    exit 1
+  fi
+}
+
+ensure_tools() {
+  local missing=()
+  for bin in lsblk parted mkfs.ext4 blkid; do
+    if ! command -v "$bin" >/dev/null 2>&1; then
+      missing+=("$bin")
+    fi
+  done
+  if (( ${#missing[@]} > 0 )); then
+    if [[ -n "${DRY_RUN}" ]]; then
+      echo "Warning: missing tools (in dry-run): ${missing[*]}" >&2
+    else
+      echo "Missing required tool(s): ${missing[*]}" >&2
+      exit 1
+    fi
+  fi
+}
+
+ensure_device_ok() {
+  if [[ ! -b "$DEVICE" ]]; then
+    echo "Device not found: $DEVICE" >&2
+    exit 1
+  fi
+  # Refuse to operate on the disk that backs the root filesystem
+  local root_src root_disk
+  root_src=$(findmnt -no SOURCE /)
+  # Get parent disk name of root partition
+  root_disk=$(lsblk -no PKNAME "$root_src" 2>/dev/null || true)
+  if [[ -n "$root_disk" && "/dev/$root_disk" == "$DEVICE" ]]; then
+    echo "Refusing to operate on root disk: $DEVICE" >&2
+    exit 1
+  fi
+}
+
+unmount_and_swapoff() {
+  # Unmount any mounted partitions from the target device
+  for part in $(lsblk -rno NAME "/dev/$(basename "$DEVICE")" | sed '1d'); do
+    part="/dev/$part"
+    if findmnt -rn -S "$part" >/dev/null 2>&1; then
+      run umount -R "$part"
+    fi
+  done
+  # Disable swap on any partitions from this device
+  while read -r swpdev _; do
+    run swapoff "$swpdev"
+  done < <(awk -v dev="$DEVICE" 'NR>1 && index($1,dev)==1 {print $1}' /proc/swaps)
+}
+
+wipe_and_partition() {
+  # Best-effort wipe of signatures
+  for dev in "$DEVICE" ${DEVICE}?*; do
+    [[ -e "$dev" ]] || continue
+    run wipefs -a "$dev" || true
+  done
+  # Create fresh GPT and a single partition occupying 100%
+  run parted -s "$DEVICE" mklabel gpt
+  run parted -s "$DEVICE" mkpart primary ext4 1MiB 100%
+  run partprobe "$DEVICE" || true
+}
+
+device_partition() {
+  # Return the first partition path of DEVICE, typically /dev/sda1
+  lsblk -rno NAME "$DEVICE" | sed -n '2p' | awk '{print "/dev/"$1}'
+}
+
+format_ext4() {
+  local part="$1"
+  run mkfs.ext4 -F -L "$LABEL" "$part"
+  # Adjust reserved blocks percentage for a data volume if possible
+  if command -v tune2fs >/dev/null 2>&1; then
+    run tune2fs -m "$RESERVED_PERCENT" "$part"
+  else
+    log "tune2fs not found; skipping reserved blocks adjustment"
+  fi
+}
+
+ensure_mountpoint() {
+  run mkdir -p "$MOUNTPOINT"
+}
+
+fstab_add_or_update() {
+  local part="$1" uuid fstab_line ts
+  uuid=$(blkid -s UUID -o value "$part" || true)
+  if [[ -n "${DRY_RUN}" ]]; then
+    # In dry-run, the UUID may reflect the current partition (pre-mkfs) or be empty.
+    # Don’t rely on it; just display intended fstab format.
+    fstab_line="UUID=<to-be-generated-after-mkfs>  $MOUNTPOINT  ext4  $FSTAB_OPTS  0  2"
+  else
+    if [[ -z "$uuid" ]]; then
+      echo "Failed to get UUID for $part" >&2
+      exit 1
+    fi
+    fstab_line="UUID=$uuid  $MOUNTPOINT  ext4  $FSTAB_OPTS  0  2"
+  fi
+  ts=$(date +%F-%H%M%S)
+  if [[ -n "${DRY_RUN}" ]]; then
+    echo "Would back up /etc/fstab to /etc/fstab.backup-${ts}"
+    echo "Would write fstab line: $fstab_line"
+  else
+    run cp -a /etc/fstab "/etc/fstab.backup-${ts}"
+    # Remove any existing fstab line for this UUID or mountpoint
+    grep -vE "(^UUID=${uuid}[[:space:]]|[[:space:]]${MOUNTPOINT}[[:space:]])" /etc/fstab > /etc/fstab.new || true
+    printf "%s\n" "$fstab_line" >> /etc/fstab.new
+    run mv /etc/fstab.new /etc/fstab
+  fi
+}
+
+set_ownership() {
+  # Prefer the invoking user if run via sudo
+  local owner
+  owner="${SUDO_USER:-${USER}}"
+  if id "$owner" >/dev/null 2>&1; then
+    run chown "$owner":"$owner" "$MOUNTPOINT"
+  fi
+}
+
+verify_and_report() {
+  echo "\nVerification:"
+  if findmnt -rn -T "$MOUNTPOINT" >/dev/null 2>&1; then
+    findmnt "$MOUNTPOINT" || true
+    df -h "$MOUNTPOINT" || true
+  else
+    echo "$MOUNTPOINT not mounted."
+  fi
+  lsblk -f "$(device_partition)" || true
+}
+
+already_configured() {
+  local part type label
+  part=$(device_partition || true)
+  if [[ -n "$part" ]]; then
+    type=$(blkid -s TYPE -o value "$part" || true)
+    label=$(blkid -s LABEL -o value "$part" || true)
+    if [[ "$type" == "ext4" && "$label" == "$LABEL" ]]; then
+      # If already mounted at the desired mountpoint, consider done
+      if findmnt -rn -S "$part" -T "$MOUNTPOINT" >/dev/null 2>&1; then
+        return 0
+      fi
+    fi
+  fi
+  return 1
+}
+
+main() {
+  require_root
+  ensure_tools
+  ensure_device_ok
+
+  if already_configured; then
+    echo "Device already configured and mounted; ensuring fstab and mount..."
+    fstab_add_or_update "$(device_partition)"
+    run mount -a
+    set_ownership
+    verify_and_report
+    exit 0
+  fi
+
+  confirm_destructive
+  unmount_and_swapoff
+  wipe_and_partition
+  local part
+  part="$(device_partition)"
+  if [[ -z "$part" ]]; then
+    echo "Failed to discover partition on $DEVICE after partitioning" >&2
+    exit 1
+  fi
+  format_ext4 "$part"
+  ensure_mountpoint
+  fstab_add_or_update "$part"
+  run mount -a
+  set_ownership
+  verify_and_report
+  echo "\nDone: $DEVICE -> $part mounted at $MOUNTPOINT with label $LABEL"
+}
+
+main "$@"
