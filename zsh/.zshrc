@@ -162,7 +162,6 @@ alias ls='ls --color=auto -a'
 alias c='clear'
 alias vim='nvim'
 alias q='exit'
-# gh-copilot aliases are added below only if the extension is installed
 
 # 14) Tooling integrations (guarded)
 if command -v zoxide >/dev/null 2>&1; then
@@ -170,12 +169,25 @@ if command -v zoxide >/dev/null 2>&1; then
 fi
 # fzf is initialized above; keep legacy line disabled to avoid double-loading.
 # [[ -f "$HOME/.fzf.zsh" ]] && source "$HOME/.fzf.zsh"
-if command -v gh >/dev/null 2>&1 && gh extension list 2>/dev/null | grep -qE '(^|[[:space:]])github/gh-copilot( |$)'; then
-  alias ghce='gh copilot explain'
-  alias ghcs='gh copilot suggest'
-  __gh_copilot_aliases__="$(gh copilot alias -- zsh 2>/dev/null || true)"
-  [[ -n "$__gh_copilot_aliases__" ]] && eval "$__gh_copilot_aliases__"
-fi
+
+# Suggest a command using Copilot and execute in current shell
+# Uses a temp file and dynamically respects $SHELL.
+unalias ghcs 2>/dev/null
+ghcs() {
+  local _copilot_tmp
+  _copilot_tmp=$(mktemp -p "${TMPDIR:-/tmp}" ghcs.XXXXXXXX) || return
+  gh copilot suggest --shell-out="${_copilot_tmp}" "$@"
+  if [[ -s "${_copilot_tmp}" ]]; then
+    local _sh=${SHELL:-/bin/sh}
+    case "$_sh" in
+      *zsh|*bash|*sh) . "${_copilot_tmp}" ;;
+      *fish) fish "${_copilot_tmp}" ;;
+      *) "$_sh" -c ". \"${_copilot_tmp}\"" ;;
+    esac
+  fi
+  rm -f -- "${_copilot_tmp}"
+}
+
 if command -v tmuxifier >/dev/null 2>&1; then
   eval "$(tmuxifier init -)"
 fi
