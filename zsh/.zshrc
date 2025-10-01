@@ -171,8 +171,8 @@ fi
 # fzf is initialized above; keep legacy line disabled to avoid double-loading.
 # [[ -f "$HOME/.fzf.zsh" ]] && source "$HOME/.fzf.zsh"
 if command -v gh >/dev/null 2>&1 && gh extension list 2>/dev/null | grep -qE '(^|[[:space:]])github/gh-copilot( |$)'; then
-  alias gce='gh copilot explain'
-  alias gcs='gh copilot suggest'
+  alias ghce='gh copilot explain'
+  alias ghcs='gh copilot suggest'
   __gh_copilot_aliases__="$(gh copilot alias -- zsh 2>/dev/null || true)"
   [[ -n "$__gh_copilot_aliases__" ]] && eval "$__gh_copilot_aliases__"
 fi
