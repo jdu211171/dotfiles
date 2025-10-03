@@ -106,6 +106,17 @@ source "$ZINIT_HOME/zinit.zsh"
 # Plugins
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
+
+# zsh-autosuggestions: enable word-by-word acceptance (works with vi mode)
+# Must be set before the plugin is loaded
+ZSH_AUTOSUGGEST_STRATEGY=(history)
+ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS=(
+  forward-word
+  vi-forward-word
+  vi-forward-blank-word
+  vi-end-of-word
+  vi-end-of-blank-word
+)
 zinit light zsh-users/zsh-autosuggestions
 zinit light Aloxaf/fzf-tab
 zinit snippet OMZP::git
@@ -145,6 +156,16 @@ bindkey "${terminfo[kcuu1]}" history-beginning-search-backward 2>/dev/null
 bindkey "${terminfo[kcud1]}" history-beginning-search-forward 2>/dev/null
 bindkey -M vicmd 'k' history-beginning-search-backward
 bindkey -M vicmd 'j' history-beginning-search-forward
+
+# Accept autosuggestions one word at a time in vi insert mode
+# These keys invoke the standard `forward-word` widget, which zsh-autosuggestions
+# intercepts (via ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS) to accept just the
+# next word of the suggestion instead of the whole line.
+bindkey -M viins '^[f' forward-word               # Alt+f
+bindkey -M viins '^[[1;5C' forward-word 2>/dev/null # Ctrl+Right (xterm/kitty/wezterm)
+bindkey -M viins '^[[1;3C' forward-word 2>/dev/null # Alt+Right
+bindkey -M viins '^[[5C'   forward-word 2>/dev/null # Some terms send this for Alt+Right
+bindkey -M viins '^[OC'    forward-word 2>/dev/null # Fallback variant
 
 # If fzf isn't installed, make Tab do normal completion
 if ! command -v fzf >/dev/null 2>&1; then
