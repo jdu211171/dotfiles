@@ -4,11 +4,26 @@
 
 # 1) Basic shell behavior and history
 set -o noclobber
-setopt appendhistory sharehistory
-setopt hist_ignore_space hist_ignore_dups hist_ignore_all_dups hist_find_no_dups hist_save_no_dups
+
+# Use a shared, bash-compatible history file so both shells learn together
+: ${SHARED_HISTFILE:=$HOME/.zsh_history}
+HISTFILE=$SHARED_HISTFILE
 HISTSIZE=15000
-HISTFILE=$HOME/.zsh_history
 SAVEHIST=$HISTSIZE
+
+# History behavior
+# - APPEND_HISTORY: append instead of overwrite
+# - INC_APPEND_HISTORY: write each line as it’s executed
+# - SHARE_HISTORY: merge new lines from other shells on the fly
+# - (no)EXTENDED_HISTORY: keep plain format compatible with bash
+setopt appendhistory inc_append_history sharehistory
+unsetopt extended_history
+
+# De-dup, skip noisy lines, reduce blanks
+setopt hist_ignore_space hist_ignore_dups hist_ignore_all_dups hist_find_no_dups hist_save_no_dups hist_reduce_blanks
+
+# Improve safety of concurrent writes to the history file
+setopt hist_save_by_copy
 
 # 2) Linux-only config (macOS-specific logic removed)
 
@@ -162,6 +177,7 @@ alias ls='ls --color=auto -a'
 alias c='clear'
 alias vim='nvim'
 alias q='exit'
+alias ghce='gh copilot explain'
 
 # 14) Tooling integrations (guarded)
 if command -v zoxide >/dev/null 2>&1; then

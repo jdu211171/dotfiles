@@ -48,6 +48,7 @@ You can target specific packages with PACKAGES:
 - If Stow reports an existing non-symlink file conflict, move that file into this repo under the matching package and rerun with restow.
 - .stow-local-ignore prevents Stow from linking repo meta files like .git and README.md.
 - For host-specific tweaks (e.g., laptop vs desktop), include host-laptop and only stow it on that machine.
+- Shared shell history (bash + zsh): see docs/shared-history.md
 
 ## Hotspot (tethering) on Arch
 
