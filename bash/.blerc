@@ -1,0 +1,28 @@
+# ~/.blerc — ble.sh UI tuning
+
+# Compatibility: work with both ble 0.3 (stable) and 0.4 (devel)
+bleopt complete_auto_complete=1
+bleopt complete_auto_history=1
+bleopt complete_auto_delay=120   # ms before suggesting
+
+# Style the suggestion (ghost text)
+# 0.4+: ble-face; 0.3: ble-color-setface
+if declare -F ble-face >/dev/null; then
+  ble-face auto_complete='fg=245,italic'
+else
+  # Older ble.sh: use ble-color-setface FACE SPEC (no equals)
+  ble-color-setface auto_complete fg=245,italic
+fi
+
+# Popup menu settings (guard options that may not exist in 0.3)
+bleopt complete_menu_complete=1
+bleopt complete_menu_filter=1
+bleopt complete_menu_style=align
+if bleopt -v complete_menu_color >/dev/null 2>&1; then bleopt complete_menu_color=on; fi
+if bleopt -v complete_menu_color_match >/dev/null 2>&1; then bleopt complete_menu_color_match=on; fi
+if bleopt -v complete_menu_maxlines >/dev/null 2>&1; then bleopt complete_menu_maxlines=12; fi
+if bleopt -v info_display >/dev/null 2>&1; then bleopt info_display=top; fi
+
+# Word-by-word acceptance of autosuggestion
+# Default M-Right inserts one word in ble; bind explicit keys for reliability
+ble-bind -m auto_complete -f 'M-f' auto_complete/insert-word   # Alt+f

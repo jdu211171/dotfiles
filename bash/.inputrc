@@ -1,0 +1,19 @@
+# ~/.inputrc — readline UI defaults (fallback when ble.sh is unavailable)
+
+# Better completion behavior
+set show-all-if-ambiguous on
+set menu-complete-display-prefix on
+set page-completions off
+set completion-ignore-case on
+set mark-symlinked-directories on
+set match-hidden-files off
+
+# Visuals
+set colored-stats on
+set visible-stats on
+set colored-completion-prefix on
+
+# Use menu-complete on TAB; Shift‑TAB goes backward
+TAB: menu-complete
+"\e[Z": menu-complete-backward
+
