@@ -55,8 +55,8 @@ sandbox_mode = "danger-full-access"
     transport = "stdio"
 
   [mcp_servers.aws-api]
-    args = ["awslabs.aws-api-mcp-server@latest"]
-    command = "uvx"
+    args = []
+    command = "/home/user/.local/bin/aws-api-mcp-stdio"
     startup_timeout_sec = 60
     tool_timeout_sec = 120
     transport = "stdio"

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Wrapper to launch the AWS API MCP server with standard AWS credential resolution.
+# - Uses AWS CLI/SDK default chain: env vars, SSO cached creds, shared config/credentials, etc.
+# - Does not hardcode profile/region; set AWS_PROFILE/AWS_REGION in your shell if desired.
+# - Ensures config files are considered (SSO, named profiles) via AWS_SDK_LOAD_CONFIG=1.
+
+export AWS_SDK_LOAD_CONFIG=${AWS_SDK_LOAD_CONFIG:-1}
+
+# If you prefer a default region without setting env, uncomment and adjust:
+# export AWS_REGION=${AWS_REGION:-us-east-1}
+
+# The server is published as a Python package; uvx will fetch and run it.
+exec uvx awslabs.aws-api-mcp-server@latest
+
