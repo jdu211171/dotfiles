@@ -47,6 +47,13 @@ sandbox_mode = "danger-full-access"
     tool_timeout_sec = 60
     transport = "stdio"
 
+  [mcp_servers.fetch]
+    args = ["mcp-server-fetch"]
+    command = "uvx"
+    startup_timeout_sec = 60
+    tool_timeout_sec = 60
+    transport = "stdio"
+
 [sandbox_workspace_write]
   exclude_slash_tmp = false
   exclude_tmpdir_env_var = false
