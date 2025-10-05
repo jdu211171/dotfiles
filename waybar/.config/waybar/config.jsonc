@@ -26,7 +26,7 @@
     "custom/reboot",
     "custom/shutdown",
     "custom/pomodoro",
-    "tray",
+    "tray"
   ],
 
   // Hyprland modules
@@ -40,7 +40,7 @@
       "2": [],
       "3": [],
       "4": [],
-      "5": [],
+      "5": []
     },
   },
 
@@ -62,12 +62,12 @@
     "rewrite": {
       "^(.*) — Mozilla Firefox$": "󰈹 $1",
       "^(.*) - VSCodium$": "󰨞 $1",
-      "^(.*) - Visual Studio Code$": "󰨞 $1",
+      "^(.*) - Visual Studio Code$": "󰨞 $1"
     },
   },
   "hyprland/submap": {
     "format": "󰌌 {name}",
-    "tooltip": true,
+    "tooltip": true
   },
 
   // Custom Bluetooth module
@@ -78,7 +78,7 @@
     "format": "{text}",
     "tooltip": true,
     "on-click": "/home/user/.config/waybar/scripts/bluetooth.sh toggle",
-    "on-click-right": "blueman-manager",
+    "on-click-right": "blueman-manager"
   },
 
   // Docker daemon
@@ -98,7 +98,7 @@
     "interval": 5,
     "format": "{text}",
     "tooltip": true,
-    "on-click": "/home/user/.config/waybar/scripts/theme.sh toggle",
+    "on-click": "/home/user/.config/waybar/scripts/theme.sh toggle"
   },
 
   // System modules
@@ -117,7 +117,7 @@
     "format-disabled": "󰤭",
     "tooltip-format": "{ifname} {ipaddr}/{cidr}\n{essid} ({signalStrength}%)",
     "states": { "low": 30, "medium": 60, "high": 100 },
-    "max-length": 24,
+    "max-length": 24
   },
   "pulseaudio": {
     "format": "{icon}",
@@ -129,7 +129,7 @@
       "headphones": "󰋋",
       "handsfree": "󰋋",
       "headset": "󰋋",
-      "default": ["󰕿", "󰖀", "󰕾"],
+      "default": ["󰕿", "󰖀", "󰕾"]
     },
   },
   "battery": {
@@ -139,7 +139,7 @@
     "format-charging": "󰂄",
     "format-full": "󰁹",
     "format-icons": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
-    "interval": 15,
+    "interval": 15
   },
   // Power controls
   "custom/shutdown": {
@@ -148,7 +148,7 @@
     "interval": 86400,
     "format": "{text}",
     "tooltip": true,
-    "on-click": "/home/user/.config/waybar/scripts/shutdown.sh run",
+    "on-click": "/home/user/.config/waybar/scripts/shutdown.sh run"
   },
   "custom/reboot": {
     "exec": "/home/user/.config/waybar/scripts/reboot.sh",
@@ -156,10 +156,10 @@
     "interval": 86400,
     "format": "{text}",
     "tooltip": true,
-    "on-click": "/home/user/.config/waybar/scripts/reboot.sh run",
+    "on-click": "/home/user/.config/waybar/scripts/reboot.sh run"
   },
   "tray": {
     "icon-size": 16,
-    "spacing": 8,
-  },
+    "spacing": 8
+  }
 }

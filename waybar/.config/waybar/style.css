@@ -14,7 +14,8 @@ window#waybar {
   border: 1px solid rgba(205, 214, 244, 0.10);
   border-radius: 10px;
   margin: 2px 2px 0 2px; /* keep in sync with config */
-  padding: 4px 6px;
+  /* Remove left padding so first workspace hugs edge */
+  padding: 4px 6px 4px 0;
   transition: background 0.2s ease, border-color 0.2s ease;
 }
 
@@ -43,6 +44,19 @@ window#waybar.hidden {
   border: none;
   border-radius: 8px;
   margin: 0 2px;
+}
+
+/* Remove extra gutter before the first workspace */
+#workspaces button:first-child {
+  margin-left: 0;
+}
+
+/* (no container inset overrides needed) */
+
+/* When the very first workspace is active, round it to match the bar */
+#workspaces button:first-child.active {
+  border-top-left-radius: 10px;  /* match window#waybar radius */
+  border-bottom-left-radius: 10px;
 }
 
 /* No hover styling on workspaces (explicitly override GTK) */
