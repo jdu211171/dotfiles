@@ -1,0 +1,17 @@
+## ~/.zshrc.platform — example (copy to ~/.zshrc.platform)
+# Put OS- or host-specific exports and PATH updates here.
+# This file is intentionally not sourced unless you create it in $HOME.
+
+# Examples:
+# export OMP_CONFIG="$HOME/.config/ohmyposh/zen.toml"
+# export ANDROID_SDK_ROOT="$HOME/Library/Android/sdk"   # macOS
+# export ANDROID_HOME="$ANDROID_SDK_ROOT"
+# export BUN_INSTALL="$HOME/.bun" && PATH="$BUN_INSTALL/bin:$PATH"
+# export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket" # Linux
+
+# Add directories to PATH (prepend)
+# case "$(uname -s)" in
+#   Darwin) PATH="/opt/homebrew/bin:$PATH" ;;
+#   Linux)  PATH="$HOME/.local/bin:$PATH" ;;
+# esac
+
