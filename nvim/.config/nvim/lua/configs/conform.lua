@@ -36,10 +36,11 @@ function M.setup()
     },
     pint = {
       command = "php",
-      args = { "vendon/bin/pint", "$FILENAME" },
+      args = { "vendor/bin/pint", "$FILENAME" },
       stdin = false,
+      cwd = util.root_file { "composer.json", "composer.lock", ".git" },
     },
-    blade_formatter = {
+    ["blade-formatter"] = {
       command = "blade-formatter",
       args = { "--write", "$FILENAME" },
       stdin = false,
@@ -97,8 +98,8 @@ function M.setup()
     formatters = formatters,
     -- Default: disabled; can be toggled per project via configs.format_toggle
     -- Return opts to enable, or false/nil to disable.
-    format_on_save = function(ctx)
-      if fmt_toggle.is_enabled(ctx.buf) then
+    format_on_save = function(bufnr)
+      if fmt_toggle.is_enabled(bufnr) then
         return { timeout_ms = 3000, lsp_fallback = false }
       end
       return false
