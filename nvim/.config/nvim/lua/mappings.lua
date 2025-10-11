@@ -7,6 +7,12 @@ local map = vim.keymap.set
 map("n", ";", ":", { desc = "CMD enter command mode" })
 map("i", "jk", "<ESC>")
 
+-- Visual paste: do not clobber the unnamed/clipboard register
+-- Default Vim behavior replaces the selection and yanks it into the unnamed
+-- register, overwriting your last yank (and system clipboard when using
+-- clipboard=unnamedplus). This mapping keeps your last yank intact.
+map("x", "p", [==["_dP]==], { desc = "Paste without overwriting register" })
+
 -- Visual: Tab/Shift-Tab to indent/dedent and keep selection
 map("v", "<Tab>", ">gv", { silent = true, desc = "Visual: indent selection" })
 map("v", "<S-Tab>", "<gv", { silent = true, desc = "Visual: dedent selection" })
@@ -76,3 +82,32 @@ end
 -- Use remap=true so buffer-local <Tab>/<S-Tab> mappings (e.g., Telescope) still trigger
 map("n", "<M-Right>", "<Tab>",   { remap = true, silent = true, desc = "Normal: behave as <Tab> (Alt+Right)" })
 map("n", "<M-Left>",  "<S-Tab>", { remap = true, silent = true, desc = "Normal: behave as <S-Tab> (Alt+Left)" })
+
+-- Find & Replace helpers
+-- - <leader>sr: confirm each match
+-- - <leader>sR: replace all matches
+-- Uses word boundaries (\<\>) in Normal mode and very nomagic (\V) in Visual mode.
+map(
+  "n",
+  "<leader>sr",
+  [[:%s/\<<C-r><C-w>\>//gc<Left><Left><Left>]],
+  { desc = "Substitute word (confirm each)" }
+)
+map(
+  "n",
+  "<leader>sR",
+  [[:%s/\<<C-r><C-w>\>//g<Left><Left>]],
+  { desc = "Substitute word (replace all)" }
+)
+map(
+  "x",
+  "<leader>sr",
+  [["zy:%s/\V<C-r>z//gc<Left><Left><Left>]],
+  { desc = "Substitute selection (confirm each)" }
+)
+map(
+  "x",
+  "<leader>sR",
+  [["zy:%s/\V<C-r>z//g<Left><Left>]],
+  { desc = "Substitute selection (replace all)" }
+)

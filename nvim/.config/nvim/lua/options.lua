@@ -16,6 +16,8 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 
 local o = vim.o
 o.relativenumber = true
+-- Live preview for :substitute — shows changes as you type the command
+o.inccommand = "split"
 -- o.cursorlineopt ='both' -- to enable cursorline!
 
 -- Ensure sessions restore local window/buffer options & filetypes correctly
