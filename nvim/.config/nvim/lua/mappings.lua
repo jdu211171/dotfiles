@@ -83,31 +83,31 @@ end
 map("n", "<M-Right>", "<Tab>",   { remap = true, silent = true, desc = "Normal: behave as <Tab> (Alt+Right)" })
 map("n", "<M-Left>",  "<S-Tab>", { remap = true, silent = true, desc = "Normal: behave as <S-Tab> (Alt+Left)" })
 
--- Find & Replace helpers
--- - <leader>sr: confirm each match
--- - <leader>sR: replace all matches
+-- Find & Replace helpers (buffer-only)
+-- - <leader>br: confirm each match
+-- - <leader>bR: replace all matches
 -- Uses word boundaries (\<\>) in Normal mode and very nomagic (\V) in Visual mode.
 map(
   "n",
-  "<leader>sr",
+  "<leader>br",
   [[:%s/\<<C-r><C-w>\>//gc<Left><Left><Left>]],
-  { desc = "Substitute word (confirm each)" }
+  { desc = "Buffer substitute word (confirm each)" }
 )
 map(
   "n",
-  "<leader>sR",
+  "<leader>bR",
   [[:%s/\<<C-r><C-w>\>//g<Left><Left>]],
-  { desc = "Substitute word (replace all)" }
+  { desc = "Buffer substitute word (replace all)" }
 )
 map(
   "x",
-  "<leader>sr",
+  "<leader>br",
   [["zy:%s/\V<C-r>z//gc<Left><Left><Left>]],
-  { desc = "Substitute selection (confirm each)" }
+  { desc = "Buffer substitute selection (confirm each)" }
 )
 map(
   "x",
-  "<leader>sR",
+  "<leader>bR",
   [["zy:%s/\V<C-r>z//g<Left><Left>]],
-  { desc = "Substitute selection (replace all)" }
+  { desc = "Buffer substitute selection (replace all)" }
 )

@@ -38,6 +38,85 @@ return {
     end,
   },
 
+  -- Project-wide search & replace UI (grug-far)
+  {
+    "MagicDuck/grug-far.nvim",
+    version = "1.6.3", -- compatible with Neovim 0.10+; remove to track latest
+    -- Register keymaps with lazy so mappings work before plugin loads
+    keys = {
+      {
+        "<leader>sr",
+        function()
+          local cwd = vim.loop.cwd()
+          local out = vim.fn.systemlist("git -C " .. vim.fn.shellescape(cwd) .. " rev-parse --show-toplevel")
+          if type(out) == "table" and out[1] and out[1] ~= "" and vim.v.shell_error == 0 then
+            cwd = out[1]
+          end
+          require("grug-far").open({ cwd = cwd, prefills = { search = vim.fn.expand("<cword>") } })
+        end,
+        mode = "n",
+        desc = "Grug: search & replace (project)",
+      },
+      {
+        "<leader>sr",
+        function()
+          local cwd = vim.loop.cwd()
+          local out = vim.fn.systemlist("git -C " .. vim.fn.shellescape(cwd) .. " rev-parse --show-toplevel")
+          if type(out) == "table" and out[1] and out[1] ~= "" and vim.v.shell_error == 0 then
+            cwd = out[1]
+          end
+          require("grug-far").with_visual_selection({ cwd = cwd })
+        end,
+        mode = "x",
+        desc = "Grug: search selection (project)",
+      },
+      {
+        "<leader>sf",
+        function()
+          local cwd = vim.loop.cwd()
+          local out = vim.fn.systemlist("git -C " .. vim.fn.shellescape(cwd) .. " rev-parse --show-toplevel")
+          if type(out) == "table" and out[1] and out[1] ~= "" and vim.v.shell_error == 0 then
+            cwd = out[1]
+          end
+          require("grug-far").open({ cwd = cwd, prefills = { paths = vim.fn.expand("%"), search = vim.fn.expand("<cword>") } })
+        end,
+        mode = "n",
+        desc = "Grug: search in current file",
+      },
+      {
+        "<leader>si",
+        function()
+          local cwd = vim.loop.cwd()
+          local out = vim.fn.systemlist("git -C " .. vim.fn.shellescape(cwd) .. " rev-parse --show-toplevel")
+          if type(out) == "table" and out[1] and out[1] ~= "" and vim.v.shell_error == 0 then
+            cwd = out[1]
+          end
+          require("grug-far").open({ cwd = cwd, visualSelectionUsage = "operate-within-range" })
+        end,
+        mode = { "n", "x" },
+        desc = "Grug: search within selection range",
+      },
+    },
+    config = function()
+      local ok, grug = pcall(require, "grug-far")
+      if not ok then return end
+
+      local function get_root()
+        local cwd = vim.loop.cwd()
+        local out = vim.fn.systemlist("git -C " .. vim.fn.shellescape(cwd) .. " rev-parse --show-toplevel")
+        if type(out) == "table" and out[1] and out[1] ~= "" and vim.v.shell_error == 0 then
+          return out[1]
+        end
+        return cwd
+      end
+
+      grug.setup {}
+
+      -- We keep setup minimal; keys above trigger lazy-load and call APIs
+      -- Users can run :GrugFar or use the keys to launch the panel
+      end,
+  },
+
   -- Disable auto popup completion from nvim-cmp; manual trigger only
   {
     "hrsh7th/nvim-cmp",
