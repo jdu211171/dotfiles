@@ -51,12 +51,31 @@ vim.api.nvim_create_autocmd("VimEnter", {
     local modified = vim.api.nvim_get_option_value("modified", { buf = 0 })
     if modified or not (is_dir or opening == "") then return end
 
-    vim.schedule(function()
+    -- Defer slightly to let lazy-loaded UI pieces settle, then open NvDash
+    -- and clean up any stray, empty preview/placeholder windows some plugins
+    -- may create during startup.
+    vim.defer_fn(function()
       if not vim.bo.buflisted then vim.cmd.enew() end
       pcall(function()
         require("nvchad.nvdash").open()
       end)
-    end)
+
+      -- Close any extra windows that are just empty scratch buffers. This
+      -- fixes an issue where a tiny "[No Name]" window appears above the
+      -- dashboard on first launch and requires :q to dismiss.
+      local current_tab = vim.api.nvim_get_current_tabpage()
+      for _, win in ipairs(vim.api.nvim_tabpage_list_wins(current_tab)) do
+        if win ~= vim.api.nvim_get_current_win() then
+          local buf = vim.api.nvim_win_get_buf(win)
+          local name = vim.api.nvim_buf_get_name(buf)
+          local bt = vim.bo[buf].buftype
+          local modified_buf = vim.api.nvim_get_option_value("modified", { buf = buf })
+          if (name == nil or name == "") and bt == "" and not modified_buf then
+            pcall(vim.api.nvim_win_close, win, true)
+          end
+        end
+      end
+    end, 20)
   end,
 })
 
