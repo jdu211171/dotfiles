@@ -34,3 +34,7 @@ gemini/.gemini/google_accounts.json
 gemini/.gemini/installation_id
 gemini/.gemini/tmp/
 gemini/.gemini/settings.json.bak.*
+
+# Local .zshrc files
+zsh/.zshrc.linux
+zsh/.zshrc.darwin

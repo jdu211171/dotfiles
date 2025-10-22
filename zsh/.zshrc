@@ -132,5 +132,9 @@ alias q='exit'
 if [[ "$OSTYPE" == darwin* ]] && [[ -r "$HOME/.zshrc.darwin" ]]; then
   source "$HOME/.zshrc.darwin"
 fi
+# Linux-specific file (managed by dotfiles)
+if [[ "$OSTYPE" == linux* ]] && [[ -r "$HOME/.zshrc.linux" ]]; then
+  source "$HOME/.zshrc.linux"
+fi
 # Generic per-host/platform overrides
 [[ -r "$HOME/.zshrc.platform" ]] && source "$HOME/.zshrc.platform"
