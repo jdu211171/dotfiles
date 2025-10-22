@@ -1,0 +1,15 @@
+{
+  "banner": "always",
+  "beep": true,
+  "render_markdown": true,
+  "screen_reader": false,
+  "theme": "auto",
+  "trusted_folders": [
+    "/Users/muhammadnurislomtukhtamishhoji-zoda",
+    "/Users/muhammadnurislomtukhtamishhoji-zoda/Development",
+    "/Users/muhammadnurislomtukhtamishhoji-zoda/Development/JDULibrarianSystem",
+    "/Users/muhammadnurislomtukhtamishhoji-zoda/Development/toppan-machi-info"
+  ],
+  "stream": true,
+  "parallel_tool_execution": true
+}

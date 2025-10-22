@@ -1,0 +1,23 @@
+# Ignore noisy/transient files in ~/.copilot
+# Only track static configuration files
+
+# Session and history state (frequently changing)
+\.copilot/session-state
+\.copilot/history-session-state
+\.copilot/command-history-state\.json
+
+# Logs directory (noisy)
+\.copilot/logs
+
+# Any cache or temporary files
+\.copilot/.*\.log$
+\.copilot/.*\.tmp$
+\.copilot/cache
+
+# Documentation (don't stow to home directory)
+^/README\.md
+^/README\.md\.bak
+^/MIGRATION\.md
+
+# Stow metadata
+\.stow-local-ignore
