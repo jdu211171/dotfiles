@@ -127,6 +127,22 @@ alias c='clear'
 alias vim='nvim'
 alias q='exit'
 
+# gh copilot auto-execute function
+ghcs() {
+  local tmpfile=$(mktemp)
+  gh copilot suggest -t shell "$@" -s "$tmpfile" 2>/dev/null
+  if [[ -f "$tmpfile" && -s "$tmpfile" ]]; then
+    local cmd=$(cat "$tmpfile")
+    rm "$tmpfile"
+    echo "Executing: $cmd"
+    eval "$cmd"
+  else
+    rm -f "$tmpfile"
+    echo "No command generated" >&2
+    return 1
+  fi
+}
+
 # ---------- Platform-specific include ----------
 # macOS-specific file (if present)
 if [[ "$OSTYPE" == darwin* ]] && [[ -r "$HOME/.zshrc.darwin" ]]; then
