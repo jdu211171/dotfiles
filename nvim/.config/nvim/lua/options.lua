@@ -20,9 +20,6 @@ o.relativenumber = true
 o.inccommand = "split"
 -- o.cursorlineopt ='both' -- to enable cursorline!
 
--- Ensure sessions restore local window/buffer options & filetypes correctly
-vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
-
 -- NOTE: Leave <C-h/j/k/l> unmapped here.
 -- nvim-tmux-navigation sets these in lua/plugins/init.lua to integrate
 -- Neovim window movement with tmux panes. Local mappings here would
