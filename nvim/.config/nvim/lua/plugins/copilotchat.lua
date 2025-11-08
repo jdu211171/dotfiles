@@ -90,7 +90,7 @@ return {
       { "<leader>cC", "<cmd>CopilotChatCommit<cr>",   desc = "Copilot Chat - Commit msg" },
     },
     opts = {
-      model = 'gpt-5',
+      model = 'grok-code-fast-1',
       temperature = 0.1,
       auto_insert_mode = true,
       window = {
