@@ -2,8 +2,8 @@ default_profile = "full-auto-mode"
 approval_policy = "never"
 file_opener = "vscode"
 hide_agent_reasoning = true
-model = "gpt-5-codex"
-model_reasoning_effort = "high"
+model = "gpt-5.2-codex"
+model_reasoning_effort = "xhigh"
 network_access = true
 notify = ["codex-notify-sound"]
 sandbox_mode = "danger-full-access"
@@ -38,6 +38,14 @@ sandbox_mode = "danger-full-access"
     command = "npx"
     startup_timeout_sec = 20
     tool_timeout_sec = 60
+    transport = "stdio"
+
+  [mcp_servers.firebase]
+    # Runs Firebase MCP via npx. You'll need to run `firebase login --no-localhost` once.
+    args = ["-y", "firebase-tools@latest", "mcp"]
+    command = "npx"
+    startup_timeout_sec = 60
+    tool_timeout_sec = 120
     transport = "stdio"
 
   [mcp_servers.git]
@@ -75,3 +83,14 @@ sandbox_mode = "danger-full-access"
 
 [profiles.full-auto-mode]
 full-auto = true
+
+[notice]
+hide_gpt5_1_migration_prompt = true
+"hide_gpt-5.1-codex-max_migration_prompt" = true
+
+[notice.model_migrations]
+"gpt-5.2" = "gpt-5.2-codex"
+
+[features]
+unified_exec = true
+shell_snapshot = true

@@ -11,5 +11,8 @@
     "/Users/muhammadnurislomtukhtamishhoji-zoda/Development/toppan-machi-info"
   ],
   "stream": true,
-  "parallel_tool_execution": true
+  "parallel_tool_execution": true,
+  "asked_setup_terminals": [
+    "vscode"
+  ]
 }

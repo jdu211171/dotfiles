@@ -35,6 +35,8 @@ gemini/.gemini/installation_id
 gemini/.gemini/tmp/
 gemini/.gemini/settings.json.bak.*
 
-# Local .zshrc files
-zsh/.zshrc.linux
-zsh/.zshrc.darwin
+# Copilot CLI (do not track noisy/transient files)
+copilot/.copilot/session-state/
+copilot/.copilot/history-session-state/
+copilot/.copilot/command-history-state.json
+copilot/.copilot/logs/
