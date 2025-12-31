@@ -160,6 +160,17 @@ alias c='clear'
 alias vim='nvim'
 alias q='exit'
 
+# ---------- Suffix Aliases ----------
+alias -s md="bat"
+alias -s mov="open"
+alias -s png="open"
+alias -s mp4="open"
+alias -s go="$EDITOR"
+alias -s js="$EDITOR"
+alias -s ts="$EDITOR"
+alias -s yaml="bat -l yaml"
+alias -s json="jless"
+
 # gh copilot auto-execute function
 ghcs() {
   local tmpfile=$(mktemp)
