@@ -21,6 +21,17 @@ autoload -Uz edit-command-line
 zle -N edit-command-line
 bindkey '^x^e' edit-command-line  # Ctrl+x, e to edit command line in $EDITOR
 compinit -C
+clear-keep-buffer() {
+  zle clear-screen
+}
+copy-command(){
+    echo -n $BUFFER | pbcopy
+    zle -M "Command copied to clipboard"
+}
+zle -N clear-keep-buffer
+bindkey '^Xl' clear-keep-buffer
+zle -N copy-command
+bindkey '^Xc' copy-command
 
 # ---------- Plugin Manager (zinit) ----------
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
