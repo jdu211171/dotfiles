@@ -171,6 +171,28 @@ alias -s ts="$EDITOR"
 alias -s yaml="bat -l yaml"
 alias -s json="jless"
 
+# ---------- Global aliases ----------
+# These global aliases can be used anywhere in a command line, not just at the start.
+# Hide error output (stderr)
+# Usage: ls not_a_file NE
+alias -g NE='2>/dev/null'
+# Hide normal output (stdout)
+# Usage: echo hello ND
+alias -g ND='>/dev/null'
+# Hide all output (stdout and stderr)
+# Usage: some_command NUL
+# NOTE: Fixed typo, should be 2>&1, not 2>1
+alias -g NUL='>/dev/null 2>&1'
+# Pipe output to jq for JSON pretty-printing
+# Usage: curl ... JQ
+alias -g JQ='| jq'
+# Pipe output to wl-copy (Wayland clipboard)
+# Usage: echo hello C
+alias -g C='| wl-copy'
+# Pipe output to less for paging
+# Usage: cat bigfile.txt L
+alias -g L='| less'
+
 # gh copilot auto-execute function
 ghcs() {
   local tmpfile=$(mktemp)
