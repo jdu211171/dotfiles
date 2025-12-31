@@ -57,6 +57,33 @@ zstyle ':completion:*' menu no
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls $realpath'
 
+# ---------- Hooks  ----------
+autoload -Uz add-zsh-hook
+add-zsh-hook chpwd python-activate-hook
+add-zsh-hook chpwd nvm_auto_use
+add-zsh-hook chpwd function() {
+    ls
+}
+
+python-activate-hook() {
+  # If .venv directory exists, activate it
+  if [[ -d .venv ]]; then
+    source .venv/bin/activate
+  # Else if venv directory exists, activate it
+  elif [[ -d venv ]]; then
+    source venv/bin/activate
+  # Else if a virtualenv is active, deactivate it
+  elif [[ -n "$VIRTUAL_ENV" ]]; then
+    deactivate
+  fi
+}
+
+nvm_auto_use() {
+  if [[ -f .nvmrc ]]; then
+    nvm use
+  fi
+}
+
 # ---------- Prompt (oh-my-posh) ----------
 if command -v oh-my-posh >/dev/null 2>&1; then
   # Default to repository-managed theme if none provided
