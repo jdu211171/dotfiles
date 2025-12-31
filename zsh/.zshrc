@@ -1,6 +1,9 @@
 ## ~/.zshrc — OS-agnostic base with core features
 # Keep platform-specific exports/PATH in ~/.zshrc.platform (optional, sourced below).
 
+# ---------- Environment ----------
+export EDITOR="nvim"
+
 # ---------- Shell & History ----------
 set -o noclobber
 HISTFILE=${HISTFILE:-$HOME/.zsh_history}
@@ -14,6 +17,9 @@ setopt hist_ignore_space hist_ignore_dups hist_ignore_all_dups \
 
 # ---------- Completion ----------
 autoload -Uz compinit
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey '^x^e' edit-command-line  # Ctrl+x, e to edit command line in $EDITOR
 compinit -C
 
 # ---------- Plugin Manager (zinit) ----------
