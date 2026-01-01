@@ -72,9 +72,9 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls $realpath'
 autoload -Uz add-zsh-hook
 add-zsh-hook chpwd python-activate-hook
 add-zsh-hook chpwd nvm_auto_use
-add-zsh-hook chpwd function() {
-    ls
-}
+# add-zsh-hook chpwd function() {
+#     ls
+# }
 
 python-activate-hook() {
   # If .venv directory exists, activate it
