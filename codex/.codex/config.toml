@@ -13,6 +13,9 @@ sandbox_mode = "danger-full-access"
 
 [mcp_servers]
 
+  [mcp_servers.vercel]
+    url = "https://mcp.vercel.com"
+
   [mcp_servers.context7]
     args = ["-y", "@upstash/context7-mcp@latest"]
     command = "npx"
@@ -58,6 +61,13 @@ sandbox_mode = "danger-full-access"
   [mcp_servers.fetch]
     args = ["mcp-server-fetch"]
     command = "uvx"
+    startup_timeout_sec = 60
+    tool_timeout_sec = 60
+    transport = "stdio"
+
+  [mcp_servers.backlog]
+    args = []
+    command = "npx -y backlog-mcp-server"
     startup_timeout_sec = 60
     tool_timeout_sec = 60
     transport = "stdio"
