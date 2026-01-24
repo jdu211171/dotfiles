@@ -90,8 +90,10 @@ python-activate-hook() {
 }
 
 nvm_auto_use() {
-  if [[ -f .nvmrc ]]; then
+  if [[ -s .nvmrc ]]; then
     nvm use
+  else
+    nvm use 24
   fi
 }
 
