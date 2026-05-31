@@ -1,24 +1,48 @@
 {
   "mcpServers": {
     "context7": {
-      "type": "http",
-      "url": "https://mcp.context7.com/mcp",
-      "headers": {},
       "tools": [
         "*"
-      ]
+      ],
+      "type": "http",
+      "url": "https://mcp.context7.com/mcp",
+      "headers": {}
     },
     "playwright": {
+      "tools": [
+        "*"
+      ],
       "command": "npx",
       "args": [
         "@playwright/mcp@latest"
-      ],
-      "tools": ["*"]
+      ]
     },
     "chrome-devtools": {
+      "tools": [
+        "*"
+      ],
       "command": "npx",
-      "args": ["chrome-devtools-mcp@latest"],
-      "tools": ["*"]
+      "args": [
+        "chrome-devtools-mcp@latest"
+      ]
+    },
+    "supabase": {
+      "tools": [
+        "*"
+      ],
+      "command": "/bin/bash",
+      "args": [
+        "/Users/muhammadnurislomtukhtamishhoji-zoda/dotfiles/scripts/supabase-mcp-stdio.sh"
+      ]
+    },
+    "backlog": {
+      "tools": [
+        "*"
+      ],
+      "command": "/bin/bash",
+      "args": [
+        "/Users/muhammadnurislomtukhtamishhoji-zoda/dotfiles/scripts/backlog-mcp-stdio.sh"
+      ]
     }
   }
 }

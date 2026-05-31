@@ -33,6 +33,10 @@ vim.api.nvim_create_autocmd({ "TermOpen", "TermEnter", "BufEnter", "WinEnter" },
   callback = function()
     vim.opt_local.number = true
     vim.opt_local.relativenumber = true
+    vim.opt_local.expandtab = false   -- Use actual tabs instead of spaces
+    vim.opt_local.shiftwidth = 4      -- Number of spaces for each step of (auto)indent
+    vim.opt_local.tabstop = 4         -- Number of spaces that a <Tab> in the file counts for
+    vim.opt_local.softtabstop = 4     -- Number of spaces that a <Tab> counts for while editing
   end,
 })
 
