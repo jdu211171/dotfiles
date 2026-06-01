@@ -70,38 +70,18 @@ require("gitsigns").setup {
     map("n", "[h", gitsigns.prev_hunk, { desc = "Previous hunk" })
 
     -- Navigate staged hunks
-    map(
-      "n",
-      "]H",
-      function()
-        gitsigns.nav_hunk("next", { target = "staged" })
-      end,
-      { desc = "Next staged hunk" }
-    )
-    map(
-      "n",
-      "[H",
-      function()
-        gitsigns.nav_hunk("prev", { target = "staged" })
-      end,
-      { desc = "Previous staged hunk" }
-    )
+    map("n", "]H", function()
+      gitsigns.nav_hunk("next", { target = "staged" })
+    end, { desc = "Next staged hunk" })
+    map("n", "[H", function()
+      gitsigns.nav_hunk("prev", { target = "staged" })
+    end, { desc = "Previous staged hunk" })
     -- Navigate all hunks (staged + unstaged)
-    map(
-      "n",
-      "]A",
-      function()
-        gitsigns.nav_hunk("next", { target = "all" })
-      end,
-      { desc = "Next hunk (all)" }
-    )
-    map(
-      "n",
-      "[A",
-      function()
-        gitsigns.nav_hunk("prev", { target = "all" })
-      end,
-      { desc = "Previous hunk (all)" }
-    )
+    map("n", "]A", function()
+      gitsigns.nav_hunk("next", { target = "all" })
+    end, { desc = "Next hunk (all)" })
+    map("n", "[A", function()
+      gitsigns.nav_hunk("prev", { target = "all" })
+    end, { desc = "Previous hunk (all)" })
   end,
 }

@@ -12,54 +12,18 @@ return {
         auto_trigger = true,
         debounce = 75,
         keymap = {
-          -- Friendlier inline suggestion workflow
-          accept = "<Tab>",
-          accept_word = false,
-          accept_line = false,
-          next = "<M-]>",
-          prev = "<M-[>",
-          dismiss = "<C-]>",
+          accept = "<Tab>", -- Tab to accept suggestion if active, otherwise normal Tab
+          accept_word = "<M-l>", -- Alt+l to accept the next word (move right like Vim 'l')
+          accept_line = "<M-j>", -- Alt+j to accept the next line (move down like Vim 'j')
+          next = "<M-n>", -- Alt+n to cycle to the next suggestion
+          prev = "<M-p>", -- Alt+p to cycle to the previous suggestion
+          dismiss = "<M-x>", -- Alt+x to dismiss suggestion (eXit)
         },
       },
       panel = { enabled = false },
     },
     config = function(_, opts)
       require("copilot").setup(opts)
-
-      local suggestion = require("copilot.suggestion")
-
-      local function fallback(key)
-        return vim.api.nvim_replace_termcodes(key, true, false, true)
-      end
-
-      local function accept_word_or_fallback(key)
-        if suggestion.is_visible() then
-          suggestion.accept_word()
-          return "<Ignore>"
-        end
-        return fallback(key)
-      end
-
-      local function accept_line_or_fallback(key)
-        if suggestion.is_visible() then
-          suggestion.accept_line()
-          return "<Ignore>"
-        end
-        return fallback(key)
-      end
-
-      vim.keymap.set("i", "<M-Right>", function()
-        return accept_word_or_fallback("<M-Right>")
-      end, { expr = true, silent = true, desc = "Copilot accept word (Alt+Right)" })
-
-      vim.keymap.set("i", "<End>", function()
-        return accept_line_or_fallback("<End>")
-      end, { expr = true, silent = true, desc = "Copilot accept line (End)" })
-
-      vim.keymap.set("i", "<S-Tab>", function()
-        suggestion.next()
-        return "<Ignore>"
-      end, { expr = true, silent = true, desc = "Copilot trigger suggestion (Shift+Tab)" })
     end,
   },
 
@@ -73,24 +37,24 @@ return {
     },
     build = "make tiktoken",
     keys = {
-      { "<leader>cc", "<cmd>CopilotChatToggle<cr>",   desc = "Copilot Chat - Toggle" },
-      { "<leader>co", "<cmd>CopilotChatOpen<cr>",     desc = "Copilot Chat - Open" },
-      { "<leader>cq", "<cmd>CopilotChatClose<cr>",    desc = "Copilot Chat - Close" },
-      { "<leader>cs", "<cmd>CopilotChatStop<cr>",     desc = "Copilot Chat - Stop output" },
-      { "<leader>cr", "<cmd>CopilotChatReset<cr>",    desc = "Copilot Chat - Reset" },
-      { "<leader>cP", "<cmd>CopilotChatPrompts<cr>",  desc = "Copilot Chat - Prompts" },
-      { "<leader>cM", "<cmd>CopilotChatModels<cr>",   desc = "Copilot Chat - Models" },
+      { "<leader>cc", "<cmd>CopilotChatToggle<cr>", desc = "Copilot Chat - Toggle" },
+      { "<leader>co", "<cmd>CopilotChatOpen<cr>", desc = "Copilot Chat - Open" },
+      { "<leader>cq", "<cmd>CopilotChatClose<cr>", desc = "Copilot Chat - Close" },
+      { "<leader>cs", "<cmd>CopilotChatStop<cr>", desc = "Copilot Chat - Stop output" },
+      { "<leader>cr", "<cmd>CopilotChatReset<cr>", desc = "Copilot Chat - Reset" },
+      { "<leader>cP", "<cmd>CopilotChatPrompts<cr>", desc = "Copilot Chat - Prompts" },
+      { "<leader>cM", "<cmd>CopilotChatModels<cr>", desc = "Copilot Chat - Models" },
       -- Common built-in prompt commands
-      { "<leader>ce", "<cmd>CopilotChatExplain<cr>",  desc = "Copilot Chat - Explain" },
-      { "<leader>cf", "<cmd>CopilotChatFix<cr>",      desc = "Copilot Chat - Fix" },
-      { "<leader>cR", "<cmd>CopilotChatReview<cr>",   desc = "Copilot Chat - Review" },
+      { "<leader>ce", "<cmd>CopilotChatExplain<cr>", desc = "Copilot Chat - Explain" },
+      { "<leader>cf", "<cmd>CopilotChatFix<cr>", desc = "Copilot Chat - Fix" },
+      { "<leader>cR", "<cmd>CopilotChatReview<cr>", desc = "Copilot Chat - Review" },
       { "<leader>cO", "<cmd>CopilotChatOptimize<cr>", desc = "Copilot Chat - Optimize" },
-      { "<leader>cD", "<cmd>CopilotChatDocs<cr>",     desc = "Copilot Chat - Docs" },
-      { "<leader>cT", "<cmd>CopilotChatTests<cr>",    desc = "Copilot Chat - Tests" },
-      { "<leader>cC", "<cmd>CopilotChatCommit<cr>",   desc = "Copilot Chat - Commit msg" },
+      { "<leader>cD", "<cmd>CopilotChatDocs<cr>", desc = "Copilot Chat - Docs" },
+      { "<leader>cT", "<cmd>CopilotChatTests<cr>", desc = "Copilot Chat - Tests" },
+      { "<leader>cC", "<cmd>CopilotChatCommit<cr>", desc = "Copilot Chat - Commit msg" },
     },
     opts = {
-      model = 'grok-code-fast-1',
+      model = "grok-code-fast-1",
       temperature = 0.1,
       auto_insert_mode = true,
       window = {
@@ -122,8 +86,7 @@ return {
       },
       -- Prefer visual selection, fallback to current line
       selection = function(source)
-        return require("CopilotChat.select").visual(source)
-          or require("CopilotChat.select").line(source)
+        return require("CopilotChat.select").visual(source) or require("CopilotChat.select").line(source)
       end,
     },
     config = function(_, opts)
@@ -142,7 +105,7 @@ return {
       -- For Neovim < 0.11, ensure good completion behavior in the chat
       local ver = vim.version()
       if ver and (ver.major == 0 and ver.minor < 11) then
-        vim.opt.completeopt:append({ "noinsert", "popup" })
+        vim.opt.completeopt:append { "noinsert", "popup" }
       end
     end,
   },

@@ -1,6 +1,6 @@
-local telescope = require("telescope")
-local actions = require("telescope.actions")
-local action_state = require("telescope.actions.state")
+local telescope = require "telescope"
+local actions = require "telescope.actions"
+local action_state = require "telescope.actions.state"
 
 -- Open all currently multi-selected entries; fall back to default for single selection.
 local function open_multi(prompt_bufnr, open_cmd)

@@ -27,7 +27,7 @@ map("t", "<M-q>", [[<C-\><C-n>]], { desc = "Terminal: exit to Normal (Alt-q)" })
 
 -- Utility: copy current file's relative path
 map("n", "<leader>yp", function()
-  local rel = vim.fn.expand("%:.")
+  local rel = vim.fn.expand "%:."
   if rel == nil or rel == "" then
     vim.notify("No file path for this buffer", vim.log.levels.WARN)
     return
@@ -38,7 +38,7 @@ end, { desc = "Yank relative path to clipboard" })
 
 -- Utility: copy @file:<relative> for Copilot Chat mentions
 map("n", "<leader>yf", function()
-  local rel = vim.fn.expand("%:.")
+  local rel = vim.fn.expand "%:."
   if rel == nil or rel == "" then
     vim.notify("No file path for this buffer", vim.log.levels.WARN)
     return
@@ -72,42 +72,27 @@ do
   local mapdir = function(lhs, navfn, wincmd)
     vim.keymap.set({ "n", "t" }, lhs, (ok and navfn) or fallback(wincmd), { silent = true, noremap = true })
   end
-  mapdir("<C-h>", ok and nav.NvimTmuxNavigateLeft,  "wincmd h")
-  mapdir("<C-j>", ok and nav.NvimTmuxNavigateDown,  "wincmd j")
-  mapdir("<C-k>", ok and nav.NvimTmuxNavigateUp,    "wincmd k")
+  mapdir("<C-h>", ok and nav.NvimTmuxNavigateLeft, "wincmd h")
+  mapdir("<C-j>", ok and nav.NvimTmuxNavigateDown, "wincmd j")
+  mapdir("<C-k>", ok and nav.NvimTmuxNavigateUp, "wincmd k")
   mapdir("<C-l>", ok and nav.NvimTmuxNavigateRight, "wincmd l")
 end
 
 -- Normal mode: Alt+Right/Left act like Tab/Shift-Tab
 -- Use remap=true so buffer-local <Tab>/<S-Tab> mappings (e.g., Telescope) still trigger
-map("n", "<M-Right>", "<Tab>",   { remap = true, silent = true, desc = "Normal: behave as <Tab> (Alt+Right)" })
-map("n", "<M-Left>",  "<S-Tab>", { remap = true, silent = true, desc = "Normal: behave as <S-Tab> (Alt+Left)" })
+map("n", "<M-Right>", "<Tab>", { remap = true, silent = true, desc = "Normal: behave as <Tab> (Alt+Right)" })
+map("n", "<M-Left>", "<S-Tab>", { remap = true, silent = true, desc = "Normal: behave as <S-Tab> (Alt+Left)" })
 
 -- Find & Replace helpers (buffer-only)
 -- - <leader>br: confirm each match
 -- - <leader>bR: replace all matches
 -- Uses word boundaries (\<\>) in Normal mode and very nomagic (\V) in Visual mode.
-map(
-  "n",
-  "<leader>br",
-  [[:%s/\<<C-r><C-w>\>//gc<Left><Left><Left>]],
-  { desc = "Buffer substitute word (confirm each)" }
-)
-map(
-  "n",
-  "<leader>bR",
-  [[:%s/\<<C-r><C-w>\>//g<Left><Left>]],
-  { desc = "Buffer substitute word (replace all)" }
-)
+map("n", "<leader>br", [[:%s/\<<C-r><C-w>\>//gc<Left><Left><Left>]], { desc = "Buffer substitute word (confirm each)" })
+map("n", "<leader>bR", [[:%s/\<<C-r><C-w>\>//g<Left><Left>]], { desc = "Buffer substitute word (replace all)" })
 map(
   "x",
   "<leader>br",
   [["zy:%s/\V<C-r>z//gc<Left><Left><Left>]],
   { desc = "Buffer substitute selection (confirm each)" }
 )
-map(
-  "x",
-  "<leader>bR",
-  [["zy:%s/\V<C-r>z//g<Left><Left>]],
-  { desc = "Buffer substitute selection (replace all)" }
-)
+map("x", "<leader>bR", [["zy:%s/\V<C-r>z//g<Left><Left>]], { desc = "Buffer substitute selection (replace all)" })

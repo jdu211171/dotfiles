@@ -33,10 +33,10 @@ vim.api.nvim_create_autocmd({ "TermOpen", "TermEnter", "BufEnter", "WinEnter" },
   callback = function()
     vim.opt_local.number = true
     vim.opt_local.relativenumber = true
-    vim.opt_local.expandtab = false   -- Use actual tabs instead of spaces
-    vim.opt_local.shiftwidth = 4      -- Number of spaces for each step of (auto)indent
-    vim.opt_local.tabstop = 4         -- Number of spaces that a <Tab> in the file counts for
-    vim.opt_local.softtabstop = 4     -- Number of spaces that a <Tab> counts for while editing
+    vim.opt_local.expandtab = false -- Use actual tabs instead of spaces
+    vim.opt_local.shiftwidth = 4 -- Number of spaces for each step of (auto)indent
+    vim.opt_local.tabstop = 4 -- Number of spaces that a <Tab> in the file counts for
+    vim.opt_local.softtabstop = 4 -- Number of spaces that a <Tab> counts for while editing
   end,
 })
 
@@ -46,17 +46,23 @@ vim.api.nvim_create_autocmd({ "TermOpen", "TermEnter", "BufEnter", "WinEnter" },
 vim.api.nvim_create_autocmd("VimEnter", {
   callback = function()
     -- Only when launched with no args and current buffer isn't modified
-    if vim.fn.argc() ~= 0 then return end
+    if vim.fn.argc() ~= 0 then
+      return
+    end
     local opening = vim.api.nvim_buf_get_name(0)
     local is_dir = vim.fn.isdirectory(opening) == 1
     local modified = vim.api.nvim_get_option_value("modified", { buf = 0 })
-    if modified or not (is_dir or opening == "") then return end
+    if modified or not (is_dir or opening == "") then
+      return
+    end
 
     -- Defer slightly to let lazy-loaded UI pieces settle, then open NvDash
     -- and clean up any stray, empty preview/placeholder windows some plugins
     -- may create during startup.
     vim.defer_fn(function()
-      if not vim.bo.buflisted then vim.cmd.enew() end
+      if not vim.bo.buflisted then
+        vim.cmd.enew()
+      end
       pcall(function()
         require("nvchad.nvdash").open()
       end)
@@ -96,9 +102,13 @@ do
       -- Collect potentially impacted buffers before applying edits
       local impacted = {}
       local function add_uri(uri)
-        if not uri then return end
+        if not uri then
+          return
+        end
         local bufnr = vim.uri_to_bufnr(uri)
-        if bufnr and bufnr > 0 then impacted[bufnr] = true end
+        if bufnr and bufnr > 0 then
+          impacted[bufnr] = true
+        end
       end
       if workspace_edit then
         if workspace_edit.documentChanges then
@@ -110,7 +120,9 @@ do
             -- rename/create/delete kinds don't carry edits themselves
           end
         elseif workspace_edit.changes then
-          for uri, _ in pairs(workspace_edit.changes) do add_uri(uri) end
+          for uri, _ in pairs(workspace_edit.changes) do
+            add_uri(uri)
+          end
         end
       end
 
@@ -119,7 +131,9 @@ do
       for bufnr in pairs(impacted) do
         before[bufnr] = {
           exists = (vim.fn.bufexists(bufnr) == 1),
-          listed = pcall(function() return vim.bo[bufnr].buflisted end) and vim.bo[bufnr].buflisted or false,
+          listed = pcall(function()
+            return vim.bo[bufnr].buflisted
+          end) and vim.bo[bufnr].buflisted or false,
           visible = (vim.fn.bufwinid(bufnr) ~= -1),
         }
       end
@@ -130,20 +144,23 @@ do
         -- Save any modified normal file buffers, then unlist those that
         -- weren’t visible before the edit (to avoid bufferline noise).
         for bufnr in pairs(impacted) do
-          if vim.api.nvim_buf_is_loaded(bufnr)
+          if
+            vim.api.nvim_buf_is_loaded(bufnr)
             and vim.api.nvim_get_option_value("modified", { buf = bufnr })
             and vim.bo[bufnr].buftype == ""
             and vim.bo[bufnr].modifiable
             and not vim.bo[bufnr].readonly
           then
             pcall(vim.api.nvim_buf_call, bufnr, function()
-              vim.cmd("silent noautocmd update")
+              vim.cmd "silent noautocmd update"
             end)
           end
 
           local was = before[bufnr]
           if was and not was.visible and not was.listed and vim.fn.bufwinid(bufnr) == -1 then
-            pcall(function() vim.bo[bufnr].buflisted = false end)
+            pcall(function()
+              vim.bo[bufnr].buflisted = false
+            end)
           end
         end
       end

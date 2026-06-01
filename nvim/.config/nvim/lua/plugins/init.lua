@@ -52,7 +52,7 @@ return {
           if type(out) == "table" and out[1] and out[1] ~= "" and vim.v.shell_error == 0 then
             cwd = out[1]
           end
-          require("grug-far").open({ cwd = cwd, prefills = { search = vim.fn.expand("<cword>") } })
+          require("grug-far").open { cwd = cwd, prefills = { search = vim.fn.expand "<cword>" } }
         end,
         mode = "n",
         desc = "Grug: search & replace (project)",
@@ -65,7 +65,7 @@ return {
           if type(out) == "table" and out[1] and out[1] ~= "" and vim.v.shell_error == 0 then
             cwd = out[1]
           end
-          require("grug-far").with_visual_selection({ cwd = cwd })
+          require("grug-far").with_visual_selection { cwd = cwd }
         end,
         mode = "x",
         desc = "Grug: search selection (project)",
@@ -78,7 +78,10 @@ return {
           if type(out) == "table" and out[1] and out[1] ~= "" and vim.v.shell_error == 0 then
             cwd = out[1]
           end
-          require("grug-far").open({ cwd = cwd, prefills = { paths = vim.fn.expand("%"), search = vim.fn.expand("<cword>") } })
+          require("grug-far").open {
+            cwd = cwd,
+            prefills = { paths = vim.fn.expand "%", search = vim.fn.expand "<cword>" },
+          }
         end,
         mode = "n",
         desc = "Grug: search in current file",
@@ -91,7 +94,7 @@ return {
           if type(out) == "table" and out[1] and out[1] ~= "" and vim.v.shell_error == 0 then
             cwd = out[1]
           end
-          require("grug-far").open({ cwd = cwd, visualSelectionUsage = "operate-within-range" })
+          require("grug-far").open { cwd = cwd, visualSelectionUsage = "operate-within-range" }
         end,
         mode = { "n", "x" },
         desc = "Grug: search within selection range",
@@ -99,7 +102,9 @@ return {
     },
     config = function()
       local ok, grug = pcall(require, "grug-far")
-      if not ok then return end
+      if not ok then
+        return
+      end
 
       local function get_root()
         local cwd = vim.loop.cwd()
@@ -114,7 +119,7 @@ return {
 
       -- We keep setup minimal; keys above trigger lazy-load and call APIs
       -- Users can run :GrugFar or use the keys to launch the panel
-      end,
+    end,
   },
 
   -- Disable auto popup completion from nvim-cmp; manual trigger only
@@ -251,13 +256,102 @@ return {
     },
   },
 
-  -- {
-  -- 	"nvim-treesitter/nvim-treesitter",
-  -- 	opts = {
-  -- 		ensure_installed = {
-  -- 			"vim", "lua", "vimdoc",
-  --      "html", "css"
-  -- 		},
-  -- 	},
-  -- },
+  -- Snacks.nvim - modern utility collection, configured here specifically for premium image previews
+  {
+    "folke/snacks.nvim",
+    priority = 1000,
+    lazy = false,
+    opts = {
+      image = {
+        enabled = true,
+        doc = {
+          inline = true, -- show image inline in markdown/org files
+          float = true, -- show image in a floating window on hover
+          max_width = 80,
+          max_height = 40,
+        },
+      },
+    },
+  },
+
+  {
+    "nvim-treesitter/nvim-treesitter",
+    branch = "main",
+    build = ":TSUpdate",
+    opts = {
+      ensure_installed = {
+        -- Web (frontend)
+        "html",
+        "css",
+        "scss",
+        "javascript",
+        "typescript",
+        "tsx",
+        "vue",
+        "graphql",
+
+        -- Ruby ecosystem (Rails dominates in Japan)
+        "ruby",
+        "embedded_template", -- ERB
+
+        -- PHP ecosystem
+        "php",
+        "phpdoc",
+
+        -- Python
+        "python",
+
+        -- Go
+        "go",
+        "gomod",
+        "gosum",
+        "gowork",
+
+        -- JVM
+        "java",
+        "kotlin",
+
+        -- Apple / iOS
+        "swift",
+
+        -- C# (Unity — dominant engine in Japanese game industry)
+        "c_sharp",
+
+        -- Systems / game dev
+        "c",
+        "cpp",
+        "rust",
+
+        -- Scripting / tooling
+        "lua",
+        "luadoc",
+        "bash",
+        "sql",
+
+        -- Config & data formats
+        "json",
+        "json5",
+        "jsonc",
+        "yaml",
+        "toml",
+        "proto",
+        "hcl",
+        "markdown",
+        "markdown_inline",
+        "dockerfile",
+        "regex",
+
+        -- Neovim / editor
+        "vim",
+        "vimdoc",
+        "query",
+        "printf",
+      },
+    },
+    config = function(_, opts)
+      -- Override NvChad's default config which calls the removed configs.setup() module.
+      -- On the main branch, we just call the new setup module.
+      require("nvim-treesitter").setup(opts)
+    end,
+  },
 }
