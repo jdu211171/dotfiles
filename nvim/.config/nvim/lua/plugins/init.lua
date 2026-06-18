@@ -1,4 +1,11 @@
 return {
+  -- Smart paste indentation for code blocks; load immediately so normal paste keys are ready.
+  {
+    "nemanjamalesija/smart-paste.nvim",
+    lazy = false,
+    config = true,
+  },
+
   {
     "stevearc/conform.nvim",
     event = "BufWritePre",
