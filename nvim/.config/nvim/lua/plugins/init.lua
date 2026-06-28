@@ -37,6 +37,71 @@ return {
       },
     },
   },
+  -- Run the current file with language-aware commands.
+  -- Lazy-load on the documented commands and the run mapping.
+  {
+    "CRAG666/code_runner.nvim",
+    cmd = { "RunCode", "RunFile", "RunProject", "RunClose", "CRFiletype", "CRProjects" },
+    keys = {
+      {
+        "<leader>rr",
+        "<cmd>RunCode<cr>",
+        mode = "n",
+        desc = "Run current file",
+      },
+    },
+    opts = {
+      mode = "float",
+      focus = true,
+      startinsert = true,
+      float = {
+        border = "rounded",
+      },
+      filetype = {
+        java = function()
+          local dir = vim.fn.expand "%:p:h"
+          local file = vim.fn.expand "%:t"
+          local stem = vim.fn.expand "%:t:r"
+          local pathsep = package.config:sub(1, 1)
+          local classpath_sep = pathsep == "\\" and ";" or ":"
+          local cp = { "." }
+
+          local function add_if_readable(pattern)
+            local matches = vim.fn.glob(pattern, false, true)
+            for _, match in ipairs(matches) do
+              if vim.fn.filereadable(match) == 1 and match:match "%.jar$" then
+                table.insert(cp, match)
+              end
+            end
+          end
+
+          add_if_readable(dir .. pathsep .. "*.jar")
+          add_if_readable(dir .. pathsep .. "lib" .. pathsep .. "*.jar")
+
+          local function has_project_file(name)
+            return vim.fn.filereadable(dir .. pathsep .. name) == 1
+          end
+
+          if has_project_file "pom.xml" then
+            return "cd $dir && mvn -q -DskipTests compile exec:java"
+          end
+
+          if has_project_file "build.gradle" or has_project_file "build.gradle.kts" then
+            return "cd $dir && ./gradlew run"
+          end
+
+          local classpath = table.concat(cp, classpath_sep)
+          return string.format("cd $dir && javac -cp %s %s && java -cp %s %s", classpath, file, classpath, stem)
+        end,
+        javascript = "node",
+        javascriptreact = "node",
+        typescript = "npx tsx",
+        typescriptreact = "npx tsx",
+        python = "python3 -u",
+        python3 = "python3 -u",
+      },
+    },
+  },
   -- These are some examples, uncomment them if you want to see them work!
   {
     "neovim/nvim-lspconfig",
