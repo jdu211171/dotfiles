@@ -17,6 +17,44 @@ map("x", "p", [==["_dP]==], { desc = "Paste without overwriting register" })
 map("v", "<Tab>", ">gv", { silent = true, desc = "Visual: indent selection" })
 map("v", "<S-Tab>", "<gv", { silent = true, desc = "Visual: dedent selection" })
 
+local function tab_fallback(lhs)
+  return vim.api.nvim_replace_termcodes(lhs, true, false, true)
+end
+
+-- Insert/select: keep completion navigation first, then LuaSnip expansion/jumps.
+-- If neither applies, fall back to a normal Tab/Shift-Tab.
+map({ "i", "s" }, "<Tab>", function()
+  local ok_cmp, cmp = pcall(require, "cmp")
+  if ok_cmp and cmp.visible() then
+    cmp.select_next_item()
+    return ""
+  end
+
+  local ok_luasnip, luasnip = pcall(require, "luasnip")
+  if ok_luasnip and luasnip.expand_or_locally_jumpable() then
+    luasnip.expand_or_jump()
+    return ""
+  end
+
+  return tab_fallback "<Tab>"
+end, { expr = true, silent = true, desc = "Snippet expand/jump or Tab" })
+
+map({ "i", "s" }, "<S-Tab>", function()
+  local ok_cmp, cmp = pcall(require, "cmp")
+  if ok_cmp and cmp.visible() then
+    cmp.select_prev_item()
+    return ""
+  end
+
+  local ok_luasnip, luasnip = pcall(require, "luasnip")
+  if ok_luasnip and luasnip.locally_jumpable(-1) then
+    luasnip.jump(-1)
+    return ""
+  end
+
+  return tab_fallback "<S-Tab>"
+end, { expr = true, silent = true, desc = "Snippet jump back or Shift-Tab" })
+
 -- Do NOT hijack plain <Esc> so zsh vi-mode keeps working
 -- Provide reliable alternatives that do not need extended-keys
 map("t", "<C-\\>", [[<C-\><C-n>]], { desc = "Terminal: exit to Normal (Ctrl-\\)" })

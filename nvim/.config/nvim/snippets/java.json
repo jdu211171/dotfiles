@@ -1,0 +1,7 @@
+{
+	"System.out.println": {
+		"prefix": "sout",
+		"body": ["System.out.println($1);"],
+		"description": "Print to standard out"
+	}
+}

@@ -12,7 +12,7 @@ return {
         auto_trigger = true,
         debounce = 75,
         keymap = {
-          accept = "<Tab>", -- Tab to accept suggestion if active, otherwise normal Tab
+          accept = "<M-a>", -- Alt+a accepts the full suggestion; keep Tab for cmp/LuaSnip
           accept_word = "<M-l>", -- Alt+l to accept the next word (move right like Vim 'l')
           accept_line = "<M-j>", -- Alt+j to accept the next line (move down like Vim 'j')
           next = "<M-n>", -- Alt+n to cycle to the next suggestion

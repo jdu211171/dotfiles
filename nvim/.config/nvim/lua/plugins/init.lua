@@ -194,16 +194,6 @@ return {
     end,
   },
 
-  -- Disable auto popup completion from nvim-cmp; manual trigger only
-  {
-    "hrsh7th/nvim-cmp",
-    opts = function(_, opts)
-      opts.completion = opts.completion or {}
-      opts.completion.autocomplete = false
-      return opts
-    end,
-  },
-
   -- GitHub Copilot
   -- {
   --   "github/copilot.vim",

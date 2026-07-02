@@ -1,0 +1,32 @@
+
+==============================================================================
+nvim-treesitter:                                                          1 ❌
+
+Requirements ~
+- ✅ OK Neovim was compiled with tree-sitter runtime ABI version 15 (required >=13).
+- ❌ ERROR tree-sitter-cli not found
+- ✅ OK tar 3.5.3 (/usr/bin/tar)
+- ✅ OK curl 8.7.1 (/usr/bin/curl)
+  curl 8.7.1 (x86_64-apple-darwin25.0) libcurl/8.7.1 (SecureTransport) LibreSSL/3.3.6 zlib/1.2.12 nghttp2/1.68.1
+  Release-Date: 2024-03-27
+  Protocols: dict file ftp ftps gopher gophers http https imap imaps ipfs ipns ldap ldaps mqtt pop3 pop3s rtsp smb smbs smtp smtps telnet tftp
+  Features: alt-svc AsynchDNS GSS-API HSTS HTTP2 HTTPS-proxy IPv6 Kerberos Largefile libz MultiSSL NTLM SPNEGO SSL threadsafe UnixSockets
+
+OS Info ~
+- machine: arm64
+- release: 25.5.0
+- version: Darwin Kernel Version 25.5.0: Mon Apr 27 20:41:26 PDT 2026; root:xnu-12377.121.6~2/RELEASE_ARM64_T8132
+- sysname: Darwin
+
+Install directory for parsers and queries ~
+- /Users/muhammadnurislomtukhtamishhoji-zoda/.local/share/nvim/site
+- ✅ OK is writable.
+- ✅ OK is in runtimepath.
+
+Installed languages     H L F I J ~
+- ecma
+- html_tags
+- jsx
+
+  Legend: [H]ighlights, [L]ocals, [F]olds, [I]ndents, In[J]ections ~
+
