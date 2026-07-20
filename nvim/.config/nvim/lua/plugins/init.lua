@@ -194,6 +194,15 @@ return {
     end,
   },
 
+  -- Completion runtime toggles. Defaults keep automatic popups and snippet
+  -- completions enabled; mappings can switch either off without editing config.
+  {
+    "hrsh7th/nvim-cmp",
+    opts = function(_, opts)
+      return require("configs.completion_toggle").apply_to_opts(opts)
+    end,
+  },
+
   -- GitHub Copilot
   -- {
   --   "github/copilot.vim",
@@ -285,6 +294,9 @@ return {
     "nvim-tree/nvim-tree.lua",
     lazy = false,
     opts = {
+      -- view = {
+      --   side = "right",
+      -- },
       filters = {
         -- do not hide dotfiles; ensures .env is visible
         dotfiles = false,

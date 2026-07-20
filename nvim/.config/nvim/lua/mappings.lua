@@ -3,6 +3,9 @@ require "nvchad.mappings"
 -- add yours here
 
 local map = vim.keymap.set
+local completion_toggle = require "configs.completion_toggle"
+
+completion_toggle.setup_user_commands()
 
 map("n", ";", ":", { desc = "CMD enter command mode" })
 map("i", "jk", "<ESC>")
@@ -30,10 +33,12 @@ map({ "i", "s" }, "<Tab>", function()
     return ""
   end
 
-  local ok_luasnip, luasnip = pcall(require, "luasnip")
-  if ok_luasnip and luasnip.expand_or_locally_jumpable() then
-    luasnip.expand_or_jump()
-    return ""
+  if completion_toggle.snippets_enabled() then
+    local ok_luasnip, luasnip = pcall(require, "luasnip")
+    if ok_luasnip and luasnip.expand_or_locally_jumpable() then
+      luasnip.expand_or_jump()
+      return ""
+    end
   end
 
   return tab_fallback "<Tab>"
@@ -46,14 +51,20 @@ map({ "i", "s" }, "<S-Tab>", function()
     return ""
   end
 
-  local ok_luasnip, luasnip = pcall(require, "luasnip")
-  if ok_luasnip and luasnip.locally_jumpable(-1) then
-    luasnip.jump(-1)
-    return ""
+  if completion_toggle.snippets_enabled() then
+    local ok_luasnip, luasnip = pcall(require, "luasnip")
+    if ok_luasnip and luasnip.locally_jumpable(-1) then
+      luasnip.jump(-1)
+      return ""
+    end
   end
 
   return tab_fallback "<S-Tab>"
 end, { expr = true, silent = true, desc = "Snippet jump back or Shift-Tab" })
+
+map("n", "<leader>ta", completion_toggle.toggle_auto_popup, { desc = "Toggle completion auto popup" })
+map("n", "<leader>ts", completion_toggle.toggle_snippets, { desc = "Toggle snippets" })
+map("n", "<leader>tq", completion_toggle.toggle_quiet, { desc = "Toggle quiet completion" })
 
 -- Do NOT hijack plain <Esc> so zsh vi-mode keeps working
 -- Provide reliable alternatives that do not need extended-keys

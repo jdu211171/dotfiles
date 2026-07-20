@@ -3,6 +3,14 @@ return {
   {
     "zbirenbaum/copilot.lua",
     event = "InsertEnter",
+    dependencies = {
+      {
+        "copilotlsp-nvim/copilot-lsp",
+        init = function()
+          vim.g.copilot_nes_debounce = 500
+        end,
+      },
+    },
     opts = {
       filetypes = {
         ["*"] = true,
@@ -18,6 +26,15 @@ return {
           next = "<M-n>", -- Alt+n to cycle to the next suggestion
           prev = "<M-p>", -- Alt+p to cycle to the previous suggestion
           dismiss = "<M-x>", -- Alt+x to dismiss suggestion (eXit)
+        },
+      },
+      nes = {
+        enabled = true,
+        auto_trigger = true,
+        keymap = {
+          accept_and_goto = "<M-g>", -- Alt+g accepts NES and jumps to the next edit point
+          accept = false,
+          dismiss = "<M-x>",
         },
       },
       panel = { enabled = false },
