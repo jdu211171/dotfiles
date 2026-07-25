@@ -20,21 +20,21 @@ return {
         auto_trigger = true,
         debounce = 75,
         keymap = {
-          accept = "<M-a>", -- Alt+a accepts the full suggestion; keep Tab for cmp/LuaSnip
-          accept_word = "<M-l>", -- Alt+l to accept the next word (move right like Vim 'l')
-          accept_line = "<M-j>", -- Alt+j to accept the next line (move down like Vim 'j')
-          next = "<M-n>", -- Alt+n to cycle to the next suggestion
-          prev = "<M-p>", -- Alt+p to cycle to the previous suggestion
-          dismiss = "<M-x>", -- Alt+x to dismiss suggestion (eXit)
+          accept = "<M-a>", -- Option+a accepts the full suggestion; keep Tab for cmp/LuaSnip
+          accept_word = "<M-l>", -- Option+l accepts the next word (move right like Vim 'l')
+          accept_line = "<M-j>", -- Option+j accepts the next line (move down like Vim 'j')
+          next = "<M-n>", -- Option+n cycles to the next suggestion
+          prev = "<M-p>", -- Option+p cycles to the previous suggestion
+          dismiss = "<M-x>", -- Option+x dismisses the suggestion (eXit)
         },
       },
       nes = {
         enabled = true,
         auto_trigger = true,
         keymap = {
-          accept_and_goto = "<M-g>", -- Alt+g accepts NES and jumps to the next edit point
+          accept_and_goto = "<M-g>", -- Option+g accepts NES and jumps to the next edit point
           accept = false,
-          dismiss = "<M-x>",
+          dismiss = "<M-s>", -- Option+s skips the current NES suggestion
         },
       },
       panel = { enabled = false },
