@@ -1,6 +1,11 @@
 # Keep the tmux muscle memory and skip the first-run wizard.
 onboarding = false
 
+[terminal]
+# New panes, tabs, and workspaces use Herdr's launch directory when there is
+# no source pane/workspace to follow.
+new_cwd = "current"
+
 [keys]
 prefix = "ctrl+b"
 

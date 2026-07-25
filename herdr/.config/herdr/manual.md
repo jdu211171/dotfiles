@@ -40,6 +40,18 @@ Ctrl-b w   Open workspace navigation
 Ctrl-b g   Open the workspace picker
 ```
 
+Herdr reattaches to the existing default session when you run `herdr` again;
+it does not automatically create a new workspace for every folder. From a
+different project directory, create and focus a workspace there with:
+
+```bash
+hnew
+```
+
+This is equivalent to creating a workspace using the current directory. New
+panes, tabs, and workspaces also use Herdr's launch directory when there is no
+source pane to follow.
+
 The mouse can also switch workspaces, tabs, and panes.
 
 ## Named sessions
