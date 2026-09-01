@@ -4,6 +4,12 @@
 # ---------- Environment ----------
 export EDITOR="nvim"
 
+# ---------- Early platform toggles ----------
+# Source platform file early so toggles like USE_ZOXIDE_CD are set before the
+# features that read them (e.g. the zoxide block) run. It is sourced again at the
+# end of this file so late PATH/host overrides still take effect last.
+[[ -r "$HOME/.zshrc.platform" ]] && source "$HOME/.zshrc.platform"
+
 # ---------- Shell & History ----------
 set -o noclobber
 HISTFILE=${HISTFILE:-$HOME/.zsh_history}
@@ -100,7 +106,7 @@ nvm_auto_use() {
 # ---------- Prompt (oh-my-posh) ----------
 if command -v oh-my-posh >/dev/null 2>&1; then
   # Default to repository-managed theme if none provided
-  export OMP_CONFIG="${OMP_CONFIG:-$HOME/.config/ohmyposh/zen.toml}"
+  export OMP_CONFIG="${OMP_CONFIG:-$HOME/.config/oh-my-posh/zen.toml}"
   if [[ -f "$OMP_CONFIG" ]]; then
     eval "$(oh-my-posh init zsh --config "$OMP_CONFIG")"
   else
@@ -233,3 +239,14 @@ if [[ "$OSTYPE" == linux* ]] && [[ -r "$HOME/.zshrc.linux" ]]; then
 fi
 # Generic per-host/platform overrides
 [[ -r "$HOME/.zshrc.platform" ]] && source "$HOME/.zshrc.platform"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# Ghostty - local shared libraries
+export LD_LIBRARY_PATH="$HOME/.local/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+
+
+# Added by Antigravity CLI installer
+export PATH="/home/user/.local/bin:$PATH"
