@@ -262,6 +262,34 @@ return {
     event = { "BufReadPost", "BufNewFile" },
   },
 
+  -- Markdown Preview (browser-based, synchronized scrolling)
+  -- Builds with npx+yarn when Node is available; otherwise falls back to the
+  -- pre-built binary installer (mkdp#util#install) so no Node toolchain is needed.
+  {
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    ft = { "markdown" },
+    build = function(plugin)
+      if vim.fn.executable "npx" == 1 then
+        vim.cmd("!cd " .. plugin.dir .. " && cd app && npx --yes yarn install")
+      else
+        vim.cmd [[Lazy load markdown-preview.nvim]]
+        vim.fn["mkdp#util#install"]()
+      end
+    end,
+    init = function()
+      vim.g.mkdp_filetypes = { "markdown" }
+    end,
+    keys = {
+      {
+        "<leader>mp",
+        "<cmd>MarkdownPreviewToggle<cr>",
+        mode = "n",
+        desc = "Toggle Markdown Preview",
+      },
+    },
+  },
+
   -- TMUX + Neovim navigation
   -- Directional Ctrl-h/j/k/l across Neovim splits and tmux panes.
   {
