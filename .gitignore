@@ -28,12 +28,40 @@ codex/.codex/sessions/
 codex/.codex/shell_snapshots/
 codex/.codex/config.toml.bak.*
 
-# Gemini CLI (do not track secrets/noise if copied here)
+# Gemini / Antigravity CLI (do not track secrets/noise if copied here)
 gemini/.gemini/oauth_creds.json
 gemini/.gemini/google_accounts.json
+gemini/.gemini/google_account_id
 gemini/.gemini/installation_id
+gemini/.gemini/state.json
+gemini/.gemini/trustedFolders.json
+gemini/.gemini/extension_integrity.json
+gemini/.gemini/history/
+gemini/.gemini/history.jsonl
 gemini/.gemini/tmp/
 gemini/.gemini/settings.json.bak.*
+gemini/.gemini/antigravity-cli/brain/
+gemini/.gemini/antigravity-cli/conversations/
+gemini/.gemini/antigravity-cli/presence/
+gemini/.gemini/antigravity-cli/cache/
+gemini/.gemini/antigravity-cli/history.jsonl
+gemini/.gemini/antigravity-cli/conversation_summaries.db
+gemini/.gemini/antigravity-cli/jetski_state.pbtxt
+gemini/.gemini/antigravity-cli/log/
+gemini/.gemini/antigravity-cli/crashes/
+gemini/.gemini/antigravity-cli/scratch/
+gemini/.gemini/antigravity-cli/plugins/
+gemini/.gemini/antigravity-cli/builtin/
+gemini/.gemini/antigravity-browser-profile/
+gemini/.gemini/antigravity/brain/
+gemini/.gemini/antigravity/conversations/
+gemini/.gemini/antigravity/context_state/
+gemini/.gemini/antigravity/code_tracker/
+gemini/.gemini/antigravity/browser_recordings/
+gemini/.gemini/antigravity/playground/
+gemini/.gemini/antigravity/user_settings.pb
+gemini/.gemini/antigravity/installation_id
+gemini/.gemini/antigravity/onboarding.json.lock
 
 # Copilot CLI (do not track noisy/transient files)
 copilot/.copilot/session-state/

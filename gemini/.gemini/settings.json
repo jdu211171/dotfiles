@@ -1,3 +1,49 @@
 {
-  "selectedAuthType": "oauth-personal"
+  "general": {
+    "preferredEditor": "vscode",
+    "vimMode": true,
+    "previewFeatures": true,
+    "enableAutoUpdate": true,
+    "sessionRetention": {
+      "enabled": true,
+      "maxAge": "30d",
+      "warningAcknowledged": true
+    },
+    "defaultApprovalMode": "auto_edit"
+  },
+  "security": {
+    "auth": {
+      "selectedType": "oauth-personal"
+    }
+  },
+  "ui": {
+    "theme": "Atom One",
+    "hideWindowTitle": true,
+    "hideTips": true,
+    "hideBanner": true,
+    "hideFooter": true,
+    "footer": {
+      "hideCWD": true
+    },
+    "hideContextSummary": true,
+    "showMemoryUsage": true
+  },
+  "mcpServers": {
+    "chrome-devtools": {
+      "command": "npx",
+      "args": [
+        "chrome-devtools-mcp@latest"
+      ]
+    }
+  },
+  "ide": {
+    "hasSeenNudge": true,
+    "enabled": true
+  },
+  "tools": {
+    "useRipgrep": true
+  },
+  "model": {
+    "name": ""
+  }
 }

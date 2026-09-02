@@ -1,0 +1,23 @@
+{
+  "model": "Gemini 3.7 Flash (High)",
+  "toolPermission": "always-proceed",
+  "trustedWorkspaces": [
+    "/Users/muhammadnurislomtukhtamishhoji-zoda/Development/sakura-ya",
+    "/Users/muhammadnurislomtukhtamishhoji-zoda/Development/family",
+    "/Users/muhammadnurislomtukhtamishhoji-zoda",
+    "/Users/muhammadnurislomtukhtamishhoji-zoda/Development",
+    "/Users/muhammadnurislomtukhtamishhoji-zoda/Development/ourfund",
+    "/Users/muhammadnurislomtukhtamishhoji-zoda/dotfiles/nvim",
+    "/Users/muhammadnurislomtukhtamishhoji-zoda/dotfiles",
+    "/Users/muhammadnurislomtukhtamishhoji-zoda/.config/nvim",
+    "/Users/muhammadnurislomtukhtamishhoji-zoda/Development/housing",
+    "/Users/muhammadnurislomtukhtamishhoji-zoda/Development/ShareNest",
+    "/Users/muhammadnurislomtukhtamishhoji-zoda/Downloads",
+    "/Users/muhammadnurislomtukhtamishhoji-zoda/FumiNur",
+    "/Users/muhammadnurislomtukhtamishhoji-zoda/Development/Franchise",
+    "/Users/muhammadnurislomtukhtamishhoji-zoda/test",
+    "/Users/muhammadnurislomtukhtamishhoji-zoda/Development/downSub",
+    "/Users/muhammadnurislomtukhtamishhoji-zoda/furniture",
+    "/Users/muhammadnurislomtukhtamishhoji-zoda/Documents"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "conductor": {
+    "overrides": [
+      "/Users/muhammadnurislomtukhtamishhoji-zoda/*"
+    ]
+  },
+  "context7": {
+    "overrides": [
+      "/Users/muhammadnurislomtukhtamishhoji-zoda/*"
+    ]
+  },
+  "chrome-devtools-mcp": {
+    "overrides": [
+      "/Users/muhammadnurislomtukhtamishhoji-zoda/*"
+    ]
+  }
+}

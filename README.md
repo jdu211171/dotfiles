@@ -17,6 +17,9 @@ Canonical location on this machine: ~/dotfiles
 - wofi/.config/wofi/config
 - dunst/.config/dunst/dunstrc
 - oh-my-posh/.config/oh-my-posh/theme.omp.json
+- herdr/.config/herdr/config.toml
+- codex/.codex/config.toml
+- gemini/.gemini/{settings.json,GEMINI.md,...}
 - host-laptop/.config/hypr/host.conf (optional per-host overrides)
 
 GitHub may collapse hidden path segments in the file browser. The Neovim
