@@ -12,3 +12,8 @@ theme = Atom One Dark
 
 # Width handling (CJK compatibility)
 grapheme-width-method = legacy
+
+# Send left Option as Alt so terminal applications can use <M-…> mappings.
+# Right Option keeps the native macOS Unicode/special-character behavior.
+macos-option-as-alt = left
+

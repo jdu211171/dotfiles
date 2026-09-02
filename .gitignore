@@ -40,3 +40,30 @@ copilot/.copilot/session-state/
 copilot/.copilot/history-session-state/
 copilot/.copilot/command-history-state.json
 copilot/.copilot/logs/
+
+# Large binaries and installer artifacts
+scripts/.local/bin/agy*
+scripts/.local/bin/uv*
+codex/.codex/plugins/
+
+# Runtime SQLite, logs, and caches
+*.sqlite*
+*.log
+firebase-debug.log
+.specstory/
+codex/.codex/cache/
+codex/.codex/tmp/
+codex/.codex/.tmp/
+codex/.codex/sqlite/
+codex/.codex/thread-writer-locks/
+codex/.codex/installation_id
+codex/.codex/models_cache.json
+codex/.codex/session_index.jsonl
+codex/.codex/vendor_imports/
+codex/.codex/.*_migration
+codex/.codex/.codex-global-state.json
+zed/.config/zed/conversations/
+zed/.config/zed/prompts/
+*.bak*
+
+

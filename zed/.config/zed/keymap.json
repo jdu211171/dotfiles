@@ -34,12 +34,6 @@
     }
   },
   {
-    "context": "Editor && vim_mode == insert",
-    "bindings": {
-      "alt-right": "editor::AcceptPartialEditPrediction"
-    }
-  },
-  {
     "bindings": {
       "shift-escape": "workspace::ToggleZoom"
     }

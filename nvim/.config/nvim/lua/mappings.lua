@@ -106,25 +106,48 @@ map("n", "<leader>nd", function()
 end, { desc = "NvDash: Open dashboard" })
 
 -- Final override: ensure Ctrl-h/j/k/l are mapped after all other mappings load.
--- Uses nvim-tmux-navigation when available; otherwise falls back to :wincmd.
+-- In Herdr, move within Neovim first and cross into a Herdr pane at an edge.
+-- Outside Herdr, keep the existing tmux integration and plain Neovim fallback.
 do
   local ok, nav = pcall(require, "nvim-tmux-navigation")
-  local function fallback(cmd)
+  local function herdr_navigation(wincmd, direction)
     return function()
-      -- Leave terminal mode if needed
       if vim.bo.buftype == "terminal" then
         vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-\\><C-n>", true, false, true), "n", false)
       end
-      vim.cmd(cmd)
+
+      local previous_window = vim.api.nvim_get_current_win()
+      vim.cmd("wincmd " .. wincmd)
+      if vim.api.nvim_get_current_win() == previous_window then
+        local herdr = vim.env.HERDR_BIN_PATH
+        if not herdr or herdr == "" then
+          herdr = "herdr"
+        end
+        vim.fn.system { herdr, "pane", "focus", "--direction", direction, "--current" }
+      end
     end
   end
-  local mapdir = function(lhs, navfn, wincmd)
-    vim.keymap.set({ "n", "t" }, lhs, (ok and navfn) or fallback(wincmd), { silent = true, noremap = true })
+
+  local function fallback(navfn, wincmd)
+    if ok then
+      return navfn
+    end
+    return function()
+      if vim.bo.buftype == "terminal" then
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-\\><C-n>", true, false, true), "n", false)
+      end
+      vim.cmd("wincmd " .. wincmd)
+    end
   end
-  mapdir("<C-h>", ok and nav.NvimTmuxNavigateLeft, "wincmd h")
-  mapdir("<C-j>", ok and nav.NvimTmuxNavigateDown, "wincmd j")
-  mapdir("<C-k>", ok and nav.NvimTmuxNavigateUp, "wincmd k")
-  mapdir("<C-l>", ok and nav.NvimTmuxNavigateRight, "wincmd l")
+
+  local mapdir = function(lhs, navfn, wincmd, direction)
+    local mapping = vim.env.HERDR_PANE_ID and herdr_navigation(wincmd, direction) or fallback(navfn, wincmd)
+    vim.keymap.set({ "n", "t" }, lhs, mapping, { silent = true, noremap = true })
+  end
+  mapdir("<C-h>", ok and nav.NvimTmuxNavigateLeft, "h", "left")
+  mapdir("<C-j>", ok and nav.NvimTmuxNavigateDown, "j", "down")
+  mapdir("<C-k>", ok and nav.NvimTmuxNavigateUp, "k", "up")
+  mapdir("<C-l>", ok and nav.NvimTmuxNavigateRight, "l", "right")
 end
 
 -- Normal mode: Alt+Right/Left act like Tab/Shift-Tab

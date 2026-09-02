@@ -1,8 +1,8 @@
 [user]
 	name = jdu211171
-	email = 211171m@jdu.uz
+	email = 123369867+jdu211171@users.noreply.github.com
 [core]
-	editor = nvim
+	editor = cat
 [color]
   ui = auto
 [init]
@@ -20,7 +20,12 @@
   prompt = false
   keepBackup = false
 [mergetool "vscode"]
-  cmd = '/usr/sbin/code' \"$MERGE
+	cmd = code --wait --merge $LOCAL $REMOTE $BASE $MERGED
   trustExitCode = false
 [push]
 	autoSetupRemote = true
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true

@@ -1,4 +1,40 @@
 {
+  "vim": {
+    "show_edit_predictions_in_normal_mode": true
+  },
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false,
+    "anthropic_retention": false
+  },
+  "session": {
+    "trust_all_worktrees": true
+  },
+  "outline_panel": {
+    "button": false,
+    "dock": "right"
+  },
+  "collaboration_panel": {
+    "button": false,
+    "dock": "right"
+  },
+  "agent_servers": {
+    "codex-acp": {
+      "type": "registry"
+    },
+    "gemini": {
+      "favorite_models": [
+        "auto-gemini-3"
+      ],
+      "type": "registry"
+    },
+    "github-copilot-cli": {
+      "type": "registry"
+    }
+  },
+  "edit_predictions": {
+    "provider": "copilot"
+  },
   "project_panel": {
     "dock": "right"
   },
@@ -13,19 +49,30 @@
   "toolbar": {
     "code_actions": false
   },
-  "features": {
-    "edit_prediction_provider": "copilot"
-  },
   "show_edit_predictions": true,
   "relative_line_numbers": "enabled",
   "agent": {
+    "tool_permissions": {
+      "tools": {
+        "edit_file": {
+          "default": "allow"
+        },
+        "create_directory": {
+          "default": "allow"
+        }
+      },
+      "default": "allow"
+    },
+    "inline_assistant_model": {
+      "provider": "copilot_chat",
+      "model": "gpt-4.1"
+    },
     "dock": "left",
-    "always_allow_tool_actions": true,
     "use_modifier_to_send": true,
     "default_profile": "write",
     "default_model": {
       "provider": "copilot_chat",
-      "model": "gpt-4.1"
+      "model": "gemini-3.1-pro-preview"
     },
     "model_parameters": []
   },

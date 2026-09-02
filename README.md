@@ -19,25 +19,28 @@ Canonical location on this machine: ~/dotfiles
 - oh-my-posh/.config/oh-my-posh/theme.omp.json
 - host-laptop/.config/hypr/host.conf (optional per-host overrides)
 
+GitHub may collapse hidden path segments in the file browser. The Neovim
+package lives under `nvim/.config/nvim/`, not directly under `nvim/`.
+
 ## Usage
 
-1) Install Stow: pacman -S stow (Arch), apt install stow, or brew install stow
+1. Install Stow: pacman -S stow (Arch), apt install stow, or brew install stow
 
-2) Dry-run to preview links:
+2. Dry-run to preview links:
 
-    make -C ~/dotfiles dry-run
+   make -C ~/dotfiles dry-run
 
-3) Apply symlinks into $HOME:
+3. Apply symlinks into $HOME:
 
-    make -C ~/dotfiles stow
+   make -C ~/dotfiles stow
 
 - Restow after changes:
 
-    make -C ~/dotfiles restow
+  make -C ~/dotfiles restow
 
 - Unstow to remove symlinks:
 
-    make -C ~/dotfiles unstow
+  make -C ~/dotfiles unstow
 
 You can target specific packages with PACKAGES:
 
@@ -67,8 +70,6 @@ Fresh install quick start:
     autohotspot-install
     # edit ~/.config/autohotspot.env to set SSID/PSK if needed
     hotspot-up   # or just plug Ethernet to auto-start via dispatcher
-
-
 
 ## Bootstrap script
 

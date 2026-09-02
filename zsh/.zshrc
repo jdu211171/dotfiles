@@ -86,9 +86,11 @@ python-activate-hook() {
   # If .venv directory exists, activate it
   if [[ -d .venv ]]; then
     source .venv/bin/activate
+    echo "🐍 venv sourced (.venv)"
   # Else if venv directory exists, activate it
   elif [[ -d venv ]]; then
     source venv/bin/activate
+    echo "🐍 venv sourced (venv)"
   # Else if a virtualenv is active, deactivate it
   elif [[ -n "$VIRTUAL_ENV" ]]; then
     deactivate
@@ -129,17 +131,6 @@ else
   bindkey '^I' expand-or-complete   # Tab does normal completion if fzf absent
 fi
 
-# ---------- zoxide (directory jumper) ----------
-if command -v zoxide >/dev/null 2>&1; then
-  # Set USE_ZOXIDE_CD=1 in ~/.zshrc.platform to replace `cd` with zoxide.
-  if [[ ${USE_ZOXIDE_CD:-0} -eq 1 ]]; then
-    eval "$(zoxide init zsh --cmd cd)"
-  else
-    eval "$(zoxide init zsh)"
-  fi
-  alias zi='zoxide query -i'
-fi
-
 # ---------- Keybindings ----------
 bindkey -v
 bindkey '^p' history-beginning-search-backward
@@ -173,10 +164,22 @@ maybe_start_tmux() {
 }
 maybe_start_tmux; unset -f maybe_start_tmux
 
+# ---------- Herdr session helpers ----------
+# Herdr workspaces are the normal project-level session manager. These helpers
+# are for completely separate named Herdr server sessions.
+alias hm='herdr'
+alias hls='herdr session list'
+alias ha='herdr session attach'
+alias hstop='herdr session stop'
+alias hdel='herdr session delete'
+alias hnew='herdr workspace create --cwd "$PWD" --label "${PWD##*/}" --focus'
+
 # ---------- Minimal, portable aliases ----------
 alias ls='ls -a'
 alias c='clear'
+alias cls='clear'
 alias vim='nvim'
+alias vi='nvim'
 alias q='exit'
 
 # ---------- Suffix Aliases ----------
@@ -206,11 +209,11 @@ alias -g NUL='>/dev/null 2>&1'
 # Usage: curl ... JQ
 alias -g JQ='| jq'
 # Pipe output to wl-copy (Wayland clipboard)
-# Usage: echo hello C
-alias -g C='| wl-copy'
+# Usage: echo hello CLIP
+alias -g CLIP='| wl-copy'
 # Pipe output to less for paging
-# Usage: cat bigfile.txt L
-alias -g L='| less'
+# Usage: cat bigfile.txt LESS
+alias -g LESS='| less'
 
 # gh copilot auto-execute function
 ghcs() {
@@ -244,9 +247,37 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-# Ghostty - local shared libraries
-export LD_LIBRARY_PATH="$HOME/.local/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+# Ghostty - local shared libraries (Linux)
+[[ "$OSTYPE" == linux* ]] && export LD_LIBRARY_PATH="$HOME/.local/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 
+# ---------- zoxide (directory jumper) ----------
+# NOTE: Intentionally placed after platform-specific includes so that
+# USE_ZOXIDE_CD (set in .zshrc.darwin / .zshrc.platform) is read correctly.
+if command -v zoxide >/dev/null 2>&1; then
+  # Set USE_ZOXIDE_CD=1 in ~/.zshrc.platform to replace `cd` with zoxide.
+  if [[ ${USE_ZOXIDE_CD:-0} -eq 1 ]]; then
+    eval "$(zoxide init zsh --cmd cd)"
+  else
+    eval "$(zoxide init zsh)"
+  fi
+  alias zi='zoxide query -i'
+fi
 
-# Added by Antigravity CLI installer
-export PATH="/home/user/.local/bin:$PATH"
+# Antigravity PATH
+[ -d "$HOME/.antigravity/antigravity/bin" ] && export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
+[ -d "$HOME/.local/bin" ] && export PATH="$HOME/.local/bin:$PATH"
+
+# Dotnet
+[ -d "$HOME/.dotnet" ] && export DOTNET_ROOT="$HOME/.dotnet" && export PATH="$DOTNET_ROOT:$PATH"
+
+# Disable XON/XOFF flow control so Ctrl+S does not freeze the terminal.
+[[ $- == *i* ]] && stty -ixon 2>/dev/null
+
+# >>> grok installer >>>
+if [ -d "$HOME/.grok/bin" ]; then
+  export PATH="$HOME/.grok/bin:$PATH"
+  fpath=(~/.grok/completions/zsh $fpath)
+  autoload -Uz compinit && compinit -C
+fi
+# <<< grok installer <<<
+
