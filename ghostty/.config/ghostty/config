@@ -7,8 +7,8 @@ font-size = 14
 # WSL has no desktop appearance portal, so auto light/dark switching doesn't work here.
 # Using a fixed dark theme for now. To re-enable auto-switching (works on native Linux
 # desktops), comment out the line below and uncomment the auto-switch line.
-theme = Atom One Dark
-# theme = dark:Atom One Dark,light:Catppuccin Latte
+# theme = Atom One Dark
+theme = dark:Atom One Dark,light:Catppuccin Latte
 
 # Width handling (CJK compatibility)
 grapheme-width-method = legacy

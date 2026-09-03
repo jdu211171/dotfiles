@@ -9,10 +9,12 @@ Canonical location on this machine: ~/dotfiles
 - hypr/.config/hypr/hyprland.conf
 - waybar/.config/waybar/config.jsonc
 - kitty/.config/kitty/kitty.conf
+- herdr/.config/herdr/{config.toml,manual.md}
 - nvim/.config/nvim/init.lua
 - zed/.config/zed/{settings.json,keymap.json}
 - zsh/.zshrc
 - git/.gitconfig
+- kiro/.kiro/settings/permissions.yaml
 - scripts/.local/bin/...
 - wofi/.config/wofi/config
 - dunst/.config/dunst/dunstrc

@@ -17,6 +17,32 @@ Ctrl-b q   Detach and leave everything running
 
 Run `herdr` again later to reattach.
 
+If WSL has shut down, Herdr recreates the saved workspace layout and resumes
+supported agents in their recorded conversations. This requires the agent's
+official Herdr integration; for Codex, install it once with:
+
+```bash
+herdr integration install codex
+```
+
+The integration records new or resumed Codex session IDs. Codex panes that
+were already running when it was installed need to be restarted once before
+they can be restored automatically after a WSL shutdown.
+
+### Kiro compatibility
+
+Herdr 0.8.2 detects Kiro but does not ship a Kiro session integration, so Kiro
+panes cannot yet be restored automatically from Herdr's session snapshot. To
+resume one after WSL shutdown, run the command in its existing pane:
+
+```bash
+kiro-cli --v3 --resume-id <session-id>
+```
+
+Use Kiro's chat history/session picker to find the ID. Once Herdr adds an
+official Kiro integration, enable it with `herdr integration install kiro` and
+the `[session]` setting above will cover those panes too.
+
 ## The prefix
 
 Herdr commands use the same prefix as tmux:

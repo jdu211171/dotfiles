@@ -1,0 +1,77 @@
+rules:
+  # Preserve the existing trusted documentation and browser MCP servers.
+  - capability: mcp
+    match:
+      - "chrome/*"
+      - "context7/*"
+      - "aws-docs/*"
+    effect: allow
+
+  # Read and inspect files within the active workspace.
+  - capability: fs_read
+    match:
+      - "./**"
+    effect: allow
+
+  # Basic, non-mutating shell inspection commands.
+  - capability: shell
+    match:
+      - "pwd"
+      - "ls"
+      - "ls *"
+      - "tree"
+      - "tree *"
+      - "cat *"
+      - "head *"
+      - "tail *"
+      - "grep *"
+      - "rg *"
+      - "wc *"
+      - "stat *"
+      - "file *"
+      - "git status"
+      - "git status *"
+      - "git diff"
+      - "git diff *"
+      - "git log *"
+      - "git show *"
+      - "git ls-files *"
+    effect: allow
+
+  # Keep file creation, modification, and deletion disabled for now.
+  # Change this to "ask" later if per-operation approval is desired.
+  - capability: fs_write
+    effect: deny
+
+  # Explicitly deny common destructive or privilege-changing shell commands.
+  - capability: shell
+    match:
+      - "rm"
+      - "rm *"
+      - "rmdir *"
+      - "unlink *"
+      - "shred *"
+      - "mv *"
+      - "cp *"
+      - "touch *"
+      - "mkdir *"
+      - "install *"
+      - "ln *"
+      - "truncate *"
+      - "dd *"
+      - "tee *"
+      - "sed -i *"
+      - "perl -i *"
+      - "chmod *"
+      - "chown *"
+      - "* > *"
+      - "*>*"
+      - "git clean *"
+      - "git reset *"
+      - "git restore *"
+      - "git checkout -- *"
+      - "git branch -D *"
+      - "git push --force*"
+      - "sudo *"
+      - "doas *"
+    effect: deny

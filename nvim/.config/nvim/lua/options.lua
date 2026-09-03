@@ -169,3 +169,7 @@ do
     end
   end
 end
+
+-- Always use LF line endings (prevent ^M / CRLF issues on WSL2)
+o.fileformat = "unix"
+o.fileformats = "unix,dos"
