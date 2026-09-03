@@ -1,0 +1,8 @@
+prefix_rule(pattern=["/usr/bin/zsh"], decision="allow")
+prefix_rule(pattern=["powershell.exe"], decision="allow")
+prefix_rule(pattern=["mv"], decision="allow")
+prefix_rule(pattern=["stow"], decision="allow")
+prefix_rule(pattern=["herdr"], decision="allow")
+prefix_rule(pattern=["sleep"], decision="allow")
+prefix_rule(pattern=["git"], decision="allow")
+prefix_rule(pattern=["sed"], decision="allow")
