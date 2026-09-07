@@ -56,8 +56,10 @@ kiro-herdr restore
 ```
 
 The launcher records the newest Kiro session for the working directory when
-Kiro exits. Existing sessions can be added with `kiro-herdr register`. Use
-`hkr` as the short restore alias and `hkl` to inspect saved mappings.
+Kiro exits. To discover every currently running Kiro pane automatically, run
+`kiro-herdr register` with no arguments. Existing sessions can still be added
+with `kiro-herdr register <pane> <cwd> <session-id>`. Use `hkr` as the short
+restore alias and `hkl` to inspect saved mappings.
 
 ## The prefix
 

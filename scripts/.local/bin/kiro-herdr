@@ -7,6 +7,7 @@ KIRO_BIN="${KIRO_BIN:-kiro-cli}"
 usage() {
   cat <<'EOF'
 Usage:
+  kiro-herdr register                 # discover every running Kiro pane
   kiro-herdr restore
   kiro-herdr list
   kiro-herdr launch <pane-id> <cwd> [kiro-cli arguments ...]
@@ -76,12 +77,42 @@ record() {
   echo "Recorded Kiro $session_id for Herdr pane $pane"
 }
 
+discover() {
+  ensure_state_dir
+  local pane cwd info session_id session_file kiro_present found=0
+  while IFS=$'\t' read -r pane cwd; do
+    [[ -n "$pane" && -n "$cwd" ]] || continue
+    info="$(herdr pane process-info --pane "$pane" 2>/dev/null || true)"
+    kiro_present="$(printf '%s' "$info" | jq -r '
+      any(.result.process_info.foreground_processes[]?;
+        ((.name // "") | test("kiro"; "i")) or ((.cmdline // "") | test("kiro-cli"; "i")) or ((.argv // []) | any(. | test("kiro-cli"; "i"))))' 2>/dev/null)"
+    [[ "$kiro_present" == true ]] || continue
+    session_id="$(printf '%s' "$info" | jq -r '
+      [.result.process_info.foreground_processes[]?.argv[]? | select(startswith("sess_"))][0] // empty' 2>/dev/null)"
+    if [[ -z "$session_id" ]]; then
+      # A newly-created Kiro process may not include --resume-id. In that case
+      # use the newest native Kiro session associated with this working tree.
+      session_file="$(latest_session_for_cwd "$cwd")"
+      [[ -n "$session_file" ]] && session_id="$(jq -r '.id' "$session_file")"
+    fi
+    [[ -n "$session_id" ]] || continue
+    register_session "$pane" "$cwd" "$session_id"
+    echo "Registered Kiro $session_id in $pane ($cwd)"
+    found=1
+  done < <(herdr pane list 2>/dev/null | jq -r '.result.panes[]? | [.pane_id, (.foreground_cwd // .cwd // "")] | @tsv')
+  (( found == 1 )) || echo "No running Kiro panes found."
+}
+
 command="${1:-}"; shift || true
 case "$command" in
   restore) restore "$@" ;;
   list) list_sessions "$@" ;;
+  register)
+    if [[ $# -eq 0 ]]; then discover
+    elif [[ $# -eq 3 ]]; then register_session "$@"
+    else usage >&2; exit 2; fi
+    ;;
   launch) [[ $# -ge 2 ]] || { usage >&2; exit 2; }; launch "$@" ;;
-  register) [[ $# -eq 3 ]] || { usage >&2; exit 2; }; register_session "$@" ;;
   __record) [[ $# -eq 2 ]] || { usage >&2; exit 2; }; record "$@" ;;
   *) usage >&2; exit 2 ;;
 esac
