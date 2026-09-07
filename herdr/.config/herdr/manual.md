@@ -43,6 +43,22 @@ Use Kiro's chat history/session picker to find the ID. Once Herdr adds an
 official Kiro integration, enable it with `herdr integration install kiro` and
 the `[session]` setting above will cover those panes too.
 
+### Kiro pane restore bridge
+
+This repository includes `kiro-herdr`, a small bridge for the current Herdr
+version. It stores Kiro session IDs in the local (ignored) file
+`~/.config/herdr/kiro-sessions.tsv` and
+recreates them in their Herdr panes:
+
+```sh
+kiro-herdr launch w1:p7 /home/user/projects/v2-master --v3
+kiro-herdr restore
+```
+
+The launcher records the newest Kiro session for the working directory when
+Kiro exits. Existing sessions can be added with `kiro-herdr register`. Use
+`hkr` as the short restore alias and `hkl` to inspect saved mappings.
+
 ## The prefix
 
 Herdr commands use the same prefix as tmux:

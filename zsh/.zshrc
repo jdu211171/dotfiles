@@ -173,6 +173,8 @@ alias ha='herdr session attach'
 alias hstop='herdr session stop'
 alias hdel='herdr session delete'
 alias hnew='herdr workspace create --cwd "$PWD" --label "${PWD##*/}" --focus'
+alias hkr='kiro-herdr restore'
+alias hkl='kiro-herdr list'
 
 # ---------- Minimal, portable aliases ----------
 alias ls='ls -a'
@@ -280,4 +282,3 @@ if [ -d "$HOME/.grok/bin" ]; then
   autoload -Uz compinit && compinit -C
 fi
 # <<< grok installer <<<
-

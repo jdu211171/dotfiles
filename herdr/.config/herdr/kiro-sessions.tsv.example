@@ -1,0 +1,4 @@
+# Copy to ~/.config/herdr/kiro-sessions.tsv (machine-local state)
+# Herdr pane ID<TAB>working directory<TAB>Kiro session ID
+# Example:
+# w1:p7\t/home/user/projects/v2-master\tsess_example

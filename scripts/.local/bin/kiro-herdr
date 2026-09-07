@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+STATE_FILE="${XDG_CONFIG_HOME:-$HOME/.config}/herdr/kiro-sessions.tsv"
+KIRO_BIN="${KIRO_BIN:-kiro-cli}"
+
+usage() {
+  cat <<'EOF'
+Usage:
+  kiro-herdr restore
+  kiro-herdr list
+  kiro-herdr launch <pane-id> <cwd> [kiro-cli arguments ...]
+  kiro-herdr register <pane-id> <cwd> <session-id>
+EOF
+}
+
+ensure_state_dir() {
+  mkdir -p "${STATE_FILE%/*}"
+  [[ -e "$STATE_FILE" ]] || : > "$STATE_FILE"
+}
+
+quote_for_shell() { printf '%q' "$1"; }
+
+register_session() {
+  local pane="$1" cwd="$2" session_id="$3" tmp
+  ensure_state_dir
+  tmp="${STATE_FILE}.tmp.$$"
+  awk -F '\t' -v pane="$pane" '$0 !~ /^[[:space:]]*#/ && NF >= 3 && $1 == pane { next } { print }' "$STATE_FILE" > "$tmp"
+  printf '%s\t%s\t%s\n' "$pane" "$cwd" "$session_id" >> "$tmp"
+  mv "$tmp" "$STATE_FILE"
+}
+
+latest_session_for_cwd() {
+  local cwd="$1"
+  find "${KIRO_HOME:-$HOME/.kiro}/sessions" -type f -name session.json -print0 2>/dev/null |
+    while IFS= read -r -d '' file; do
+      jq -r --arg cwd "$cwd" --arg file "$file" \
+        'select((.workspacePaths // []) | index($cwd)) | [$file, (.lastModifiedAt // "")] | @tsv' "$file" 2>/dev/null || true
+    done | sort -k2,2r | awk -F '\t' 'NR == 1 { print $1 }'
+}
+
+restore() {
+  ensure_state_dir
+  local pane cwd session_id command
+  while IFS=$'\t' read -r pane cwd session_id; do
+    [[ -z "${pane//[[:space:]]/}" || "$pane" == \#* ]] && continue
+    [[ -n "$cwd" && -n "$session_id" ]] || continue
+    command="cd $(quote_for_shell "$cwd") && $(quote_for_shell "$KIRO_BIN") --v3 --resume-id $(quote_for_shell "$session_id")"
+    echo "Restoring Kiro $session_id in Herdr pane $pane ($cwd)"
+    herdr pane run "$pane" "$command"
+  done < "$STATE_FILE"
+}
+
+list_sessions() {
+  ensure_state_dir
+  printf 'PANE\tCWD\tSESSION_ID\n'
+  awk -F '\t' '$0 !~ /^[[:space:]]*#/ && NF >= 3 { print }' "$STATE_FILE"
+}
+
+launch() {
+  local pane="$1" cwd="$2"; shift 2
+  [[ $# -gt 0 ]] || set -- --v3
+  local command="cd $(quote_for_shell "$cwd") && $(quote_for_shell "$KIRO_BIN")"
+  local arg
+  for arg in "$@"; do command+=" $(quote_for_shell "$arg")"; done
+  local recorder="$(quote_for_shell "$0") __record $(quote_for_shell "$pane") $(quote_for_shell "$cwd")"
+  herdr pane run "$pane" "$command; rc=\$?; $recorder; exit \$rc"
+}
+
+record() {
+  local pane="$1" cwd="$2" session_file session_id
+  session_file="$(latest_session_for_cwd "$cwd")"
+  [[ -n "$session_file" ]] || { echo "No Kiro session found for $cwd" >&2; return 1; }
+  session_id="$(jq -r '.id' "$session_file")"
+  register_session "$pane" "$cwd" "$session_id"
+  echo "Recorded Kiro $session_id for Herdr pane $pane"
+}
+
+command="${1:-}"; shift || true
+case "$command" in
+  restore) restore "$@" ;;
+  list) list_sessions "$@" ;;
+  launch) [[ $# -ge 2 ]] || { usage >&2; exit 2; }; launch "$@" ;;
+  register) [[ $# -eq 3 ]] || { usage >&2; exit 2; }; register_session "$@" ;;
+  __record) [[ $# -eq 2 ]] || { usage >&2; exit 2; }; record "$@" ;;
+  *) usage >&2; exit 2 ;;
+esac
