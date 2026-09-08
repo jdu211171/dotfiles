@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ -z "${GEMINI_API_KEY:-}" ]]; then
+  echo "headroom-agy requires GEMINI_API_KEY and modelProvider=gemini in ~/.gemini/antigravity-cli/settings.json" >&2
+  exit 1
+fi
+
+headroom_port="${HEADROOM_PORT:-8787}"
+proxy_url="http://127.0.0.1:${headroom_port}"
+proxy_pid=""
+
+cleanup() {
+  if [[ -n "$proxy_pid" ]] && kill -0 "$proxy_pid" 2>/dev/null; then
+    kill "$proxy_pid"
+    wait "$proxy_pid" 2>/dev/null || true
+  fi
+}
+trap cleanup EXIT INT TERM
+
+if ! curl -fsS "$proxy_url/health" >/dev/null 2>&1; then
+  HEADROOM_BEACON=off headroom proxy --port "$headroom_port" &
+  proxy_pid=$!
+
+  for _ in {1..40}; do
+    if curl -fsS "$proxy_url/health" >/dev/null 2>&1; then
+      break
+    fi
+    sleep 0.25
+  done
+
+  if ! curl -fsS "$proxy_url/health" >/dev/null 2>&1; then
+    echo "Headroom proxy did not become healthy on port $headroom_port" >&2
+    exit 1
+  fi
+fi
+
+GOOGLE_GEMINI_BASE_URL="$proxy_url" command agy "$@"

@@ -176,6 +176,19 @@ alias hnew='herdr workspace create --cwd "$PWD" --label "${PWD##*/}" --focus'
 alias hkr='kiro-herdr restore'
 alias hkl='kiro-herdr list'
 
+# ---------- Headroom agent wrappers ----------
+export HEADROOM_BEACON="off"
+hcodex() {
+  command headroom wrap codex --code-memory none -- "$@"
+}
+hgrok() {
+  command headroom wrap grok --code-memory none -- "$@"
+}
+hopencode() {
+  command headroom wrap opencode --no-serena -- "$@"
+}
+alias hagy='headroom-agy'
+
 # ---------- Minimal, portable aliases ----------
 alias ls='ls -a'
 alias c='clear'

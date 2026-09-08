@@ -5,11 +5,12 @@ hide_agent_reasoning = true
 model = "gpt-5.6-sol"
 model_reasoning_effort = "medium"
 network_access = true
-notify = ["codex-notify-sound"]
 sandbox_mode = "danger-full-access"
 personality = "pragmatic"
 plan_mode_reasoning_effort = "xhigh"
 approvals_reviewer = "user"
+
+notify = ["/Users/muhammadnurislomtukhtamishhoji-zoda/dotfiles/codex/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended", "--previous-notify", "[\"codex-notify-sound\"]"]
 
 [history]
   persistence = "save-all"
@@ -33,6 +34,30 @@ command = "npx"
 args = ["-y", "firebase-tools@latest", "mcp"]
 startup_timeout_sec = 60.0
 tool_timeout_sec = 120.0
+
+[mcp_servers.node_repl]
+args = []
+command = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+startup_timeout_sec = 120
+
+[mcp_servers.node_repl.env]
+NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000"
+NODE_REPL_NODE_MODULE_DIRS = "/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
+NODE_REPL_NODE_PATH = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
+NODE_REPL_TRUSTED_CODE_PATHS = "/Users/muhammadnurislomtukhtamishhoji-zoda/.codex:/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
+CODEX_HOME = "/Users/muhammadnurislomtukhtamishhoji-zoda/.codex"
+BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
+BROWSER_USE_TINYSKY_ENABLED = "1"
+NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
+NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
+BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
+BROWSER_USE_CODEX_APP_VERSION = "26.901.31953"
+NODE_REPL_TRUSTED_SERVICES = '{"browser":"/Users/muhammadnurislomtukhtamishhoji-zoda/.codex/plugins/cache/openai-bundled/browser/26.901.31953/scripts/browser-service.mjs"}'
+CODEX_CLI_PATH = "/Applications/ChatGPT.app/Contents/Resources/codex"
+
+[mcp_servers.cua_repl]
+command = "/Applications/ChatGPT.app/Contents/MacOS/ChatGPT"
+enabled = false
 
 # [mcp_servers.backlog]
 # command = "/Users/muhammadnurislomtukhtamishhoji-zoda/dotfiles/scripts/backlog-mcp-stdio.sh"
@@ -127,12 +152,87 @@ trust_level = "trusted"
 [projects."/Users/muhammadnurislomtukhtamishhoji-zoda/test"]
 trust_level = "trusted"
 
+[projects."/Users/muhammadnurislomtukhtamishhoji-zoda/Documents/Codex/2026-09-04/create-a-scheduled-task-called-weekday"]
+trust_level = "trusted"
+
+[projects."/Users/muhammadnurislomtukhtamishhoji-zoda/Documents/Codex/2026-09-04/github-plugin-github-openai-curated-remote"]
+trust_level = "trusted"
+
+[projects."/Users/muhammadnurislomtukhtamishhoji-zoda/Documents/Codex/2026-09-04/google-drive-plugin-google-drive-openai"]
+trust_level = "trusted"
+
+[projects."/Users/muhammadnurislomtukhtamishhoji-zoda/Documents/Codex/2026-09-04/linear-plugin-linear-openai-curated-remote"]
+trust_level = "trusted"
+
+[projects."/Users/muhammadnurislomtukhtamishhoji-zoda/Documents/Codex/2026-09-04/teach-me"]
+trust_level = "trusted"
+
+[projects."/Users/muhammadnurislomtukhtamishhoji-zoda/Documents/Codex/2026-09-04/http-www-hikarigaoka-sp-com-page"]
+trust_level = "trusted"
+
+[projects."/Users/muhammadnurislomtukhtamishhoji-zoda/Documents/Codex/2026-09-05/teach-me-how-to-solve-this"]
+trust_level = "trusted"
+
+[projects."/Users/muhammadnurislomtukhtamishhoji-zoda/Documents/Codex/2026-09-05/x20-i-need"]
+trust_level = "trusted"
+
+[projects."/Users/muhammadnurislomtukhtamishhoji-zoda/Documents/Codex/2026-09-05/i-ll-check-the-fare-from"]
+trust_level = "trusted"
+
+[projects."/Users/muhammadnurislomtukhtamishhoji-zoda/Documents/Codex/2026-09-05/i-ll-check-the-fare-from-2"]
+trust_level = "trusted"
+
+[projects."/Users/muhammadnurislomtukhtamishhoji-zoda/Development/v2-master"]
+trust_level = "trusted"
+
+[projects."/Users/muhammadnurislomtukhtamishhoji-zoda/Documents/Codex/2026-09-07/https-www-kurashiru-com-recipes-453c8279"]
+trust_level = "trusted"
+
 [plugins."github@openai-curated"]
 enabled = true
 
 [plugins."google-drive@openai-curated"]
 enabled = true
 
+[plugins."documents@openai-primary-runtime"]
+enabled = true
+
+[plugins."pdf@openai-primary-runtime"]
+enabled = true
+
+[plugins."spreadsheets@openai-primary-runtime"]
+enabled = true
+
+[plugins."presentations@openai-primary-runtime"]
+enabled = true
+
+[plugins."template-creator@openai-primary-runtime"]
+enabled = true
+
 [tui.model_availability_nux]
 "gpt-5.5" = 4
 "gpt-5.6-sol" = 4
+gpt-6-astra = 2
+
+[desktop]
+default-service-tier = "fast"
+followUpQueueMode = "queue"
+external-agent-import-sync-item-types = "all"
+external-agent-import-sync-enabled = true
+conversationDetailMode = "STEPS_COMMANDS"
+ambient-suggestions-enabled = true
+
+[marketplaces.openai-primary-runtime]
+source_type = "local"
+source = "/Users/muhammadnurislomtukhtamishhoji-zoda/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
+
+[hooks.state]
+
+[hooks.state."/Users/muhammadnurislomtukhtamishhoji-zoda/.codex/hooks.json:session_start:0:0"]
+trusted_hash = "sha256:fafaa51fd0a5f22621a396e3ee2fdd4a9e88f7fd1e4b0972860238f2c167d7b1"
+
+# --- Headroom MCP server ---
+[mcp_servers.headroom]
+command = "/Users/muhammadnurislomtukhtamishhoji-zoda/.local/bin/headroom"
+args = ["mcp", "serve"]
+# --- end Headroom MCP server ---
