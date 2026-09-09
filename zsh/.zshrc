@@ -281,6 +281,7 @@ fi
 # Antigravity PATH
 [ -d "$HOME/.antigravity/antigravity/bin" ] && export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
 [ -d "$HOME/.local/bin" ] && export PATH="$HOME/.local/bin:$PATH"
+[ -d "/snap/bin" ] && export PATH="/snap/bin:$PATH"
 
 # Dotnet
 [ -d "$HOME/.dotnet" ] && export DOTNET_ROOT="$HOME/.dotnet" && export PATH="$DOTNET_ROOT:$PATH"
@@ -295,3 +296,6 @@ if [ -d "$HOME/.grok/bin" ]; then
   autoload -Uz compinit && compinit -C
 fi
 # <<< grok installer <<<
+
+# opencode
+export PATH=/home/user/.opencode/bin:$PATH
