@@ -1,1 +1,12 @@
-/Users/muhammadnurislomtukhtamishhoji-zoda/.local/share/uv/tools/headroom-ai/bin/headroom
+#!/usr/bin/env bash
+set -euo pipefail
+
+headroom_bin="${HEADROOM_BIN:-$HOME/.local/share/uv/tools/headroom-ai/bin/headroom}"
+
+if [[ ! -x "$headroom_bin" ]]; then
+  echo "Headroom is not installed at $headroom_bin" >&2
+  echo "Install it with: uv tool install headroom-ai" >&2
+  exit 127
+fi
+
+exec "$headroom_bin" "$@"

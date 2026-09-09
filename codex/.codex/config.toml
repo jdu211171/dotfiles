@@ -233,6 +233,6 @@ trusted_hash = "sha256:fafaa51fd0a5f22621a396e3ee2fdd4a9e88f7fd1e4b0972860238f2c
 
 # --- Headroom MCP server ---
 [mcp_servers.headroom]
-command = "/Users/muhammadnurislomtukhtamishhoji-zoda/.local/bin/headroom"
+command = "headroom"
 args = ["mcp", "serve"]
 # --- end Headroom MCP server ---
