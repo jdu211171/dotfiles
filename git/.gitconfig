@@ -3,6 +3,7 @@
 	email = 123369867+jdu211171@users.noreply.github.com
 [core]
 	editor = cat
+	quotePath = false
 [color]
   ui = auto
 [init]
