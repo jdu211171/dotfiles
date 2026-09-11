@@ -80,3 +80,37 @@ Fresh install quick start:
 
 See scripts/setup.sh for a safe helper that previews and applies stow actions.
 Make it executable once: chmod +x scripts/setup.sh
+
+## gstack (AI agent skills for Codex + Kiro CLI)
+
+[gstack](https://github.com/garrytan/gstack) is a suite of opinionated skills for
+AI coding agents. It is installed per-machine (not stowed) because its skills are
+machine-generated and symlink into an upstream clone. The tracked, reproducible
+artifact is `scripts/.local/bin/gstack-install`.
+
+Install/refresh for the default hosts (Codex + Kiro CLI):
+
+    gstack-install
+
+Other usage:
+
+    gstack-install codex            # only Codex
+    gstack-install kiro codex       # explicit host list
+    gstack-install --no-update      # skip git pull on the existing clone
+    gstack-install --ref v1.84.1.0  # pin a specific tag/branch/commit
+
+What it does:
+
+- Clones (or updates) the upstream to `~/gstack` (override with `GSTACK_DIR`).
+- Runs `./setup --host <agent>` for each requested host. Skills land in
+  `${CODEX_HOME:-~/.codex}/skills/gstack-*` and `~/.kiro/skills/gstack-*`.
+- Exports `GSTACK_CHROMIUM_NO_SANDBOX=1` so the bundled browser can launch on
+  Ubuntu 24.04+ (AppArmor restricts unprivileged user namespaces).
+
+Notes:
+
+- The generated `gstack-*` skill dirs are intentionally not tracked in this repo
+  (see the gstack block in `.gitignore`). Only this bootstrap script is tracked.
+- Requirements: `git`, `bun` (v1.0+), and `node` for the browser skills.
+- The bundled Chromium is optional; if it fails to download, all non-browser
+  skills still work. Re-run `gstack-install` after fixing the cause.

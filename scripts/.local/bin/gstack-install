@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Install/refresh Garry Tan's gstack skill suite for local AI coding agents.
+# https://github.com/garrytan/gstack
+#
+# gstack is driven by a single upstream clone (default: ~/gstack). Its per-agent
+# skills are MACHINE-GENERATED into each agent's skills dir and contain absolute
+# symlinks back into that clone, so they are intentionally NOT tracked in this
+# dotfiles repo. This script is the tracked, reproducible artifact: it clones (or
+# updates) the upstream and runs `./setup --host <agent>` for each agent.
+#
+# Usage:
+#   gstack-install                      # install/refresh for default hosts (codex kiro)
+#   gstack-install codex                # only Codex
+#   gstack-install kiro codex           # explicit host list
+#   gstack-install --no-update          # skip `git pull` on an existing clone
+#   gstack-install --ref v1.84.1.0      # check out a specific tag/branch/commit
+#
+# Env:
+#   GSTACK_DIR   Upstream clone location (default: $HOME/gstack)
+#   GSTACK_REPO  Git remote (default: https://github.com/garrytan/gstack.git)
+
+GSTACK_DIR="${GSTACK_DIR:-$HOME/gstack}"
+GSTACK_REPO="${GSTACK_REPO:-https://github.com/garrytan/gstack.git}"
+
+DEFAULT_HOSTS=(codex kiro)
+HOSTS=()
+DO_UPDATE=1
+REF=""
+
+die() { echo "[gstack-install] error: $*" >&2; exit 1; }
+log() { echo "[gstack-install] $*"; }
+need() { command -v "$1" >/dev/null 2>&1 || die "missing requirement: $1"; }
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --no-update) DO_UPDATE=0; shift ;;
+    --ref) REF="${2:-}"; [[ -n "$REF" ]] || die "--ref needs a value"; shift 2 ;;
+    --ref=*) REF="${1#*=}"; shift ;;
+    -h|--help) sed -n '2,30p' "$0"; exit 0 ;;
+    -*) die "unknown flag: $1" ;;
+    *) HOSTS+=("$1"); shift ;;
+  esac
+done
+
+[[ ${#HOSTS[@]} -gt 0 ]] || HOSTS=("${DEFAULT_HOSTS[@]}")
+
+need git
+need bun
+# Node is only required by gstack on Windows, but its browser fallback uses it
+# too; warn (do not fail) if absent.
+command -v node >/dev/null 2>&1 || log "warning: node not found on PATH (needed for some browser skills)"
+
+# Clone or update the upstream.
+if [[ -d "$GSTACK_DIR/.git" ]]; then
+  log "found existing clone at $GSTACK_DIR"
+  if [[ "$DO_UPDATE" -eq 1 && -z "$REF" ]]; then
+    log "updating (git pull --ff-only)"
+    git -C "$GSTACK_DIR" pull --ff-only || log "warning: git pull failed; continuing with current checkout"
+  fi
+else
+  log "cloning $GSTACK_REPO -> $GSTACK_DIR"
+  git clone --single-branch --depth 1 "$GSTACK_REPO" "$GSTACK_DIR"
+fi
+
+if [[ -n "$REF" ]]; then
+  log "checking out ref: $REF"
+  git -C "$GSTACK_DIR" fetch --tags --depth 1 origin "$REF" 2>/dev/null || git -C "$GSTACK_DIR" fetch origin
+  git -C "$GSTACK_DIR" checkout "$REF"
+fi
+
+[[ -x "$GSTACK_DIR/setup" ]] || die "setup script not found or not executable in $GSTACK_DIR"
+
+# Ubuntu 24.04+ restricts unprivileged user namespaces (AppArmor), which blocks
+# the bundled Chromium from launching. Setting this lets the browser skills work
+# and is harmless elsewhere. (See gstack issue #2157.)
+export GSTACK_CHROMIUM_NO_SANDBOX="${GSTACK_CHROMIUM_NO_SANDBOX:-1}"
+
+for host in "${HOSTS[@]}"; do
+  log "running setup for host: $host"
+  ( cd "$GSTACK_DIR" && ./setup --host "$host" )
+done
+
+log "done. Installed gstack for: ${HOSTS[*]}"
+log "  Codex skills: ${CODEX_HOME:-~/.codex}/skills/gstack-*"
+log "  Kiro skills:  ~/.kiro/skills/gstack-*"

@@ -15,3 +15,8 @@
 #   Linux)  PATH="$HOME/.local/bin:$PATH" ;;
 # esac
 
+
+# gstack browser skills: point at a system Chrome/Chromium so gstack does not
+# download its own. On WSL2 also disable the sandbox (no user namespaces).
+# [ -x /usr/bin/google-chrome ] && export GSTACK_CHROMIUM_PATH="/usr/bin/google-chrome"
+# [ -n "${GSTACK_CHROMIUM_PATH:-}" ] && export GSTACK_CHROMIUM_NO_SANDBOX=1

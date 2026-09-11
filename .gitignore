@@ -99,3 +99,12 @@ zed/.config/zed/prompts/
 
 # Per-machine Neovim theme override (set theme locally, not tracked)
 nvim/.config/nvim/lua/chadrc_local.lua
+
+# gstack (garrytan/gstack) — installed per-machine via scripts/.local/bin/gstack-install
+# Skills are machine-generated into the agent skills dirs and symlink into the
+# ~/gstack clone; they must never be committed here. These rules are a safety net
+# in case an agent's skills/ dir is ever stowed as a folded symlink.
+codex/.codex/skills/gstack
+codex/.codex/skills/gstack-*
+kiro/.kiro/skills/gstack
+kiro/.kiro/skills/gstack-*
