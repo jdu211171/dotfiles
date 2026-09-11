@@ -94,4 +94,5 @@ zed/.config/zed/conversations/
 zed/.config/zed/prompts/
 *.bak*
 
-
+# Serena CLI (do not track noisy/transient files)
+.serena
