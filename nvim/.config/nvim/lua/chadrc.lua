@@ -5,8 +5,13 @@
 ---@type ChadrcConfig
 local M = {}
 
+-- Per-machine theme override: create ~/.config/nvim/lua/chadrc_local.lua
+-- returning { theme = "your-theme" }. That file is gitignored.
+local ok, local_cfg = pcall(require, "chadrc_local")
+local theme = (ok and type(local_cfg) == "table" and local_cfg.theme) or "one_light"
+
 M.base46 = {
-  theme = "catppuccin-latte",
+  theme = theme,
 
   hl_override = {
     Comment = { italic = true },

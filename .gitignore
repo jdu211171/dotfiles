@@ -96,3 +96,6 @@ zed/.config/zed/prompts/
 
 # Serena CLI (do not track noisy/transient files)
 .serena
+
+# Per-machine Neovim theme override (set theme locally, not tracked)
+nvim/.config/nvim/lua/chadrc_local.lua

@@ -1,0 +1,9 @@
+# Linux-specific shell configuration
+# Sourced automatically by .zshrc when $OSTYPE == linux*
+# Stowed to ~/.zshrc.linux
+
+# Snap packages
+[ -d "/snap/bin" ] && export PATH="/snap/bin:$PATH"
+
+# opencode
+[ -d "$HOME/.opencode/bin" ] && export PATH="$HOME/.opencode/bin:$PATH"
