@@ -236,3 +236,9 @@ trusted_hash = "sha256:fafaa51fd0a5f22621a396e3ee2fdd4a9e88f7fd1e4b0972860238f2c
 command = "headroom"
 args = ["mcp", "serve"]
 # --- end Headroom MCP server ---
+
+[mcp_servers.excel]
+command = "uvx"
+args = ["excel-mcp-server", "stdio"]
+startup_timeout_sec = 30.0
+tool_timeout_sec = 60.0

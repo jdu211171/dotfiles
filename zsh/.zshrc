@@ -295,3 +295,10 @@ if [ -d "$HOME/.grok/bin" ]; then
   autoload -Uz compinit && compinit -C
 fi
 # <<< grok installer <<<
+
+# bun completions
+[ -s "/home/user/.bun/_bun" ] && source "/home/user/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
