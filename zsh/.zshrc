@@ -288,13 +288,6 @@ fi
 # Disable XON/XOFF flow control so Ctrl+S does not freeze the terminal.
 [[ $- == *i* ]] && stty -ixon 2>/dev/null
 
-# >>> grok installer >>>
-if [ -d "$HOME/.grok/bin" ]; then
-  export PATH="$HOME/.grok/bin:$PATH"
-  fpath=(~/.grok/completions/zsh $fpath)
-  autoload -Uz compinit && compinit -C
-fi
-# <<< grok installer <<<
 
 # bun completions
 [ -s "/home/user/.bun/_bun" ] && source "/home/user/.bun/_bun"
@@ -302,3 +295,9 @@ fi
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+# >>> grok installer >>>
+export PATH="$HOME/.grok/bin:$PATH"
+fpath=(~/.grok/completions/zsh $fpath)
+autoload -Uz compinit && compinit -C
+# <<< grok installer <<<
