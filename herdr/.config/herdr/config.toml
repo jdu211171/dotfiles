@@ -7,9 +7,8 @@ name = "catppuccin-latte"
 auto_switch = false
 
 [terminal]
-# New panes, tabs, and workspaces use Herdr's launch directory when there is
-# no source pane/workspace to follow.
-new_cwd = "current"
+# New panes and tabs inherit the active pane/workspace directory.
+new_cwd = "follow"
 
 [keys]
 prefix = "ctrl+b"
