@@ -71,8 +71,8 @@ map("n", "<leader>tq", completion_toggle.toggle_quiet, { desc = "Toggle quiet co
 map("t", "<C-\\>", [[<C-\><C-n>]], { desc = "Terminal: exit to Normal (Ctrl-\\)" })
 map("t", "<C-g>", [[<C-\><C-n>]], { desc = "Terminal: exit to Normal (Ctrl-g)" })
 map("t", "<M-q>", [[<C-\><C-n>]], { desc = "Terminal: exit to Normal (Alt-q)" })
-
--- map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
+map({ "n", "i", "v" }, "<C-s>", "<cmd>w<cr>", { desc = "General: save file" })
+map("i", "<C-k>", vim.lsp.buf.signature_help, { desc = "LSP: signature help" })
 
 -- Utility: copy current file's relative path
 map("n", "<leader>yp", function()
