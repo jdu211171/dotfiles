@@ -32,7 +32,7 @@ return {
         enabled = true,
         auto_trigger = true,
         keymap = {
-          accept_and_goto = "<M-g>", -- Option+g accepts NES and jumps to the next edit point
+          accept_and_goto = "<M-CR>", -- Option/Alt+Enter accepts NES and jumps to the next edit point
           accept = false,
           dismiss = "<M-s>", -- Option+s skips the current NES suggestion
         },
