@@ -12,6 +12,14 @@ new_cwd = "follow"
 
 [keys]
 prefix = "ctrl+b"
+# Open the workspace picker with Ctrl+B, then move with Up/Down and select.
+workspace_picker = "prefix+w"
+navigate_workspace_up = "up"
+navigate_workspace_down = "down"
+# Switch directly by position, or move to the adjacent workspace.
+switch_workspace = "prefix+shift+1..9"
+previous_workspace = "prefix+left"
+next_workspace = "prefix+right"
 
 [ui]
 agent_panel_sort = "spaces"
