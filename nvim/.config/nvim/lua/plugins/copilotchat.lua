@@ -37,7 +37,12 @@ return {
           dismiss = "<M-s>", -- Option+s skips the current NES suggestion
         },
       },
-      panel = { enabled = false },
+      panel = {
+        enabled = false,
+        keymap = {
+          open = false,
+        },
+      },
     },
     config = function(_, opts)
       require("copilot").setup(opts)
