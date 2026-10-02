@@ -26,7 +26,6 @@ autoload -Uz compinit
 autoload -Uz edit-command-line
 zle -N edit-command-line
 bindkey '^x^e' edit-command-line  # Ctrl+x, e to edit command line in $EDITOR
-compinit -C
 clear-keep-buffer() {
   zle clear-screen
 }
@@ -65,8 +64,19 @@ if typeset -f zinit >/dev/null; then
   zinit light Aloxaf/fzf-tab
   zinit snippet OMZP::git
   zinit snippet OMZP::sudo
-  zinit cdreplay -q
 fi
+
+# Grok's installer provides completions outside zinit.
+export PATH="$HOME/.grok/bin:$PATH"
+fpath=("$HOME/.grok/completions/zsh" $fpath)
+
+# zinit may leave completion links behind after its completion source is
+# removed. Delete only dangling links before compinit scans that directory.
+for completion in "${XDG_DATA_HOME:-$HOME/.local/share}/zinit/completions"/*(N); do
+  [[ -L "$completion" && ! -e "$completion" ]] && command rm "$completion"
+done
+compinit -C
+typeset -f zinit >/dev/null && zinit cdreplay -q
 
 # Completion styles
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
@@ -178,16 +188,52 @@ alias hkl='kiro-herdr list'
 
 # ---------- Headroom agent wrappers ----------
 export HEADROOM_BEACON="off"
-hcodex() {
-  command headroom wrap codex --code-memory none -- "$@"
+
+# ---------- AI CLI yolo aliases ----------
+# Codex and OpenCode use Headroom when installed. Their wrapper options disable
+# the unrelated Serena/code-memory integration while keeping Headroom's proxy
+# and retrieval MCP enabled. Without Headroom, clear inherited proxy settings.
+codex() {
+  if (( $+commands[headroom] )); then
+    command headroom wrap codex --code-memory none -- --dangerously-bypass-approvals-and-sandbox "$@"
+  else
+    command env -u OPENAI_BASE_URL -u ANTHROPIC_BASE_URL "$(whence -p codex)" --dangerously-bypass-approvals-and-sandbox "$@"
+  fi
 }
-hgrok() {
-  command headroom wrap grok --code-memory none -- "$@"
+
+opencode() {
+  if (( $+commands[headroom] )); then
+    command headroom wrap opencode --no-serena -- --auto "$@"
+  else
+    command env -u OPENAI_BASE_URL -u ANTHROPIC_BASE_URL -u OPENCODE_CONFIG_CONTENT "$(whence -p opencode)" --auto "$@"
+  fi
 }
-hopencode() {
-  command headroom wrap opencode --no-serena -- "$@"
+
+# AGY's local Headroom adapter requires Gemini BYOK and a Gemini-backed AGY
+# profile. Fall back to AGY directly when those adapter requirements are not met.
+agy() {
+  local agy_settings="$HOME/.gemini/antigravity-cli/settings.json"
+  if (( $+commands[headroom] && $+commands[headroom-agy] )) \
+    && [[ -n "$GEMINI_API_KEY" ]] \
+    && command grep -Eq '"modelProvider"[[:space:]]*:[[:space:]]*"gemini"' "$agy_settings" 2>/dev/null; then
+    command headroom-agy --dangerously-skip-permissions "$@"
+  else
+    command env -u GOOGLE_GEMINI_BASE_URL "$(whence -p agy)" --dangerously-skip-permissions "$@"
+  fi
 }
-alias hagy='headroom-agy'
+
+# Keep the old launcher names as aliases to the conditional launchers.
+alias hcodex='codex'
+alias hopencode='opencode'
+alias hagy='agy'
+
+# Kiro has no Headroom wrapper or configurable model API endpoint. Keep its
+# native CLI direct; HTTP_PROXY is for forward proxies, not Headroom's API proxy.
+alias kiro='command kiro-cli --v3 chat --trust-all-tools'
+
+# These opt into each CLI's equivalent of automatic tool approval, directly.
+alias copilot='command copilot --yolo'
+alias grok='command grok --permission-mode bypassPermissions'
 
 # ---------- Minimal, portable aliases ----------
 alias ls='ls -a'
@@ -295,9 +341,3 @@ fi
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
-
-# >>> grok installer >>>
-export PATH="$HOME/.grok/bin:$PATH"
-fpath=(~/.grok/completions/zsh $fpath)
-autoload -Uz compinit && compinit -C
-# <<< grok installer <<<
