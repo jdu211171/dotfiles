@@ -204,6 +204,10 @@ enabled = true
 [plugins."template-creator@openai-primary-runtime"]
 enabled = true
 
+[tui]
+status_line = ["git-branch"]
+status_line_use_colors = true
+
 [tui.model_availability_nux]
 "gpt-5.5" = 4
 "gpt-5.6-sol" = 4
