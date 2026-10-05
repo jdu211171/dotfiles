@@ -27,6 +27,15 @@ codex/.codex/log/
 codex/.codex/sessions/
 codex/.codex/shell_snapshots/
 codex/.codex/config.toml.bak.*
+codex/.codex/ambient-suggestions/
+codex/.codex/archived_sessions/
+codex/.codex/browser/
+codex/.codex/computer-use/
+codex/.codex/dictation-history/
+codex/.codex/generated_images/
+codex/.codex/transcription-history.jsonl
+codex/.codex/version.json
+codex/.codex/skills/.system/
 
 # Gemini / Antigravity CLI (do not track secrets/noise if copied here)
 gemini/.gemini/oauth_creds.json
@@ -72,6 +81,9 @@ copilot/.copilot/logs/
 # Large binaries and installer artifacts
 scripts/.local/bin/agy*
 scripts/.local/bin/uv*
+scripts/.local/bin/kiro-cli*
+scripts/.local/bin/* (kiro-cli-term)
+scripts/.local/bin/headroom-cache-ttl
 codex/.codex/plugins/
 
 # Runtime SQLite, logs, and caches

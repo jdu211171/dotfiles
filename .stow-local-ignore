@@ -16,6 +16,8 @@
 (^|/)\.codex/(log|sessions|shell_snapshots)(/|$)
 (^|/)\.codex/(history\.jsonl|internal_storage\.json|version\.json|auth\.json)$
 (^|/)\.codex/config\.toml\.bak\..*$
+(^|/)\.codex/(ambient-suggestions|archived_sessions|browser|computer-use|dictation-history|generated_images|skills/\.system)(/|$)
+(^|/)\.codex/transcription-history\.jsonl$
 
 # Gemini CLI: ignore runtime/state and secrets
 (^|/)\.gemini/tmp(/|$)
@@ -26,3 +28,8 @@
 (^|/).*\.example(\..*)?$
 (^|/)codex/\.codex/.*\.example(\..*)?$
 (^|/)gemini/\.gemini/.*\.example(\..*)?$
+
+# Installed Kiro and Headroom executables are machine-local.
+(^|/)kiro-cli[^/]*$
+(^|/)[^/]+ \(kiro-cli-term\)$
+(^|/)headroom-cache-ttl$

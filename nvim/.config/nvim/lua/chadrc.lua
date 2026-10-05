@@ -8,7 +8,7 @@ local M = {}
 -- Per-machine theme override: create ~/.config/nvim/lua/chadrc_local.lua
 -- returning { theme = "your-theme" }. That file is gitignored.
 local ok, local_cfg = pcall(require, "chadrc_local")
-local theme = (ok and type(local_cfg) == "table" and local_cfg.theme) or "one_light"
+local theme = (ok and type(local_cfg) == "table" and local_cfg.theme) or "onedark"
 
 M.base46 = {
   theme = theme,
