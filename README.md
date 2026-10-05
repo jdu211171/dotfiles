@@ -10,6 +10,7 @@ Canonical location on this machine: ~/dotfiles
 - waybar/.config/waybar/config.jsonc
 - kitty/.config/kitty/kitty.conf
 - herdr/.config/herdr/{config.toml,manual.md}
+- atuin/.config/atuin/{config.toml,themes/minimal.toml}
 - nvim/.config/nvim/init.lua
 - zed/.config/zed/{settings.json,keymap.json}
 - zsh/.zshrc

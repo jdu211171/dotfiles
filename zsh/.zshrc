@@ -4,6 +4,10 @@
 # ---------- Environment ----------
 export EDITOR="nvim"
 
+# Atuin is installed per-user by its official installer. Keep the binary
+# discoverable from every shell; its configuration is managed by this repo.
+[[ -d "$HOME/.atuin/bin" ]] && export PATH="$HOME/.atuin/bin:$PATH"
+
 # ---------- Early platform toggles ----------
 # Source platform file early so toggles like USE_ZOXIDE_CD are set before the
 # features that read them (e.g. the zoxide block) run. It is sourced again at the
@@ -333,6 +337,12 @@ fi
 
 # Disable XON/XOFF flow control so Ctrl+S does not freeze the terminal.
 [[ $- == *i* ]] && stty -ixon 2>/dev/null
+
+# Atuin history integration. Keep the existing vi-mode Up binding and avoid
+# Atuin AI's '?' binding; Ctrl-r opens the compact local history picker.
+if command -v atuin >/dev/null 2>&1; then
+  eval "$(atuin init zsh --disable-up-arrow --disable-ai)"
+fi
 
 
 # bun completions

@@ -3,7 +3,7 @@ onboarding = false
 
 [theme]
 # WSL has no desktop appearance portal, so keep Herdr on a fixed theme.
-name = "catppuccin-latte"
+name = "one-dark"
 auto_switch = false
 
 [terminal]
@@ -20,6 +20,10 @@ navigate_workspace_down = "down"
 switch_workspace = "prefix+shift+1..9"
 previous_workspace = "prefix+left"
 next_workspace = "prefix+right"
+# Keep workspace navigation on prefix+Left/Right. Use Shift+Left/Right to
+# cycle the focused AI-agent instance shown in Herdr's agent panel.
+previous_agent = "prefix+shift+left"
+next_agent = "prefix+shift+right"
 
 [ui]
 agent_panel_sort = "spaces"

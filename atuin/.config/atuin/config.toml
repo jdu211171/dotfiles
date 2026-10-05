@@ -1,0 +1,29 @@
+# Atuin configuration
+#
+# Keep command history local by default. Agent commands are still recorded and
+# attributed by Atuin, but the interactive search defaults to human commands.
+
+auto_sync = false
+update_check = false
+enter_accept = false
+secrets_filter = true
+
+# Keep the picker compact and unobtrusive, like the Oh My Posh zen prompt.
+style = "compact"
+inline_height = 12
+show_preview = false
+show_help = false
+show_tabs = false
+search_mode = "fuzzy"
+filter_mode = "host"
+filter_mode_shell_up_key_binding = "host"
+keymap_mode = "auto"
+workspaces = true
+
+[search]
+# Do not mix AI-generated commands into the normal Ctrl-r history view.
+authors = ["$all-user"]
+filters = ["host", "workspace", "directory", "session"]
+
+[theme]
+name = "minimal"

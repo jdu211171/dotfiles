@@ -1,0 +1,23 @@
+# Minimal Atuin theme matching the Oh My Posh zen palette without ANSI-bright
+# terminal colors: cool blue accents, muted metadata, and a soft magenta.
+
+[theme]
+name = "minimal"
+parent = "default"
+
+[colors]
+Base = "#cdd6f4"
+Title = "#89b4fa"
+Important = "#cba6f7"
+Guidance = "#89b4fa"
+Annotation = "#9399b2"
+Muted = "#6c7086"
+SyntaxCommand = "#cdd6f4"
+SyntaxFlag = "#9399b2"
+SyntaxString = "#cba6f7"
+SyntaxVariable = "#f9e2af"
+SyntaxOperator = "#cba6f7"
+SyntaxComment = "#6c7086"
+AlertInfo = "#89b4fa"
+AlertWarn = "#f9e2af"
+AlertError = "#f38ba8"
