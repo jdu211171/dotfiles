@@ -3,7 +3,7 @@ onboarding = false
 
 [theme]
 # WSL has no desktop appearance portal, so keep Herdr on a fixed theme.
-name = "catppuccin-latte"
+name = "one-dark"
 auto_switch = false
 
 [terminal]
