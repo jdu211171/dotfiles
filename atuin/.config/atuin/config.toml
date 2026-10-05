@@ -21,8 +21,7 @@ keymap_mode = "auto"
 workspaces = true
 
 [search]
-# Do not mix AI-generated commands into the normal Ctrl-r history view.
-authors = ["$all-user"]
+# Atuin's interactive search already hides agent-authored commands by default.
 filters = ["host", "workspace", "directory", "session"]
 
 [theme]
