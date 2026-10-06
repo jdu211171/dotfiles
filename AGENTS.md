@@ -6,6 +6,7 @@ This repository manages cross‑platform dotfiles using GNU Stow. Treat it as th
 - Packages mirror `$HOME` paths: `nvim/.config/nvim`, `kitty/.config/kitty`, `git/.gitconfig`, `scripts/.local/bin`, `zed/.config/zed`, `ohmyposh/.config/oh-my-posh`.
 - Linux‑specific packages: `hypr`, `waybar`, `wofi`, `dunst`, `i3`.
 - Per‑host overrides live under `host-laptop/` and should only be stowed on that machine.
+- Global terminal-history instructions live in the native Codex, Gemini/Antigravity, OpenCode, Kiro, Copilot CLI, and Grok instruction files; their package paths are listed in `README.md`.
 - `.stow-local-ignore` keeps repo metadata (e.g., `.git`, `README.md`) from being linked.
 
 ## Build, Test, and Development Commands

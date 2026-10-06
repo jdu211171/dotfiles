@@ -1,7 +1,8 @@
-## Gemini Added Memories
-- The library ID for shadcn/ui documentation via Context7 is /websites/ui_shadcn.
+---
+inclusion: always
+---
 
-## Searchable Terminal History
+# Searchable Terminal History
 
 - Before every shell command invocation, add a concise shell comment on its own line using `# intent: <purpose>`. Keep it in the same invocation as the command so Atuin records the purpose with the command.
 - Describe the action, not its expected result. For multiple related commands in one invocation, add a comment before each logical group; don't combine unrelated commands under one vague comment.

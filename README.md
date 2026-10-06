@@ -16,13 +16,18 @@ Canonical location on this machine: ~/dotfiles
 - zsh/.zshrc
 - git/.gitconfig
 - kiro/.kiro/settings/permissions.yaml
+- kiro/.kiro/steering/terminal-command-history.md
 - scripts/.local/bin/...
 - wofi/.config/wofi/config
 - dunst/.config/dunst/dunstrc
 - oh-my-posh/.config/oh-my-posh/theme.omp.json
 - herdr/.config/herdr/config.toml
 - codex/.codex/config.toml
-- gemini/.gemini/{settings.json,GEMINI.md,...}
+- codex/.codex/AGENTS.md
+- gemini/.gemini/{settings.json,GEMINI.md,...} (Gemini CLI and Antigravity CLI rules)
+- atuin/.config/opencode/AGENTS.md
+- copilot-instructions/.copilot/instructions/terminal-command-history.instructions.md
+- grok/.grok/AGENTS.md
 - host-laptop/.config/hypr/host.conf (optional per-host overrides)
 
 GitHub may collapse hidden path segments in the file browser. The Neovim

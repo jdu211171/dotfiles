@@ -3,9 +3,9 @@ SHELL := /usr/bin/env bash
 # ---------- OS & host-aware defaults ----------
 UNAME_S := $(shell uname -s 2>/dev/null || echo Unknown)
 
-DEFAULT_PACKAGES_LINUX  := hypr waybar kitty ghostty herdr nvim zsh git scripts wofi dunst zed ohmyposh atuin codex gemini kiro
-DEFAULT_PACKAGES_DARWIN := kitty ghostty herdr nvim zsh git scripts zed ohmyposh atuin codex gemini kiro
-DEFAULT_PACKAGES_OTHER  := kitty ghostty herdr nvim zsh git scripts zed ohmyposh atuin codex gemini kiro
+DEFAULT_PACKAGES_LINUX  := hypr waybar kitty ghostty herdr nvim zsh git scripts wofi dunst zed ohmyposh atuin codex gemini kiro grok copilot-instructions
+DEFAULT_PACKAGES_DARWIN := kitty ghostty herdr nvim zsh git scripts zed ohmyposh atuin codex gemini kiro grok copilot-instructions
+DEFAULT_PACKAGES_OTHER  := kitty ghostty herdr nvim zsh git scripts zed ohmyposh atuin codex gemini kiro grok copilot-instructions
 
 ifeq ($(UNAME_S),Linux)
 DEFAULT_PACKAGES := $(DEFAULT_PACKAGES_LINUX)
