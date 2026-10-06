@@ -1,9 +1,10 @@
 # Atuin configuration
 #
-# Keep command history local by default. Agent commands are still recorded and
-# attributed by Atuin, but the interactive search defaults to human commands.
+# Sync history to the self-hosted Atuin server. Agent commands remain recorded
+# and attributed by Atuin, while interactive search defaults to human commands.
 
-auto_sync = false
+auto_sync = true
+sync_address = "https://ngea.uz/atuin"
 update_check = false
 enter_accept = false
 secrets_filter = true
