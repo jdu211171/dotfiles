@@ -8,8 +8,6 @@ personality = "pragmatic"
 plan_mode_reasoning_effort = "xhigh"
 approvals_reviewer = "user"
 
-notify = ["/Users/muhammadnurislomtukhtamishhoji-zoda/dotfiles/codex/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended", "--previous-notify", "[\"codex-notify-sound\"]"]
-
 [history]
   persistence = "save-all"
 
