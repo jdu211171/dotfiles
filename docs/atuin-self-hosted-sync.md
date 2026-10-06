@@ -1,126 +1,143 @@
 # Self-hosted Atuin sync
 
-This guide explains how to sync Atuin command history between this Mac and Linux machines using the self-hosted server.
+This guide covers Atuin sync between the Mac and Linux machines, including how to review and clean up AI-run commands.
 
-## Server and client configuration
+## Server and account
 
 - Sync URL: `https://ngea.uz/atuin`
-- Server version: `18.23.0`
-- Client config: `atuin/.config/atuin/config.toml`
-- The dotfiles config enables `auto_sync` and points Atuin at the self-hosted URL.
-- The server runs as the `atuin` system user with a SQLite database at `/var/lib/atuin/atuin.db`. It listens on localhost; Nginx serves it over HTTPS.
-- Account registration is currently disabled. It will be opened briefly for the first account registration and closed afterward.
+- Server and currently documented client version: `18.23.0`
+- Client config in this repository: `atuin/.config/atuin/config.toml`
+- Registration is closed. The Atuin account already exists; do not register a second account.
+- The server stores encrypted sync records in `/var/lib/atuin/atuin.db`. It is not a shared live SQLite file. Each machine keeps its own local Atuin database and syncs records with the server.
 
-Atuin keeps a local history database on each machine and syncs it with the server. The server is not a shared live SQLite file. Atuin encrypts synced history end to end; the server does not get the encryption key. The server still receives account and connection metadata.
+Atuin uses an account password and a separate encryption key. Keep the key in a password manager. Never put either credential in Git, a command argument, or chat. Do not run `atuin store rekey` as a casual key rotation: it changes the key used for local records and can make them disagree with records already on the server. [Atuin store reference](https://docs.atuin.sh/18.23/reference/store/)
 
-## Password and encryption key
+## Set up another Linux machine
 
-There is no Atuin account or password yet. During registration, choose a password when Atuin prompts. Do not pass the password as `-p` or put it in a command, since that can save it in shell history.
-
-Atuin also creates an encryption key. The password and encryption key are separate credentials. Save the key in a password manager or another private place. You need both the password and key to log in on another machine. Never commit or send the key in chat. Atuin cannot recover a lost encryption key.
-
-## Register the first machine and upload its history
-
-Use the Mac where Atuin already has your local history. Registration must be temporarily enabled on the server first; it is disabled now. Once the registration window is open:
-
-1. If you want to include older Zsh history that Atuin has not imported yet, import it once:
-
-   ```sh
-   # intent: import older Zsh history not already in Atuin
-   atuin import auto
-   ```
-
-   Skip this if Atuin already contains the history you want or you have imported that file before.
-
-2. Register your account. Replace the username and email with your own; Atuin prompts for the password securely.
-
-   ```sh
-   # intent: register the first account on the self-hosted Atuin server
-   atuin register -u YOUR_USERNAME -e YOUR_EMAIL
-   ```
-
-3. Display the generated encryption key and store it privately.
-
-   ```sh
-   # intent: display the encryption key for secure storage
-   atuin key
-   ```
-
-4. Upload the Atuin history currently on this Mac.
-
-   ```sh
-   # intent: perform the initial full Atuin history sync
-   atuin sync -f
-   ```
-
-After the account is created, close server registration again. Ask the VPS administrator to do that if it has not already been closed.
-
-Only commands already captured in Atuin are synced. `atuin import auto` can add older shell history. Atuin syncs terminal command history, not agent conversations or command output. The configured secret filter remains enabled, but avoid putting secrets in commands.
-
-## Add another Linux machine
-
-Pull the dotfiles commit and stow the OS package set. Atuin is already included in the Linux defaults in `Makefile`.
+Atuin is included in the Linux package set in `Makefile`. Get the latest dotfiles commit first, then preview and apply the links:
 
 ```sh
-# intent: preview the Linux dotfiles links
+# intent: update dotfiles
+cd ~/dotfiles && git pull
+
+# intent: preview Linux dotfile links
 make -C ~/dotfiles dry-run
 
-# intent: install the Linux dotfiles, including Atuin configuration
+# intent: install Linux dotfiles, including Atuin configuration
 make -C ~/dotfiles stow-os
 ```
 
-Install Atuin if it is not present. Use the same tagged version as the server unless the server is upgraded too.
+Install Atuin if needed. This installs the client version used by the current server setup:
 
 ```sh
-# intent: install the Atuin client version matching the VPS server
+# intent: install the Atuin client
 curl --proto '=https' --tlsv1.2 -LsSf https://github.com/atuinsh/atuin/releases/download/v18.23.0/atuin-installer.sh | sh
 ```
 
-Open a new shell after stowing so the shell integration loads. The shared config already points to `https://ngea.uz/atuin`. If this machine has older shell history that is not in its local Atuin database, run `atuin import auto` once before syncing.
-
-Log into the existing account; do not register a second account. Atuin prompts for your password and encryption key.
+Open a new shell so its Atuin integration loads. If this machine has older Bash or Zsh history that has **not** been imported into its local Atuin database, import it once before logging in. Do not repeat the import for the same history file; that can add duplicate entries.
 
 ```sh
-# intent: log this Linux machine into the existing Atuin account
-atuin login -u YOUR_USERNAME
+# intent: import older shell history once, only if it is not already in Atuin
+atuin import auto
+```
 
-# intent: sync this machine's Atuin history with the VPS
+Now log in to the existing account. Atuin prompts for the account password and encryption key. Use the same key as the Mac; do not run `atuin register` on this machine.
+
+```sh
+# intent: log in to the existing Atuin account
+atuin login -u tukhtamishhojizoda
+
+# intent: sync this machine's Atuin history
 atuin sync -f
 ```
 
-The local history on each logged-in machine is merged through sync. Keep each machine's existing Atuin database if it contains history you want to preserve.
+Atuin sync exchanges history records between the machines. It does not replace one machine's local database with another's. Each command keeps its machine context, so the same command run on different machines is not automatically a duplicate. [Atuin sync guide](https://docs.atuin.sh/18.23/guide/sync/)
+
+## Search AI-run commands
+
+Atuin stores supported agent commands with an author tag. The current config keeps AI-authored commands out of the normal **Ctrl-R** results, so they do not swamp everyday shell history. Use the command line to open a picker for agent commands or all commands:
+
+```sh
+# intent: search only commands tagged as agent-run
+atuin search --author '$all-agent' -- ''
+
+# intent: search commands from Codex
+atuin search --author codex -- ''
+
+# intent: search all Atuin commands, including agent-run commands
+atuin search --author '' -- ''
+```
+
+Atuin's official hooks support Codex, Claude Code, OpenCode, and Pi. After installing a hook, restart that agent. For example, `atuin hook install codex` installs the Codex hook; running it again is safe. Other agents may appear as ordinary shell commands if they run inside an Atuin-integrated shell, but Atuin may not identify them as AI-authored.
+
+Atuin 18.23 does not provide a supported command to change an existing record's author from an agent to a human. Selecting an AI command in the picker does not relabel its saved record. If you put the selected command on your prompt and run it yourself, Atuin records a new human-run entry; the original AI entry remains, so that intentionally creates a second record. Do not rerun commands just to change their label.
+
+If you have reviewed an AI command and want it in the normal Ctrl-R history, search for it with the agent-only command above, put it on the shell prompt, and run it yourself only if it is safe to run again. That creates a human-authored record. If you want only one copy afterward, find the old agent-authored entry, confirm its author in the inspector, and delete that old entry with **Ctrl-O**, then **Ctrl-D**. Deletion syncs to your other machines. This is a manual re-run and delete workflow, not an in-place relabel.
+
+## Clean up history
+
+### Delete an unwanted entry
+
+In the history picker, select the entry, inspect it with **Ctrl-O**, and press **Ctrl-D** only if it is the entry you want removed. Atuin syncs deletions to your other machines. [Atuin deletion guide](https://docs.atuin.sh/18.23/guide/delete-history/)
+
+### Exclude noisy commands going forward
+
+The `history_filter` setting in `atuin/.config/atuin/config.toml` excludes matching command text from future records. It matches the command text, not the AI author, so keep patterns narrow and preview their impact before pruning old history.
+
+To preview and then remove old records matching the configured history and directory filters:
+
+```sh
+# intent: preview records matched by configured Atuin exclusion filters
+atuin history prune --dry-run
+
+# intent: delete records matched by configured Atuin exclusion filters
+atuin history prune
+```
+
+Only run the deletion after reviewing the preview. Filtering does not distinguish AI records from human records.
+
+### Find duplicates from a repeated import
+
+Run this only if the same shell history file was imported more than once. Atuin's deduplication matches the same command, working directory, and hostname; repeated commands can be intentional, so inspect the preview. Replace `YYYY-MM-DD` with the cutoff date you want to clean up. The cutoff and number to keep are required.
+
+```sh
+# intent: preview duplicate Atuin entries before the chosen cutoff
+atuin history dedup --dry-run --before "YYYY-MM-DD" --dupkeep 1
+
+# intent: remove duplicate Atuin entries after reviewing the preview
+atuin history dedup --before "YYYY-MM-DD" --dupkeep 1
+```
+
+Do not use `atuin store push --force` or `atuin store pull --force` for routine syncing; those options can clear records on one side. Use `atuin sync` for normal syncing. `atuin sync -f` requests a full reconciliation; it is not the same as either destructive store force option.
 
 ## Daily use
 
-Automatic sync is enabled by the dotfiles config. To check the account or sync on demand:
+Automatic sync is enabled in the dotfiles config. To check sync status and sync on demand:
 
 ```sh
-# intent: check whether this machine is logged into Atuin sync
+# intent: check Atuin account and sync status
 atuin status
 
 # intent: sync Atuin history now
 atuin sync
 ```
 
-Press **Ctrl-R** in Bash or Zsh to search history. Search for command text, agent names such as `codex`, `agy`, `opencode`, `kiro`, or `grok`, or a distinctive `# intent:` comment if that comment is part of the recorded command. Atuin stores these as terminal commands; it does not index the agent transcript.
+Use **Ctrl-R** for human-authored history. Use the agent search commands above when you want to find commands run by agents. Atuin stores terminal commands, not agent conversations or command output.
 
-If expected history is missing, force a full sync:
+If history appears missing, first check that the machine is logged into the same account and uses the same encryption key, then run `atuin sync -f`. Do not re-import the same shell history file as a first troubleshooting step.
 
-```sh
-# intent: reconcile the complete local and remote Atuin histories
-atuin sync -f
-```
+## Security and recovery
 
-## Important security and recovery notes
-
-- The HTTPS endpoint is publicly reachable, but Atuin account registration is disabled except during the first account setup. Keep the account password and encryption key private.
-- Keep at least one logged-in machine and the encryption key available. Do not delete the account as a troubleshooting step; deleting it removes the server-side history.
-- The server database is `/var/lib/atuin/atuin.db`. A scheduled database backup has not been configured yet. Local Atuin databases remain on each client as additional copies.
-- Never put the Atuin password, encryption key, or local Atuin data directory in Git or this dotfiles package.
+- Registration is closed. Keep the account password and encryption key private.
+- Keep the Atuin database on each client as a local copy. Do not delete the account as a troubleshooting step; account deletion removes server-side history.
+- The VPS database is `/var/lib/atuin/atuin.db`. A scheduled server database backup has not been configured.
+- Never commit the password, encryption key, or local Atuin data directory.
 
 ## References
 
-- [Atuin sync setup](https://docs.atuin.sh/main/guide/sync/)
-- [Import existing shell history](https://docs.atuin.sh/main/guide/import/)
-- [Atuin account commands](https://docs.atuin.sh/main/reference/account/)
-- [Self-hosted server setup](https://docs.atuin.sh/main/self-hosting/server-setup/)
+- [Atuin sync setup](https://docs.atuin.sh/18.23/guide/sync/)
+- [Atuin AI agent hooks](https://docs.atuin.sh/18.23/guide/agent-hooks/)
+- [Import existing shell history](https://docs.atuin.sh/18.23/guide/import/)
+- [Delete and deduplicate history](https://docs.atuin.sh/18.23/guide/delete-history/)
+- [Atuin store commands](https://docs.atuin.sh/18.23/reference/store/)
+- [Atuin configuration](https://docs.atuin.sh/18.23/configuration/config/)
