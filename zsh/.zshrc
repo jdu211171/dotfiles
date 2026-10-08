@@ -71,6 +71,7 @@ if typeset -f zinit >/dev/null; then
   zinit light zsh-users/zsh-autosuggestions
   zinit light Aloxaf/fzf-tab
   zinit snippet OMZP::git
+  zinit snippet OMZP::docker
   zinit snippet OMZP::sudo
 fi
 
