@@ -68,6 +68,7 @@ ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS=(
 if typeset -f zinit >/dev/null; then
   zinit light zsh-users/zsh-syntax-highlighting
   zinit light zsh-users/zsh-completions
+  zinit light marlonrichert/zsh-autocomplete
   zinit light zsh-users/zsh-autosuggestions
   zinit light Aloxaf/fzf-tab
   zinit snippet OMZP::git
@@ -84,17 +85,29 @@ fpath=("$HOME/.grok/completions/zsh" $fpath)
 for completion in "${XDG_DATA_HOME:-$HOME/.local/share}/zinit/completions"/*(N); do
   [[ -L "$completion" && ! -e "$completion" ]] && command rm "$completion"
 done
-compinit -C
-typeset -f zinit >/dev/null && zinit cdreplay -q
+
+autoload -Uz add-zsh-hook
+
+# AWS CLI uses Bash's completion protocol. zsh-autocomplete owns compinit;
+# bashcompinit bridges the AWS completer into that completion system. Delay
+# registration until autocomplete has initialized compdef.
+load-aws-completions() {
+  command -v aws_completer >/dev/null 2>&1 || return 0
+  (( $+functions[compdef] )) || return 0
+  autoload -Uz bashcompinit && bashcompinit
+  complete -C "$(command -v aws_completer)" aws
+  add-zsh-hook -d precmd load-aws-completions
+}
+add-zsh-hook precmd load-aws-completions
 
 # Completion styles
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' menu no
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls $realpath'
+zstyle ':autocomplete:tab:*' fzf yes
 
 # ---------- Hooks  ----------
-autoload -Uz add-zsh-hook
 add-zsh-hook chpwd python-activate-hook
 add-zsh-hook chpwd nvm_auto_use
 # add-zsh-hook chpwd function() {
@@ -315,7 +328,7 @@ fi
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+[[ -n "${BASH_VERSION:-}" && -s "$NVM_DIR/bash_completion" ]] && \. "$NVM_DIR/bash_completion"
 
 # Ghostty - local shared libraries (Linux)
 [[ "$OSTYPE" == linux* ]] && export LD_LIBRARY_PATH="$HOME/.local/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
@@ -350,8 +363,15 @@ if command -v atuin >/dev/null 2>&1; then
 fi
 
 
-# bun completions
-[ -s "/home/user/.bun/_bun" ] && source "/home/user/.bun/_bun"
+# bun completions. zsh-autocomplete initializes compdef asynchronously, so
+# defer Bun's completion file until the completion function is available.
+load-bun-completions() {
+  [[ -s "/home/user/.bun/_bun" ]] || return 0
+  (( $+functions[compdef] )) || return 0
+  source "/home/user/.bun/_bun"
+  add-zsh-hook -d precmd load-bun-completions
+}
+add-zsh-hook precmd load-bun-completions
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
