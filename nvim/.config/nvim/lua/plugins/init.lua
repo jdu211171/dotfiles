@@ -2,7 +2,7 @@ return {
   -- Connect this local Neovim UI to a remote Neovim instance.
   {
     "mikew/nvrh",
-    version = "v0.9.1",
+    version = "*",
     lazy = false,
     config = function()
       vim.keymap.set("n", "<leader>rN", ":NvrhConnect ", {

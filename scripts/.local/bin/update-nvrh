@@ -1,0 +1,82 @@
+#!/usr/bin/env python3
+"""Update nvrh from its latest GitHub release with digest verification."""
+
+import hashlib
+import json
+import os
+import platform
+import shutil
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+
+RELEASE_API = "https://api.github.com/repos/mikew/nvrh/releases/latest"
+ASSETS = {
+    ("Darwin", "arm64"): "nvrh-darwin-arm64",
+    ("Darwin", "x86_64"): "nvrh-darwin-amd64",
+    ("Linux", "x86_64"): "nvrh-linux-amd64",
+    ("Linux", "aarch64"): "nvrh-linux-arm64",
+}
+
+
+def curl(*args):
+    return subprocess.run(
+        ["curl", "--fail", "--silent", "--show-error", "--location", *args],
+        capture_output=True,
+        check=True,
+    )
+
+
+def main():
+    asset_name = ASSETS.get((platform.system(), platform.machine()))
+    if not asset_name:
+        raise RuntimeError(
+            f"Unsupported platform: {platform.system()} {platform.machine()}"
+        )
+
+    executable = shutil.which("nvrh")
+    if not executable:
+        raise RuntimeError("nvrh is not on PATH")
+    target = Path(os.path.abspath(executable))
+
+    release = json.loads(curl("--retry", "2", RELEASE_API).stdout)
+    tag = release["tag_name"]
+    asset = next((item for item in release["assets"] if item["name"] == asset_name), None)
+    if asset is None:
+        raise RuntimeError(f"Release {tag} has no asset named {asset_name}")
+
+    expected_digest = asset.get("digest", "")
+    if not expected_digest.startswith("sha256:"):
+        raise RuntimeError(f"Release asset {asset_name} has no SHA-256 digest")
+
+    current = subprocess.run(
+        [str(target), "--version"], capture_output=True, text=True, check=False
+    ).stdout.strip()
+    if current.split()[-1:] == [tag.lstrip("v")]:
+        print(f"nvrh is already current ({tag})")
+        return
+
+    with tempfile.NamedTemporaryFile(dir=target.parent, prefix=".nvrh-update-", delete=False) as tmp:
+        temp_path = Path(tmp.name)
+        try:
+            tmp.close()
+            curl("--retry", "2", "--output", str(temp_path), asset["browser_download_url"])
+            digest = hashlib.sha256(temp_path.read_bytes()).hexdigest()
+            if f"sha256:{digest}" != expected_digest:
+                raise RuntimeError("Downloaded nvrh binary failed SHA-256 verification")
+            os.chmod(temp_path, 0o755)
+            os.replace(temp_path, target)
+        finally:
+            temp_path.unlink(missing_ok=True)
+
+    print(f"Updated nvrh to {tag}")
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as error:
+        print(f"update-nvrh: {error}", file=sys.stderr)
+        sys.exit(1)

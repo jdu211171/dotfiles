@@ -1,0 +1,3 @@
+[commands]
+"nvrh binary" = "~/.local/bin/update-nvrh"
+"nvrh Neovim plugin" = "nvim --headless '+Lazy! update nvrh' +qa"
