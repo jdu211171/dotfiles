@@ -1,4 +1,16 @@
 return {
+  -- Connect this local Neovim UI to a remote Neovim instance.
+  {
+    "mikew/nvrh",
+    version = "v0.9.1",
+    lazy = false,
+    config = function()
+      vim.keymap.set("n", "<leader>rN", ":NvrhConnect ", {
+        desc = "Remote: enter nvrh server and directory",
+      })
+    end,
+  },
+
   -- Smart paste indentation for code blocks; load immediately so normal paste keys are ready.
   {
     "nemanjamalesija/smart-paste.nvim",
