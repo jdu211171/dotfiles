@@ -6,11 +6,11 @@ local state = {
 }
 
 if state.auto_popup == nil then
-  state.auto_popup = true
+  state.auto_popup = false
 end
 
 if state.snippets == nil then
-  state.snippets = true
+  state.snippets = false
 end
 
 local base_sources

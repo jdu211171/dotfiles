@@ -206,8 +206,8 @@ return {
     end,
   },
 
-  -- Completion runtime toggles. Defaults keep automatic popups and snippet
-  -- completions enabled; mappings can switch either off without editing config.
+  -- Completion runtime toggles. Automatic popups and snippet completions are
+  -- disabled by default; mappings or commands can enable them when needed.
   {
     "hrsh7th/nvim-cmp",
     opts = function(_, opts)
