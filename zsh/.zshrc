@@ -29,6 +29,36 @@ setopt hist_ignore_space hist_ignore_dups hist_ignore_all_dups \
        hist_find_no_dups hist_save_no_dups hist_reduce_blanks \
        hist_save_by_copy
 
+# ---------- Optional prompt-at-bottom experiment ----------
+# Set to 0 to disable. Position the first prompt at the bottom, then let normal
+# terminal scrolling keep later commands and output together without blank gaps.
+typeset -g ZSH_PROMPT_AT_BOTTOM=${ZSH_PROMPT_AT_BOTTOM:-1}
+if [[ $ZSH_PROMPT_AT_BOTTOM == 1 && -o interactive ]]; then
+  _zsh_prompt_at_bottom() {
+    [[ -t 1 ]] || return 0
+    printf '\033[999;1H'
+    add-zsh-hook -d precmd _zsh_prompt_at_bottom
+  }
+  autoload -Uz add-zsh-hook
+  add-zsh-hook precmd _zsh_prompt_at_bottom
+
+  # `clear` resets the cursor to the top, so put it back at the bottom.
+  clear() {
+    command clear "$@"
+    printf '\033[999;1H'
+  }
+
+  # Keep Ctrl+L behavior consistent while preserving the current input line.
+  _zsh_clear_screen_at_bottom() {
+    zle -I
+    command clear
+    printf '\033[999;1H'
+    zle -R
+  }
+  zle -N _zsh_clear_screen_at_bottom
+  bindkey '^L' _zsh_clear_screen_at_bottom
+fi
+
 # ---------- Completion ----------
 autoload -Uz compinit
 autoload -Uz edit-command-line
