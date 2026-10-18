@@ -98,6 +98,63 @@ source pane to follow.
 
 The mouse can also switch workspaces, tabs, and panes.
 
+## Connect to another laptop
+
+Herdr supports remote machines over SSH. Each laptop has its own Herdr server
+and keeps its own sessions and panes. The saved machine profile lives in
+Herdr's local client state, not in `config.toml`, so add the profile once on
+each computer where you want to connect from. This dotfiles package enables
+Herdr's managed SSH keepalives and connection reuse with
+`[remote].manage_ssh_config = true`.
+
+First make sure the other laptop is reachable through an SSH host alias in
+`~/.ssh/config`. Keep real hostnames, usernames, and key paths in your local
+SSH configuration rather than this repository. For example:
+
+```sshconfig
+Host workbox
+    HostName <laptop-address>
+    User <ssh-user>
+```
+
+From an interactive terminal on the client laptop, save the machine in
+Herdr. Setup can offer to install or update Herdr on the remote laptop and
+will ask before doing so:
+
+```sh
+# intent: add the SSH host as a saved Herdr machine
+herdr machine add workbox
+
+# intent: list saved Herdr machines
+herdr machine list
+```
+
+After setup, either open a standalone remote client or add the machine to the
+current Herdr window and switch to it in the sidebar:
+
+```sh
+# intent: attach to the remote Herdr server over SSH
+herdr --remote workbox
+
+# intent: check the saved remote machine connection
+herdr machine status workbox
+```
+
+When running Herdr CLI commands from a local shell or an existing Herdr pane,
+select the remote profile explicitly. Otherwise commands keep using the
+current pane's Herdr server and socket:
+
+```sh
+# intent: list agents on the remote Herdr server
+herdr --machine workbox agent list
+```
+
+Machine profiles, workspace IDs, pane IDs, and agent names are scoped to each
+Herdr server. A local pane ID is not automatically meaningful on the remote
+server. Use the remote machine's profile and IDs when routing commands. See
+the [official machine connection guide](https://herdr.dev/docs/connecting-machines/)
+and [CLI reference](https://herdr.dev/docs/cli-reference/) for more details.
+
 ## Named sessions
 
 Named sessions are completely separate Herdr instances. Use them when you

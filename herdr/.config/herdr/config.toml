@@ -7,8 +7,14 @@ name = "one-dark"
 auto_switch = false
 
 [terminal]
+# Keep the account login shell unchanged; only Herdr panes default to Zsh.
+default_shell = "/bin/zsh"
 # New panes and tabs inherit the active pane/workspace directory.
 new_cwd = "follow"
+
+[remote]
+# Use Herdr-managed SSH keepalives and connection reuse for remote machines.
+manage_ssh_config = true
 
 [keys]
 prefix = "ctrl+b"
