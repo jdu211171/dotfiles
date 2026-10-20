@@ -9,6 +9,8 @@ Canonical location on this machine: ~/dotfiles
 - hypr/.config/hypr/hyprland.conf
 - waybar/.config/waybar/config.jsonc
 - kitty/.config/kitty/kitty.conf
+- lazygit/.config/lazygit/config.yml
+- LazyGit uses Delta for diff paging; install `lazygit` and `git-delta` on each host. macOS config path is linked by `lazygit-macos/`.
 - herdr/.config/herdr/{config.toml,manual.md}
 - atuin/.config/atuin/{config.toml,themes/minimal.toml}
 - nvim/.config/nvim/init.lua
