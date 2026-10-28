@@ -1,0 +1,3 @@
+[submodule "vendor/aihero-skills"]
+	path = vendor/aihero-skills
+	url = https://github.com/mattpocock/skills.git

@@ -30,6 +30,7 @@ Canonical location on this machine: ~/dotfiles
 - atuin/.config/opencode/AGENTS.md
 - copilot-instructions/.copilot/instructions/terminal-command-history.instructions.md
 - grok/.grok/AGENTS.md
+- agent-skills/.agents/skills/ (AI Hero skills; source pinned in vendor/aihero-skills)
 - host-laptop/.config/hypr/host.conf (optional per-host overrides)
 
 GitHub may collapse hidden path segments in the file browser. The Neovim
@@ -89,6 +90,25 @@ Fresh install quick start:
 
 See scripts/setup.sh for a safe helper that previews and applies stow actions.
 Make it executable once: chmod +x scripts/setup.sh
+
+## AI Hero agent skills
+
+The 27 promoted skills from [mattpocock/skills](https://github.com/mattpocock/skills) are
+pinned as a Git submodule at `vendor/aihero-skills`. The `agent-skills` Stow package
+exposes them at `~/.agents/skills` for Codex, Gemini CLI, OpenCode, and Copilot CLI.
+Kiro and Grok receive links in their native global skill directories. Existing skills
+in those directories are preserved.
+
+The AI Hero skill package is included in the default Stow sets. On another laptop,
+initialize its pinned source before stowing:
+
+```sh
+git submodule update --init --recursive
+make stow-os
+```
+
+To update the upstream skills intentionally, update the submodule and commit the new
+submodule pointer along with any dotfiles changes.
 
 ## gstack (AI agent skills for Codex + Kiro CLI)
 
