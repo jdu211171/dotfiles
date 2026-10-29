@@ -1,12 +1,3 @@
-git:
-  diffRenderers:
-    - colorArg: always
-      command: >-
-        delta --dark --paging=never
-        --plus-style="syntax #252a27"
-        --minus-style="syntax #2b2728"
-        --plus-emph-style="syntax #2a302c"
-        --minus-emph-style="syntax #332a2d"
 gui:
   theme:
     selectedLineFgColor:
