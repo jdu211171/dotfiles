@@ -20,6 +20,13 @@ o.relativenumber = true
 o.inccommand = "split"
 -- o.cursorlineopt ='both' -- to enable cursorline!
 
+-- Ensure Neovim's internal terminal (:terminal, <A-i>, etc.) uses zsh
+if vim.fn.executable "zsh" == 1 then
+  local zsh_path = vim.fn.exepath "zsh"
+  o.shell = zsh_path
+  vim.env.SHELL = zsh_path
+end
+
 -- NOTE: Leave <C-h/j/k/l> unmapped here.
 -- nvim-tmux-navigation sets these in lua/plugins/init.lua to integrate
 -- Neovim window movement with tmux panes. Local mappings here would
