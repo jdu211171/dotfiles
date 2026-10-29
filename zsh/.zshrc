@@ -396,9 +396,9 @@ fi
 # bun completions. zsh-autocomplete initializes compdef asynchronously, so
 # defer Bun's completion file until the completion function is available.
 load-bun-completions() {
-  [[ -s "/home/user/.bun/_bun" ]] || return 0
+  [[ -s "$HOME/.bun/_bun" ]] || return 0
   (( $+functions[compdef] )) || return 0
-  source "/home/user/.bun/_bun"
+  source "$HOME/.bun/_bun"
   add-zsh-hook -d precmd load-bun-completions
 }
 add-zsh-hook precmd load-bun-completions
