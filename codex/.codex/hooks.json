@@ -1,5 +1,38 @@
 {
   "hooks": {
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "atuin hook codex",
+            "type": "command"
+          }
+        ],
+        "matcher": "^Bash$"
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "hooks": [
+          {
+            "command": "atuin hook codex",
+            "type": "command"
+          }
+        ],
+        "matcher": "^Bash$"
+      }
+    ],
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "atuin hook codex",
+            "type": "command"
+          }
+        ],
+        "matcher": "^Bash$"
+      }
+    ],
     "SessionStart": [
       {
         "hooks": [
@@ -7,39 +40,6 @@
             "command": "bash '/Users/muhammadnurislomtukhtamishhoji-zoda/.codex/herdr-agent-state.sh' session",
             "timeout": 10,
             "type": "command"
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "^Bash$",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "atuin hook codex"
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "^Bash$",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "atuin hook codex"
-          }
-        ]
-      }
-    ],
-    "PostToolUseFailure": [
-      {
-        "matcher": "^Bash$",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "atuin hook codex"
           }
         ]
       }
