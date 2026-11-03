@@ -2,7 +2,7 @@
   "mcpServers": {
     "atuin": {
       "type": "stdio",
-      "command": "${userHome}/.atuin/bin/atuin",
+      "command": "atuin",
       "args": ["mcp"]
     },
     "eraser": {

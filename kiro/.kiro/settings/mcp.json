@@ -2,6 +2,10 @@
   "mcpServers": {
     "eraser": {
       "url": "https://app.eraser.io/api/mcp"
+    },
+    "atuin": {
+      "command": "atuin",
+      "args": ["mcp"]
     }
   }
 }

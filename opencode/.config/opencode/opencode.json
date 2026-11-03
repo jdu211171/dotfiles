@@ -14,6 +14,11 @@
     "eraser": {
       "type": "remote",
       "url": "https://app.eraser.io/api/mcp"
+    },
+    "atuin": {
+      "type": "local",
+      "command": ["atuin", "mcp"],
+      "enabled": true
     }
   }
 }

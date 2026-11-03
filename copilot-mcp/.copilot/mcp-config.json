@@ -29,6 +29,12 @@
     "eraser": {
       "url": "https://app.eraser.io/api/mcp",
       "type": "http"
+    },
+    "atuin": {
+      "type": "local",
+      "command": "atuin",
+      "args": ["mcp"],
+      "tools": ["*"]
     }
   }
 }

@@ -29,6 +29,10 @@
     "showMemoryUsage": true
   },
   "mcpServers": {
+    "atuin": {
+      "command": "atuin",
+      "args": ["mcp"]
+    },
     "eraser": {
       "url": "https://app.eraser.io/api/mcp"
     },

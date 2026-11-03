@@ -26,3 +26,7 @@ args = ["mcp", "serve"]
 
 [mcp_servers.eraser]
 url = "https://app.eraser.io/api/mcp"
+
+[mcp_servers.atuin]
+command = "atuin"
+args = ["mcp"]

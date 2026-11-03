@@ -95,6 +95,10 @@
   "formatter": "prettier",
   "format_on_save": "off",
   "context_servers": {
+    "atuin": {
+      "command": "atuin",
+      "args": ["mcp"]
+    },
     "eraser": {
       "url": "https://app.eraser.io/api/mcp"
     },
