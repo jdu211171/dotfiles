@@ -1,0 +1,28 @@
+[cli]
+installer = "internal"
+
+[marketplace]
+default_skills_installs_purged = true
+official_marketplace_auto_installed = true
+
+[[marketplace.sources]]
+name = "xAI Official"
+git = "https://github.com/xai-org/plugin-marketplace.git"
+
+[ui]
+max_thoughts_width = 120
+fork_secondary_model = "grok-4.5"
+yolo = false
+compact_mode = false
+permission_mode = "always-approve"
+
+[models]
+default = "grok-4.5"
+default_reasoning_effort = "high"
+
+[mcp_servers.headroom]
+command = "${HOME}/.local/bin/headroom"
+args = ["mcp", "serve"]
+
+[mcp_servers.eraser]
+url = "https://app.eraser.io/api/mcp"

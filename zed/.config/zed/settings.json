@@ -95,6 +95,9 @@
   "formatter": "prettier",
   "format_on_save": "off",
   "context_servers": {
+    "eraser": {
+      "url": "https://app.eraser.io/api/mcp"
+    },
     "prisma-mcp": {
       "enabled": false,
       "settings": {}

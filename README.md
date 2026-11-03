@@ -27,6 +27,12 @@ Canonical location on this machine: ~/dotfiles
 - codex/.codex/config.toml
 - codex/.codex/AGENTS.md
 - gemini/.gemini/{settings.json,GEMINI.md,...} (Gemini CLI and Antigravity CLI rules)
+- cursor/.cursor/{cli-config.json,mcp.json,hooks.json,hooks/} (Cursor CLI permissions, MCP servers, and Atuin command recording)
+- kiro/.kiro/settings/mcp.json (Kiro global MCP servers)
+- grok/.grok/config.toml (Grok CLI settings and MCP servers)
+- opencode/.config/opencode/opencode.json (OpenCode global MCP servers)
+- copilot-mcp/.copilot/mcp-config.json (GitHub Copilot CLI global MCP servers)
+- gemini/.gemini/config/mcp_config.json (Antigravity CLI global MCP servers)
 - atuin/.config/opencode/AGENTS.md
 - copilot-instructions/.copilot/instructions/terminal-command-history.instructions.md
 - grok/.grok/AGENTS.md

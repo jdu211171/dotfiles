@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "eraser": {
+      "serverUrl": "https://app.eraser.io/api/mcp"
+    }
+  }
+}

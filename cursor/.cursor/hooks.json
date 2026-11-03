@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "command": "if [ -x \"$HOME/.cursor/herdr-agent-state.sh\" ]; then \"$HOME/.cursor/herdr-agent-state.sh\" session; fi"
+      }
+    ],
+    "preToolUse": [
+      {
+        "command": "python3 \"$HOME/.cursor/hooks/atuin-history.py\" start",
+        "matcher": "Shell"
+      }
+    ],
+    "postToolUse": [
+      {
+        "command": "python3 \"$HOME/.cursor/hooks/atuin-history.py\" end",
+        "matcher": "Shell"
+      }
+    ],
+    "postToolUseFailure": [
+      {
+        "command": "python3 \"$HOME/.cursor/hooks/atuin-history.py\" failure",
+        "matcher": "Shell"
+      }
+    ]
+  }
+}

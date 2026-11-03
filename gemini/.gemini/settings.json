@@ -29,6 +29,9 @@
     "showMemoryUsage": true
   },
   "mcpServers": {
+    "eraser": {
+      "url": "https://app.eraser.io/api/mcp"
+    },
     "chrome-devtools": {
       "command": "npx",
       "args": [

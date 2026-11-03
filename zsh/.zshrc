@@ -287,6 +287,12 @@ alias kiro='command kiro-cli --v3 chat --trust-all-tools'
 alias copilot='command copilot --yolo'
 alias grok='command grok --permission-mode bypassPermissions'
 
+# Run Cursor with automatic approvals and tag its shell commands in Atuin.
+agent() {
+  ATUIN_HISTORY_AUTHOR=cursor ATUIN_HISTORY_AUTHOR_KIND=agent \
+    command agent --yolo --sandbox disabled --approve-mcps "$@"
+}
+
 # ---------- Minimal, portable aliases ----------
 alias ls='ls -a'
 alias c='clear'

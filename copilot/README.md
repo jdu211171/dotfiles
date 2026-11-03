@@ -6,8 +6,9 @@ This package manages GitHub Copilot CLI configuration using GNU Stow, following 
 
 **Tracked** (version controlled):
 - `config.json` - Main Copilot CLI settings (theme, beep, markdown rendering, trusted folders)
-- `mcp-config.json` - Model Context Protocol (MCP) server configurations
 - `config.json.example` - Template with accessible defaults (no tokens)
+
+The separate `copilot-mcp` package manages `mcp-config.json`.
 
 **Ignored** (not tracked via `.stow-local-ignore`):
 - `session-state/` - Session state files (transient)
@@ -21,17 +22,17 @@ Apply this configuration using GNU Stow:
 
 ```bash
 cd ~/dotfiles
-stow copilot
+stow copilot copilot-mcp
 ```
 
 Or use the Makefile:
 ```bash
-make stow PACKAGES="copilot"
+make stow PACKAGES="copilot copilot-mcp"
 ```
 
 This creates symlinks:
 - `~/.copilot/config.json` → `~/dotfiles/copilot/.copilot/config.json`
-- `~/.copilot/mcp-config.json` → `~/dotfiles/copilot/.copilot/mcp-config.json`
+- `~/.copilot/mcp-config.json` → `~/dotfiles/copilot-mcp/.copilot/mcp-config.json`
 
 ## 📝 Configuration Details
 

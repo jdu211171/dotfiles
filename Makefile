@@ -3,9 +3,9 @@ SHELL := /usr/bin/env bash
 # ---------- OS & host-aware defaults ----------
 UNAME_S := $(shell uname -s 2>/dev/null || echo Unknown)
 
-DEFAULT_PACKAGES_LINUX  := hypr waybar kitty ghostty herdr lazygit nvim zsh git scripts wofi dunst zed ohmyposh atuin codex gemini kiro grok copilot-instructions agent-skills
-DEFAULT_PACKAGES_DARWIN := kitty ghostty herdr lazygit lazygit-macos nvim zsh git scripts zed ohmyposh atuin codex gemini kiro grok copilot-instructions agent-skills
-DEFAULT_PACKAGES_OTHER  := kitty ghostty herdr lazygit nvim zsh git scripts zed ohmyposh atuin codex gemini kiro grok copilot-instructions agent-skills
+DEFAULT_PACKAGES_LINUX  := hypr waybar kitty ghostty herdr lazygit nvim zsh git scripts wofi dunst zed ohmyposh atuin codex gemini kiro grok copilot-mcp copilot-instructions cursor opencode agent-skills
+DEFAULT_PACKAGES_DARWIN := kitty ghostty herdr lazygit lazygit-macos nvim zsh git scripts zed ohmyposh atuin codex gemini kiro grok copilot-mcp copilot-instructions cursor opencode agent-skills
+DEFAULT_PACKAGES_OTHER  := kitty ghostty herdr lazygit nvim zsh git scripts zed ohmyposh atuin codex gemini kiro grok copilot-mcp copilot-instructions cursor opencode agent-skills
 
 ifeq ($(UNAME_S),Linux)
 DEFAULT_PACKAGES := $(DEFAULT_PACKAGES_LINUX)
@@ -17,6 +17,8 @@ endif
 
 # Default packages to stow; override with `make stow PACKAGES="..."`
 PACKAGES ?= $(DEFAULT_PACKAGES)
+
+STOW := ./scripts/stow-with-ignores.sh
 
 # Target directory (usually $HOME)
 TARGET ?= $(HOME)
@@ -41,39 +43,39 @@ help:
 	@echo "Vars: PACKAGES=... TARGET=... HOST=$(HOST)"
 
 dry-run:
-	@stow -nv -t "$(TARGET)" $(PACKAGES)
+	@$(STOW) -nv -t "$(TARGET)" $(PACKAGES)
 
 stow:
-	@stow -v -t "$(TARGET)" $(PACKAGES)
+	@$(STOW) -v -t "$(TARGET)" $(PACKAGES)
 
 restow:
-	@stow -v -R -t "$(TARGET)" $(PACKAGES)
+	@$(STOW) -v -R -t "$(TARGET)" $(PACKAGES)
 
 unstow:
-	@stow -v -D -t "$(TARGET)" $(PACKAGES)
+	@$(STOW) -v -D -t "$(TARGET)" $(PACKAGES)
 
 # OS-aware helpers
 stow-os:
-	@echo "OS=$(UNAME_S)"; echo "Packages: $(DEFAULT_PACKAGES)"; stow -v -t "$(TARGET)" $(DEFAULT_PACKAGES)
+	@echo "OS=$(UNAME_S)"; echo "Packages: $(DEFAULT_PACKAGES)"; $(STOW) -v -t "$(TARGET)" $(DEFAULT_PACKAGES)
 
 restow-os:
-	@echo "OS=$(UNAME_S)"; echo "Packages: $(DEFAULT_PACKAGES)"; stow -v -R -t "$(TARGET)" $(DEFAULT_PACKAGES)
+	@echo "OS=$(UNAME_S)"; echo "Packages: $(DEFAULT_PACKAGES)"; $(STOW) -v -R -t "$(TARGET)" $(DEFAULT_PACKAGES)
 
 # Include host overlay if directory exists
 stow-with-host:
 	@if [ -n "$(HOST_EXISTS)" ]; then \
 	  echo "Including host overlay: $(HOST_PACKAGE)"; \
-	  stow -v -t "$(TARGET)" $(DEFAULT_PACKAGES) $(HOST_PACKAGE); \
+	  $(STOW) -v -t "$(TARGET)" $(DEFAULT_PACKAGES) $(HOST_PACKAGE); \
 	else \
 	  echo "No host overlay found: $(HOST_PACKAGE)"; \
-	  stow -v -t "$(TARGET)" $(DEFAULT_PACKAGES); \
+	  $(STOW) -v -t "$(TARGET)" $(DEFAULT_PACKAGES); \
 	fi
 
 restow-with-host:
 	@if [ -n "$(HOST_EXISTS)" ]; then \
 	  echo "Including host overlay: $(HOST_PACKAGE)"; \
-	  stow -v -R -t "$(TARGET)" $(DEFAULT_PACKAGES) $(HOST_PACKAGE); \
+	  $(STOW) -v -R -t "$(TARGET)" $(DEFAULT_PACKAGES) $(HOST_PACKAGE); \
 	else \
 	  echo "No host overlay found: $(HOST_PACKAGE)"; \
-	  stow -v -R -t "$(TARGET)" $(DEFAULT_PACKAGES); \
+	  $(STOW) -v -R -t "$(TARGET)" $(DEFAULT_PACKAGES); \
 	fi
